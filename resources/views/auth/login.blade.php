@@ -15,29 +15,35 @@
     
     <div class="flex flex-col items-center space-y-4 w-full max-w-sm"> 
         
-        <p class="text-2xl font-bold text-[#421512] mt-10 mb-6 font-sans">Selamat Datang</p>
+        <p class="text-4xl font-medium text-[#421512] mt-10 mb-6 font-neue">Selamat Datang</p>
+      <div class="w-full flex flex-col items-center relative">
+    <p class="mb-2 text-2sm ml-10 font-light text-primary w-4/5 text-left font-alata">
+        Nama Pengguna
+    </p>
+
+    <div class="relative w-4/5">
+        <input 
+            type="text" 
+            name="username" 
+            placeholder="Masukan Nama Pengguna" 
+            value="{{ old('username') }}"
+            class="peer w-full border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
+                   py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                     placeholder-gray-500 font-sans text-lg" 
+        />
+        
+    </div>
+</div>
+
         
         <div class="w-full flex flex-col items-center">
-            <p class="mb-2 text-xl font-medium w-4/5 text-left font-sans">Nama Pengguna</p>
-            <input 
-                type="text" 
-                name="username" 
-                placeholder="Masukan Nama Pengguna" 
-                value="{{ old('username') }}"
-                class="w-4/5 border-4 border-[#421512] rounded-tl-[1rem] rounded-br-[1rem] 
-                       py-3 px-6 focus:outline-none focus:ring-4 focus:ring-[#421512] 
-                       placeholder-gray-500 font-sans text-lg" 
-            />
-        </div>
-        
-        <div class="w-full flex flex-col items-center">
-            <p class="mb-2 text-xl font-medium w-4/5 text-left font-sans">Kata Sandi</p>
+            <p class="mb-2 text-2sm ml-10 text-primary font-light w-4/5 text-left font-alata">Kata Sandi</p>
             <input 
                 type="password" name="password" 
                 placeholder="*******" 
-                class="w-4/5 border-4 border-[#421512] rounded-tl-[1rem] rounded-br-[1rem] 
-                       py-3 px-6 focus:outline-none focus:ring-4 focus:ring-[#421512] 
-                       placeholder-gray-500 font-sans text-lg" 
+                class="w-4/5 border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
+                       py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                       placeholder-gray-500 font-sans text-lg tranition ease-in-out duration-400" 
             />
         </div>
 
@@ -46,7 +52,7 @@
             <label class="flex items-center space-x-1 cursor-pointer">
                 <input type="checkbox" name="remember" id="remember" 
                        class="form-checkbox h-4 w-4 text-[#421512] border-gray-300 rounded focus:ring-[#421512]">
-                <p class="text-[#421512] text-sm font-medium select-none font-sans">Ingat Saya</p>
+                <p class="text-primary text-sm font-medium select-none font-sans">Ingat Saya</p>
             </label>
             
             <a href="#" class="underline text-sm font-medium text-[#421512] hover:text-red-700 font-sans">
@@ -55,7 +61,7 @@
         </div>
         <button 
             type="submit" 
-            class="bg-[#421512] w-4/5 py-3 rounded-[10px] text-[#FFF8E7] font-bold mt-3 hover:bg-red-900 transition font-sans">
+            class="bg-primary w-4/5 py-3 rounded-[10px] text-background  mt-3 hover:bg-red-900 transition font-alata">
             Masuk
         </button>  
     </div>

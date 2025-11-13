@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-100 font-sans antialiased">
+<body class="bg-gray-100  antialiased">
 
     @include('layouts.header')
 

@@ -4,8 +4,5 @@
 
 @section('content')
 
-<div>
-    ini order
-</div>
 
 @endsection

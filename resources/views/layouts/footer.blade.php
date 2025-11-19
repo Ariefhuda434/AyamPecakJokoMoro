@@ -10,7 +10,7 @@
 
     <footer class="bg-[#4A1E16] text-white py-12 px-8">
         <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-10">
-    ```
+
         <div></div>
 
         <div class="text-center">
@@ -33,7 +33,6 @@
 <p class="text-center text-sm">
     2025 Ayam Pecak Joko Moro, All rights reserved.
 </p>
-```
 
 </footer>
 

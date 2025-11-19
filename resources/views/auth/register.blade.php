@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Ayam Pecak Joko Moro</title>
+    <title>Registrasi | Ayam Pecak Joko Moro</title>
     <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
      @vite(['resources/css/app.css', 'resources/js/app.js'])
 
 </head>
 <body class="bg-[#421512]">
-
+    
 <div class="h-3/4 bg-[#FFF8E7] w-full fixed bottom-0 rounded-tl-[5rem] flex justify-center p-4"> 
     <form action="" class="w-full">
    <div class="flex justify-center w-full"> 
@@ -57,13 +57,13 @@
             </label>
             
             <a href="#" class="underline text-sm font-medium text-[#421512] hover:text-red-700 font-sans">
-                Belum punya akun?
+                Lupa Sandi?
             </a>
         </div>
         <button 
             type="submit" 
             class="bg-primary w-4/5 py-3 rounded-[10px] text-background  mt-3 hover:bg-red-900 transition font-alata">
-            Daftar
+            Masuk
         </button>  
     </div>
 </div>

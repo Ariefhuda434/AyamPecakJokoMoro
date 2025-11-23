@@ -11,6 +11,9 @@ Route::get('/', function () {
 Route::get('/order', function () {
     return view('order');
 });
+Route::get('/karyawan', function () {
+    return view('karyawan');
+});
 Route::get('/order/menu', function () {
     return view('menu');
 });

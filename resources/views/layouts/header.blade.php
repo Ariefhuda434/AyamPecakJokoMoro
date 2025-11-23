@@ -1,5 +1,4 @@
-<header class="fixed top-0 left-0 h-screen  w-64 z-50 flex flex-col justify-between">
-    <div class="hidden">
+{{-- <header class="fixed top-0 left-0 h-screen bg-primary  w-64 z-50 flex flex-col justify-between">
 
   <nav class="px-6 py-8 overflow-y-auto">
     <div class="flex items-center justify-center mb-8">
@@ -52,6 +51,5 @@
       Keluar
     </button>
   </div>
-    </div>
 
-</header>
+</header> --}}

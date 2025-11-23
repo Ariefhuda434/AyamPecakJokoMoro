@@ -11,7 +11,7 @@
 <body class="bg-[#421512]">
 
 <div class="h-3/4 bg-[#FFF8E7] w-full fixed bottom-0 rounded-tl-[5rem] flex justify-center p-4"> 
-    <form action="" class="w-full">
+<form action="" class="w-full">
    <div class="flex justify-center w-full"> 
     
     <div class="flex flex-col items-center space-y-4 w-full max-w-sm"> 

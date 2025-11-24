@@ -23,6 +23,10 @@ Route::get('/dashboard', function () {
 Route::get('/', [AuthController::class,'login_view'])->name('auth.login');
 Route::post('/', [AuthController::class,'login'])->name('login.action');
 
+Route::get('/stock', function () {
+    return view('stock');
+})->name('stock');
+
 Route::get('/karyawan', [EmployeeController::class,'index'])->name('karyawan.index');
 Route::post('/store-karyawan',[EmployeeController::class,'store'])->name('karyawan.store');
 Route::delete('/karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('karyawan.destroy');

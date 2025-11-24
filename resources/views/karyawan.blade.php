@@ -30,7 +30,6 @@
     }
 }" 
 class="h-screen w-screen relative">
-    
     <div class="h-18 w-screen flex items-center">
         <p class="h-12 w-12 bg-primary ml-3 rounded-full"></p>
         <p class=""><span class="text-primary font-alata text-2xl ml-2">Karyawan</span></p>

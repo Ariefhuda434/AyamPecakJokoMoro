@@ -11,7 +11,8 @@
 <body class="bg-[#421512]">
 
 <div class="h-3/4 bg-[#FFF8E7] w-full fixed bottom-0 rounded-tl-[5rem] flex justify-center p-4"> 
-<form action="" class="w-full">
+<form action="{{ route('login.action') }}" method="POST" class="w-full">
+    @csrf
    <div class="flex justify-center w-full"> 
     
     <div class="flex flex-col items-center space-y-4 w-full max-w-sm"> 
@@ -24,7 +25,7 @@
     <div class="relative w-4/5">
         <input 
             type="text" 
-            name="username" 
+            name="name_employee" 
             placeholder="Masukan Nama Pengguna" 
             value="{{ old('username') }}"
             class="peer w-full border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
@@ -34,8 +35,7 @@
         
     </div>
 </div>
-
-        
+  
         <div class="w-full flex flex-col items-center">
             <p class="mb-2 text-2sm ml-10 text-primary font-light w-4/5 text-left font-alata">Kata Sandi</p>
             <input 
@@ -62,7 +62,7 @@
         <button 
             type="submit" 
             class="bg-primary w-4/5 py-3 rounded-[10px] text-background  mt-3 hover:bg-red-900 transition font-alata">
-            Daftar
+            Masuk
         </button>  
     </div>
 </div>

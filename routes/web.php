@@ -1,14 +1,14 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 
 Route::get('/auth/register', function () {
     return view('auth.register');
 });
-Route::get('/', function () {
-    return view('auth.login');
-});
+
+
 Route::get('/order', function () {
     return view('order');
 });
@@ -17,11 +17,11 @@ Route::get('/order/menu', function () {
 });
 Route::get('/dashboard', function () {
     return view('dashboard');
-});
+})->name('dashboard.view');
 
 
-
-
+Route::get('/', [AuthController::class,'login_view'])->name('auth.login');
+Route::post('/', [AuthController::class,'login'])->name('login.action');
 
 Route::get('/karyawan', [EmployeeController::class,'index'])->name('karyawan.index');
 Route::post('/store-karyawan',[EmployeeController::class,'store'])->name('karyawan.store');

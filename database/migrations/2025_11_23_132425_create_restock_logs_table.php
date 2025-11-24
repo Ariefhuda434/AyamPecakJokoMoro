@@ -10,7 +10,7 @@ class CreateRestockLogsTable extends Migration
     {
         Schema::create('restock_log', function (Blueprint $table) {
             $table->id('Restock_id');
-            $table->foreignId('Stock_id')->constrained('stock')->onDelete('cascade');
+            $table->foreignId('Stock_id')->constrained('Stocks','Stock_id')->onDelete('cascade');
             $table->integer('Stock_Before');
             $table->integer('Update_Quantity');
             $table->string('unit');

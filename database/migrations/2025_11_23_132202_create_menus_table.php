@@ -8,13 +8,13 @@ class CreateMenusTable extends Migration
 {
     public function up()
     {
-        Schema::create('menu', function (Blueprint $table) {
+        Schema::create('menus', function (Blueprint $table) {
             $table->id('Menu_id');
             $table->string('Category');
             $table->string('Name');
             $table->integer('Price');
             $table->string('Menu_Status');
-            $table->foreignId('Recipe_id')->nullable()->constrained('receipt')->onDelete('cascade');
+            $table->foreignId('Recipe_id')->nullable()->constrained('Recipies','Recipe_id')->onDelete('cascade');
             $table->string('photo')->nullable(); 
         });
     }

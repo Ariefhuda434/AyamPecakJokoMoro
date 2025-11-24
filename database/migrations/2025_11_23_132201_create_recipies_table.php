@@ -8,7 +8,7 @@ class CreateRecipiesTable extends Migration
 {
     public function up()
     {
-        Schema::create('recipe', function (Blueprint $table) {
+        Schema::create('Recipies', function (Blueprint $table) {
             $table->id('Recipe_id');
             $table->string('Name');
             $table->text('Keterangan')->nullable();

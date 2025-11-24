@@ -15,7 +15,6 @@
    <div class="flex justify-center w-full"> 
     
     <div class="flex flex-col items-center space-y-4 w-full max-w-sm"> 
-        
         <p class="text-4xl font-medium text-[#421512] mt-10 mb-6 font-neue">Selamat Datang</p>
       <div class="w-full flex flex-col items-center relative">
     <p class="mb-2 text-2sm ml-10 font-light text-primary w-4/5 text-left font-alata">

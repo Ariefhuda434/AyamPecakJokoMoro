@@ -16,7 +16,7 @@ class CreateLogAuditsTable extends Migration
             $table->string('Column_Name');
             $table->string('Old_Value')->nullable();
             $table->string('New_Value')->nullable();
-            $table->foreignId('Employee_id')->constrained('employee')->onDelete('cascade');
+            $table->foreignId('Employee_id')->constrained('Employees','Employee_id')->onDelete('cascade');
             $table->timestamp('Change_time')->nullable();
         });
     }

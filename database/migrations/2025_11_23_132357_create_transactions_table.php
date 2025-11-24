@@ -8,10 +8,10 @@ class CreateTransactionsTable extends Migration
 {
     public function up()
     {
-        Schema::create('transaction', function (Blueprint $table) {
+        Schema::create('transactions', function (Blueprint $table) {
             $table->id('Transaction_id');
-            $table->foreignId('Order_id')->constrained('order')->onDelete('cascade');
-            $table->foreignId('Employee_id')->constrained('employee')->onDelete('cascade');
+            $table->foreignId('Order_id')->constrained('orders','Order_id')->onDelete('cascade');
+            $table->foreignId('Employee_id')->constrained('employees','Employee_id')->onDelete('cascade');
             $table->string('Method_Payment');
             $table->string('Status');
             $table->integer('Total_Price');

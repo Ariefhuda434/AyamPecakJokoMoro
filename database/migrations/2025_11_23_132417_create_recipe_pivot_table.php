@@ -10,10 +10,10 @@ class CreateRecipePivotTable extends Migration
     {
         Schema::create('recipe_pivot', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('Stock_id')->constrained('stock')->onDelete('cascade');
+            $table->foreignId('Stock_id')->constrained('Stocks','Stock_id')->onDelete('cascade');
             $table->integer('Quantity');
             $table->string('Unit');
-            $table->foreignId('Recipe_id')->constrained('recipe')->onDelete('cascade');
+            $table->foreignId('Recipe_id')->constrained('Recipies','Recipe_id')->onDelete('cascade');
         });
     }
 

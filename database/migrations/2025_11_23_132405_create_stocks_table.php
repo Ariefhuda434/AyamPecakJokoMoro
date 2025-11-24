@@ -8,7 +8,7 @@ class CreateStocksTable extends Migration
 {
     public function up()
     {
-        Schema::create('stock', function (Blueprint $table) {
+        Schema::create('Stocks', function (Blueprint $table) {
             $table->id('Stock_id');
             $table->string('Name_Stock');
             $table->string('Unit');

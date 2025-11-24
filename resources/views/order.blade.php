@@ -35,7 +35,8 @@
             </div>
         </div>
         {{-- bagian isi --}}
-        <div class="w-screen h-full flex justify-center  mt-4 gap-4">
+<div class="w-screen h-full flex justify-center flex-col  mt-4 gap-4">
+<div class="flex w-screen justify-center gap-4">
             <div class="h-63 w-48 bg-white border-4 border-primary rounded-[1rem]">
                 <div class="flex justify-between">
                     <p class="font-alata text-primary text-xl ml-6 mt-4">Meja 1</p>
@@ -79,11 +80,18 @@
                     <button type="submit" class="bg-primary  text-background h-10 w-4/5 rounded-[0.5rem]">Bayar</button>
                     <a href="" class="underline text-[10px] mt-1">Batalkan Pesanan</a>
                 </div>
-
             </div>
+</div>
 
-        </div>
-
+            <form action="{{ route('make.table') }}" method="POST" class="">
+                @csrf
+                <select name="number_table" id="">
+                    @for ($i = 1; $i <= 8; $i++)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                    @endfor
+                </select>
+                <button class="w-3/4 h-20">Tambah</button>
+            </form>
     </div>
 
 @endsection

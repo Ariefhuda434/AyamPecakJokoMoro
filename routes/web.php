@@ -3,15 +3,15 @@
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\TableController;
 
 Route::get('/auth/register', function () {
     return view('auth.register');
 });
 
 
-Route::get('/order', function () {
-    return view('order');
-});
+
 Route::get('/order/menu', function () {
     return view('menu');
 });
@@ -26,6 +26,10 @@ Route::post('/', [AuthController::class,'login'])->name('login.action');
 Route::get('/stock', function () {
     return view('stock');
 })->name('stock');
+
+Route::get('/order', [OrderController::class,'index'])->name('order.index');
+Route::post('/order/add-table',[TableController::class,'table_create'])->name('make.table');
+
 
 Route::get('/karyawan', [EmployeeController::class,'index'])->name('karyawan.index');
 Route::post('/store-karyawan',[EmployeeController::class,'store'])->name('karyawan.store');

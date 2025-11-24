@@ -11,13 +11,13 @@ class Employee extends Model
     public $timestamps = false;
     protected $primaryKey = 'Employee_id';
     protected $table = 'employees'; 
-    protected $fillable = [
-        'name_employee',
-        'number_phone',
-        'role',
-        'password',
-        'date_join',
-    ];
+        protected $fillable = [
+            'name_employee',
+            'number_phone',
+            'role',
+            'password',
+            'date_join',
+        ];
     protected $casts = [
         'date_join' => 'date',
     ];

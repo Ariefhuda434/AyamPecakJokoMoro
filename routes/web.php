@@ -1,10 +1,12 @@
 <?php
 
-use App\Http\Controllers\AuthController;
+use App\Models\Customer;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\EmployeeController;
 
 Route::get('/auth/register', function () {
     return view('auth.register');
@@ -27,8 +29,14 @@ Route::get('/stock', function () {
     return view('stock');
 })->name('stock');
 
+
+Route::post('/order/add-customer/{table}',[CustomerController::class,'store'])->name('make.customer');
+
+
 Route::get('/order', [OrderController::class,'index'])->name('order.index');
+Route::post('/order/add-order',[OrderController::class,'store'])->name('make.order');
 Route::post('/order/add-table',[TableController::class,'table_create'])->name('make.table');
+
 
 
 Route::get('/karyawan', [EmployeeController::class,'index'])->name('karyawan.index');

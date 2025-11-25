@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tables', function (Blueprint $table) {
             $table->id('No_Table');
-            $table->enum('status_table', ['kosong','terisi'])->default('kosong');
+            $table->enum('status_table', ['kosong','belum memesan'])->default('kosong');
         });
     }
 

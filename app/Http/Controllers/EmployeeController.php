@@ -15,7 +15,7 @@ class EmployeeController extends Controller
     public function index()
     {
         $employees = Employee::all();
-        return view('karyawan',compact('employees'));
+        return view('karyawan',compact('employees'));   
     }
 
     /**
@@ -36,6 +36,7 @@ class EmployeeController extends Controller
             'number_phone' => 'required|string|max:20',
             'role' => 'required|string|max:10',
             'password' => 'required|string|min:6',
+            
         ]);
         $validated['password'] = Hash::make($request->input('password'));
         $validated['date_join'] = Carbon::now();
@@ -68,11 +69,9 @@ class EmployeeController extends Controller
         'name_employee' => 'required|string|max:150',
         'number_phone' => 'required|string|max:20',
         'role' => 'required|string|max:10',
-        // Password opsional, hanya divalidasi jika diisi
         'password' => 'nullable|string|min:6', 
     ]);
 
-    // Hapus password jika tidak diisi (Edit Mode)
     if (empty($validated['password'])) {
         unset($validated['password']);
     } else {

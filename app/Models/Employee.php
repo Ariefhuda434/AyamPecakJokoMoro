@@ -2,23 +2,52 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+// WAJIB: Ganti "Model" dengan "Authenticatable" dari framework Laravel
+use Illuminate\Foundation\Auth\User as Authenticatable; 
+use Illuminate\Notifications\Notifiable;
 
-class Employee extends Model
+/**
+ * Class Employee
+ * Model ini digunakan untuk otentikasi (login) karena tidak ada tabel 'users'.
+ * Model ini terhubung ke tabel 'employees' di database.
+ */
+class Employee extends Authenticatable 
 {
-    use HasFactory;
-    public $timestamps = false;
+    use Notifiable;
+    
     protected $primaryKey = 'Employee_id';
-    protected $table = 'employees'; 
-        protected $fillable = [
-            'name_employee',
-            'number_phone',
-            'role',
-            'password',
-            'date_join',
-        ];
-    protected $casts = [
-        'date_join' => 'date',
+    
+    public function getAuthIdentifierName()
+    {
+        return 'name_employee'; 
+    }
+
+    protected $fillable = [
+        'name_employee',
+        'password',
+        'role', 
+        'number_phone',
+        'date_join',
     ];
+    
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    protected $casts = [
+        'date_join' => 'datetime',
+        'password' => 'hashed', 
+    ];
+
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'Employee_id', 'Employee_id');
+    }
+
+    // public function transactions()
+    // {
+    //     return $this->hasMany(Transaction::class, 'Employee_id', 'Employee_id');
+    // }
 }

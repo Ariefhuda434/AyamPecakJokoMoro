@@ -12,9 +12,11 @@ class CreateEmployeesTable extends Migration
             $table->id('Employee_id');
             $table->string('name_employee');
             $table->string('number_phone');
-            $table->string('role'); 
+            $table->string('remember_token')->nullable();
+            $table->enum('role', ['waiter','cashier','karyawan'])->default('karyawan');
             $table->string('password');
             $table->date('date_join');
+            $table->timestamps();
         });
     }
 

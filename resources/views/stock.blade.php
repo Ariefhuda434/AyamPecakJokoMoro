@@ -159,8 +159,20 @@
 
             <div class="space-y-6">
                 <div>
-                    <label class="block text-primary font-bold text-xl mb-2 font-alata">Nama Stok</label>
-                    <input type="text" placeholder="Masukan nama stok" class="w-full bg-transparent border-2 border-primary rounded-lg px-4 py-3 text-primary placeholder-primary/50 focus:outline-none focus:ring-2 focus:ring-secondary font-alata">
+                    <label class="block text-primary font-bold text-l mb-2 font-alata">Nama Stok</label>
+                    <input type="text" placeholder="Masukkan nama stok" class="w-full bg-transparent border-2 border-primary rounded-lg px-4 py-3 text-primary placeholder-primary/50 focus:outline-none focus:ring-2 focus:ring-secondary font-alata">
+                </div>
+                <div>
+                    <label class="block text-primary font-bold text-l mb-2 font-alata">Unit Stok</label>
+                    <input type="text" placeholder="Masukkan unit stok" class="w-full bg-transparent border-2 border-primary rounded-lg px-4 py-3 text-primary placeholder-primary/50 focus:outline-none focus:ring-2 focus:ring-secondary font-alata">
+                </div>
+                <div>
+                    <label class="block text-primary font-bold text-l mb-2 font-alata">Stok Minimum</label>
+                    <input type="text" placeholder="Masukkan stok minimum" class="w-full bg-transparent border-2 border-primary rounded-lg px-4 py-3 text-primary placeholder-primary/50 focus:outline-none focus:ring-2 focus:ring-secondary font-alata">
+                </div>
+                <div>
+                    <label class="block text-primary font-bold text-l mb-2 font-alata">Harga</label>
+                    <input type="text" placeholder="Masukkan harga" class="w-full bg-transparent border-2 border-primary rounded-lg px-4 py-3 text-primary placeholder-primary/50 focus:outline-none focus:ring-2 focus:ring-secondary font-alata">
                 </div>
             </div>
 

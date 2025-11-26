@@ -3,7 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="flex h-screen w-screen bg-[#F9F5EB] overflow-hidden" x-data="{ showRecipeModal: false, showSalesModal: false }">
+<div class="flex h-screen w-screen bg-background overflow-hidden" x-data="{ showRecipeModal: false, showSalesModal: false }">
     {{-- Sidebar --}}
     <aside class="w-24 lg:w-64 h-full bg-primary flex flex-col justify-between py-6 fixed left-0 top-0 z-20 transition-all duration-300">
         <div>
@@ -181,7 +181,7 @@
                 </div>
                 <div class="space-y-4">
                     @for($i=0; $i<4; $i++)
-                    <div class="flex items-center bg-[#4A302C] p-3 rounded-xl">
+                    <div class="flex items-center bg-[#3D4142] p-3 rounded-xl">
                         <img src="https://via.placeholder.com/60" class="w-14 h-14 rounded-lg object-cover mr-4" alt="Food">
                         <div class="flex-1">
                             <h4 class="font-bold">Ayam Goreng Pecak</h4>

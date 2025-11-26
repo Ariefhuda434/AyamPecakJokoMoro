@@ -15,33 +15,19 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $anu = $request->validate([
             'name_employee' => 'required|string', 
             'password' => 'required',
         ]);
 
         $remember = $request->filled('remember');
 
-        $loginField = 'name_employee'; 
-        
-        if (Auth::attempt([$loginField => $request->name_employee, 'password' => $request->password], $remember)) {
-            
+        if (Auth::attempt($anu, $remember)) {
             $request->session()->regenerate();
-            
-            $karyawan = Auth::user();
-        
-            if ($karyawan->role === 'manager') {
-                return redirect()->route('dashboard.view'); 
-            } elseif ($karyawan->role === 'waiter') {
-                return redirect()->route('order.index'); 
-            } elseif ($karyawan->role === 'cashier') {
-                return redirect()->route('transactions.index'); 
-            }
-            return redirect()->route('auth.login'); 
+            return redirect()->route('order.index')->with('succes','berhasil');
         }
-
-        throw ValidationException::withMessages([
-            'name_employee' => ['Nama pengguna atau password salah.'],
+        return back()->withErrors([
+            'name_employee' => 'Email atau password salah.',
         ]);
     }
 

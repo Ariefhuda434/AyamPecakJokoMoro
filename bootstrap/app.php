@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\CheckRole;
+use App\Models\Employee;
 use Illuminate\Foundation\Application;
 use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -17,7 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
         ]);
         $middleware->alias([
-            'role' => AuthController::class, 
+            'role' => CheckRole::class, 
             'auth' => Authenticate::class,
         ]);
     })

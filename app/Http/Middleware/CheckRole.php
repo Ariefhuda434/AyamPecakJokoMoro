@@ -17,12 +17,12 @@ class CheckRole
     public function handle(Request $request, Closure $next,string $role): Response
     {
         if (!Auth::check()) {
-            return redirect('/login');
+            return redirect('/');
         }
         
         $karyawan = Auth::user();
         if ($karyawan->role !== $role) {
-            return redirect()->route('auth.login')->with('error', 'Akses ditolak. Anda tidak memiliki izin.');
+        abort(403, 'Akses Ditolak. Anda tidak memiliki izin untuk halaman ini.');
         }
         return $next($request);
     }

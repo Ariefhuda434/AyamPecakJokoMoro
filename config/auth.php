@@ -62,13 +62,9 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
-        ],
         'employees' => [ // <--- TAMBAHKAN provider 'employees'
             'driver' => 'eloquent',
-            'model' => Employee::class, // <--- Menunjuk ke Model Employee
+            'model' => Employee::class, 
         ]
 
         // 'users' => [

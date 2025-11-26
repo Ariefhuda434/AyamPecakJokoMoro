@@ -37,7 +37,7 @@ class AuthController extends Controller
             } elseif ($karyawan->role === 'cashier') {
                 return redirect()->route('transactions.index'); 
             }
-            return redirect()->route('auth.login'); 
+            return redirect()->route('login'); 
         }
 
         throw ValidationException::withMessages([

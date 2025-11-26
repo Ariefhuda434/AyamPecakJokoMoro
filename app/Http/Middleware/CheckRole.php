@@ -22,7 +22,7 @@ class CheckRole
         
         $karyawan = Auth::user();
         if ($karyawan->role !== $role) {
-            return redirect()->route('auth.login')->with('error', 'Akses ditolak. Anda tidak memiliki izin.');
+            return redirect()->route('login')->with('error', 'Akses ditolak. Anda tidak memiliki izin.');
         }
         return $next($request);
     }

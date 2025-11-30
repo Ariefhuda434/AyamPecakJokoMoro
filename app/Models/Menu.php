@@ -23,4 +23,14 @@ class Menu extends Model
         'Recipe_id',
         'photo',
     ];
+
+      public function recipe()
+    {
+        return $this->hasOne(Recipe::class, 'Recipe_id', 'Recipe_id');
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'Menu_id', 'Menu_id');
+    }
 }

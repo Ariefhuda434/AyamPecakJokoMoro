@@ -20,4 +20,8 @@ class RestockLog extends Model
         'Price',
         'Date_in'
     ];
+    public function stock()
+    {
+        return $this->belongsTo(Stock::class, 'Stock_id', 'Stock_id');
+    }
 }

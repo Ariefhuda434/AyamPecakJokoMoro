@@ -12,6 +12,8 @@ use App\Http\Controllers\TransactionController;
 
 Route::get('/', [AuthController::class,'login_view'])->name('auth.login');
 Route::post('/login', [AuthController::class,'login'])->name('login.action');
+Route::resource('menu', MenuController::class);
+
 
 
 

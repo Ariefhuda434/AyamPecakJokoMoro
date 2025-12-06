@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
+use function Laravel\Prompts\select;
 
 class EmployeeController extends Controller
 {
@@ -14,8 +17,23 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::all();
-        return view('karyawan',compact('employees'));   
+        $countEmployee = Employee::Count();
+        $employeeData = DB::table('employees')
+        ->join('roles','employees.role_id', '=', 'roles.role_id')
+        ->select([
+            'employees.Employee_id as Employee_id',
+            'employees.name_employee as name_employee',
+            'employees.number_phone as number_phone',
+            'employees.created_at as date_join',
+            'roles.role_name as role_name',
+        ])
+        ->orderBy('employees.created_at','desc')
+        ->get();
+        
+        return view('karyawan',[
+            'employeeData' => $employeeData,
+            'countEmployee' => $countEmployee
+        ]);   
     }
     
      /**
@@ -34,9 +52,8 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'name_employee' => 'required|string|max:150',
             'number_phone' => 'required|string|max:20',
-            'role' => 'required|string|max:10',
+            'role' => 'required|int|max:10',
             'password' => 'required|string|min:6',
-            
         ]);
         $validated['password'] = Hash::make($request->input('password'));
         $validated['date_join'] = Carbon::now();

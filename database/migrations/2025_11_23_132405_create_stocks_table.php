@@ -12,10 +12,10 @@ class CreateStocksTable extends Migration
             $table->id('Stock_id');
             $table->string('Name_Stock');
             $table->string('Unit');
-            $table->integer('Current_Stock');
+            $table->integer('Current_Stock')->nullable();
             $table->integer('Min_Stock_Level');
-            $table->integer('Last_Cost');
-            $table->integer('Last_Updated');
+            $table->integer('Last_Cost')->nullable();
+            $table->timestamps();
         });
     }
 

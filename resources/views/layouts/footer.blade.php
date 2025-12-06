@@ -15,7 +15,6 @@
 
         <div class="text-center">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="mx-auto w-24">
-            <!-- <h2 class="text-lg font-bold mt-3 tracking-wide">AYAM PECAK JOKO MORO</h2> -->
         </div>
 
         <div class="text-left">

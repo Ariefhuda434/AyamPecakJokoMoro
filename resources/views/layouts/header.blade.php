@@ -1,4 +1,3 @@
-@auth
     @php
         $user = Auth::user();
         $roleSlug = $user->role->slug ?? 'guest'; 
@@ -64,6 +63,10 @@
            
 
             <nav class="px-6 py-8 overflow-y-auto flex-grow">
+               <div class="text-center">
+            <img src="{{ asset('images/logo.png') }}" alt="Logo" class="mx-auto w-24">
+        </div>
+
                 <ul class="flex flex-col gap-3 text-white font-medium">
                     
                     <li><a href="{{ $dashboardRoute }}" class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg {{ Request::is(ltrim(parse_url($dashboardRoute, PHP_URL_PATH), '/')) || Request::is('dashboard') ? 'bg-[#D4A017] text-[#421512]' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}"><span class="rounded-full bg-white h-8 w-8"></span>Dashboard</a></li>
@@ -102,4 +105,3 @@
         </main>
         
     </div>
-@endauth

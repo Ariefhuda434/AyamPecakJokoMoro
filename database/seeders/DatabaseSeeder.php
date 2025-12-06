@@ -19,10 +19,11 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            // RoleSeeder::class,
-            // WaiterSeeder::class,
-            // ManagerSeeder::class,
-            CashierSeeder::class
+            RoleSeeder::class,
+            WaiterSeeder::class,
+            ManagerSeeder::class,
+            CashierSeeder::class,
+            StockSeeder::class
     ]);
     }
 }

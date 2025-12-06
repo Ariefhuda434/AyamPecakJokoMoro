@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\CustomerController;
@@ -23,14 +24,15 @@ Route::middleware(['auth'])->group(function () {
         
     Route::get('/dashboard', [ManagerController::class, 'index'])->name('dashboard.view');
         
-    Route::get('/stock', function () {
-    return view('stock');
-    })->name('stock.index'); 
-        
+  Route::get('/stock', [StockController::class,'index'])->name('stock.index');  
+  Route::post('/stock', [StockController::class,'store'])->name('stock.store'); 
+  Route::put('/stock/{stock}', [StockController::class,'update'])->name('stock.update'); 
+  Route::delete('/stock/{stock}', [StockController::class,'destroy'])->name('stock.destroy');
+
     Route::get('/karyawan', [EmployeeController::class, 'index'])->name('employee.index');
-    Route::post('/karyawan/add-karyawan', [EmployeeController::class, 'store'])->name('employee.store');
-    Route::put('karyawan/edit/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
-    Route::delete('karyawan/delete/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
+    Route::post('/karyawan', [EmployeeController::class, 'store'])->name('employee.store');
+    Route::put('karyawan/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
+    Route::delete('karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
     });
 
     Route::middleware(['role:waiter'])->prefix('order')->name('order.')->group(function () {

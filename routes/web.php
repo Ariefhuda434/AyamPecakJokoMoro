@@ -9,6 +9,8 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\TransactionController;
 
+Route::get('/', [AuthController::class,'login_view'])->name('auth.login');
+Route::post('/login', [AuthController::class,'login'])->name('login.action');
 
 Route::get('/', [AuthController::class, 'login_view'])->name('login.view');
 Route::post('/login', [AuthController::class, 'login'])->name('login.action');

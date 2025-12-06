@@ -29,16 +29,8 @@
         }, 300);
     }
 }" 
-class="h-screen w-screen relative">
-    <div class="h-18 w-screen flex items-center">
-        <p class="h-12 w-12 bg-primary ml-3 rounded-full"></p>
-        <p class=""><span class="text-primary font-alata text-2xl ml-2">Karyawan</span></p>
-        <span class="h-5 w-5 bg-secondary rounded-full ml-29"></span>
-        <span class="h-9 rounded-full ml-5 w-[3px] bg-primary"></span>
-        <span class="h-12 w-12 bg-white rounded-full border-2 border-text-bg-1 ml-5"></span>
-    </div>
-    
-    <div class="h-18 w-full flex items-center justify-between">
+class="h-screen w-screen relative">    
+    <div class="h-18 w-full flex  items-center justify-between">
         <p class="ml-10 font-alata">Karyawan({{ count($employees ) }})</p>
         <button @click="openCreateModal()" class="mr-10 bg-secondary p-2 text-white font-alata rounded-lg">Tambah Karyawan</button>
     </div>
@@ -74,7 +66,7 @@ class="h-screen w-screen relative">
                             >
                                 Edit
                             </button>
-                            <form action="{{ route('karyawan.destroy', $employee->Employee_id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus {{ $employee->name_employee }}?');">
+                            <form action="{{ route('employee.destroy', $employee->Employee_id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus {{ $employee->name_employee }}?');">
                                 @csrf  
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900">Hapus</button>
@@ -112,8 +104,8 @@ class="h-screen w-screen relative">
         </button>
         <form 
             x-bind:action="isEdit 
-                ? '{{ route('karyawan.update', ['employee' => 'Employee_id']) }}'.replace('Employee_id', karyawanToEdit.Employee_id)
-                : '{{ route('karyawan.store') }}'" 
+                ? '{{ route('employee.update', ['employee' => 'Employee_id']) }}'.replace('Employee_id', karyawanToEdit.Employee_id)
+                : '{{ route('employee.store') }}'" 
             method="POST" 
             class="w-full max-w-sm"
         >

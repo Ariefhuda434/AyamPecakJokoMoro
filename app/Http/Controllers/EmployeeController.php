@@ -17,9 +17,9 @@ class EmployeeController extends Controller
         $employees = Employee::all();
         return view('karyawan',compact('employees'));   
     }
-
-    /**
-     * Show the form for creating a new resource.
+    
+     /**
+         * Show the form for creating a new resource.
      */
     public function create()
     {
@@ -41,7 +41,7 @@ class EmployeeController extends Controller
         $validated['password'] = Hash::make($request->input('password'));
         $validated['date_join'] = Carbon::now();
         Employee::create($validated);
-        return redirect()->route('karyawan.index')->with('success', 'Data karyawan berhasil ditambahkan!');
+        return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil ditambahkan!');
     }
 
     /**
@@ -80,7 +80,7 @@ class EmployeeController extends Controller
 
     $employee->update($validated);
 
-    return redirect()->route('karyawan.index')->with('success', 'Data karyawan berhasil diubah!');
+    return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil diubah!');
 }
 
     /**
@@ -89,6 +89,6 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         $employee->delete();
-        return redirect()->route('karyawan.index')->with('success', 'Data karyawan berhasil dihapus!');
+        return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil dihapus!');
     }
 }

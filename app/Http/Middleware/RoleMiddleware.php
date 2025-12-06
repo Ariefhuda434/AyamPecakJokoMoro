@@ -7,22 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckRole
+class RoleMiddleware
 {
     /**
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next,string $role): Response
+    
+    public function handle(Request $request, Closure $next,...$roles): Response
     {
         if (!Auth::check()) {
-            return redirect('/');
+            return redirect()->route('login.view'); 
         }
-        
-        $karyawan = Auth::user();
-        if ($karyawan->role !== $role) {
-        abort(403, 'Akses Ditolak. Anda tidak memiliki izin untuk halaman ini.');
+        $employee = Auth::user();
+        if (!isset($employee->role) || !in_array($employee->role->slug, $roles)) {
+            abort(403, 'Akses Ditolak. Anda tidak memiliki izin yang sesuai.');
         }
         return $next($request);
     }

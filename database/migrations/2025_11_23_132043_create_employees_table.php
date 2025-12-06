@@ -13,7 +13,7 @@ class CreateEmployeesTable extends Migration
             $table->string('name_employee');
             $table->string('number_phone');
             $table->string('remember_token')->nullable();
-            $table->enum('role', ['waiter','cashier','manager'])->default('waiter');
+            $table->foreignId('role_id')->references('role_id')->on('roles')->nullOnDelete();
             $table->string('password');
             $table->date('date_join');
             $table->timestamps();

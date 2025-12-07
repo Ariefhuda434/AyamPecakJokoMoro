@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\DB;
 
 class MenuController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $countMenu = Menu::Count();
+        $menuId = $request->query('menu_id');
         $menuData = DB::table('menus')
         ->join('recipies','menus.Recipe_id','=','recipies.Recipe_id')
         ->select([
@@ -38,31 +39,34 @@ class MenuController extends Controller
         return view('menu.create', compact('recipes'));
     }
 
-    public function store(Request $request)
+      public function store(Request $request)
     {
-        $request->validate([
-            'Category' => 'required',
-            'Name' => 'required',
-            'Price' => 'required|numeric',
-            'Menu_Status' => 'required',
-            'Recipe_id' => 'required|exists:recipe,Recipe_id',
-        ]); 
+     $validated = $request->validate([
+        'Category' => 'required',
+        'Name' => 'required|string|max:255',
+        'Price' => 'required|numeric|min:0',
+        'status_menu' => 'required', 
+        'Recipe_id' => 'required|exists:recipes,Recipe_id', 
+        'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048', 
+    ]);
 
-        Menu::create($request->all());
-
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan!');
+    if ($request->hasFile('photo')) {
+        $path = $request->file('photo')->store('public/menu_photos');
+        $validated['Photo'] = str_replace('public/', '', $path); 
     }
+    
+    $validated['Menu_Status'] = $validated['status_menu'];
+    unset($validated['status_menu']);
 
-    public function edit($id)
-    {
-        $menu = Menu::findOrFail($id);
-        $recipes = Recipe::all();
-        return view('menu.edit', compact('menu', 'recipes'));
-    }
+    Menu::create($validated);
+    return redirect()->route('menu.index')->with('success', 'Menu berhasil dibuat!');
 
-    public function update(Request $request, $id)
+}
+    
+
+    public function update(Request $request, Menu $menu)
     {
-        $request->validate([
+        $validated=$request->validate([
             'Category' => 'required',
             'Name' => 'required',
             'Price' => 'required|numeric',
@@ -70,15 +74,14 @@ class MenuController extends Controller
             'Recipe_id' => 'required|exists:recipe,Recipe_id',
         ]);
 
-        $menu = Menu::findOrFail($id);
-        $menu->update($request->all());
+        $menu->update($validated);
 
         return redirect()->route('menu.index')->with('success', 'Menu berhasil diupdate!');
     }
 
-    public function destroy($id)
+    public function destroy(Menu $menu)
     {
-        Menu::destroy($id);
+        $menu->delete();
         return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus!');
     }
 }

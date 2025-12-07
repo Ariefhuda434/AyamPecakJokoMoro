@@ -13,8 +13,8 @@ use App\Http\Controllers\RestockLogContoroller;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\OrderController;
 
-Route::get('/', [AuthController::class,'login_view'])->name('auth.login');
-Route::post('/login', [AuthController::class,'login'])->name('login.action');
+Route::get('/', [AuthController::class, 'login_view'])->name('auth.login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.action');
 
 Route::get('/', [AuthController::class, 'login_view'])->name('login.view');
 Route::post('/login', [AuthController::class, 'login'])->name('login.action');
@@ -22,47 +22,49 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 Route::middleware(['auth'])->group(function () {
-    
-  Route::middleware(['role:manager'])->prefix('manager')->group(function () {      
-  Route::get('/dashboard', [ManagerController::class, 'index'])->name('dashboard.view');
-  Route::get('/dashboard/menu-menagment', [MenuController::class, 'index'])->name('menu.index');
-  Route::post('/dashboard/menu-menagment', [MenuController::class, 'store'])->name('menu.store');
-  Route::put('/dashboard/menu-menagment/{menu}', [MenuController::class, 'update'])->name('menu.update');
-  Route::delete('/dashboard/menu-menagment/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
 
-  Route::get('/dashboard/resep', [RecipeController::class, 'index'])->name('recipies.index');
-        
-  Route::get('/stock', [StockController::class,'index'])->name('stock.index');  
-  Route::post('/stock', [StockController::class,'store'])->name('stock.store'); 
-  Route::put('/stock/{stock}', [StockController::class,'update'])->name('stock.update'); 
-  Route::delete('/stock/{stock}', [StockController::class,'destroy'])->name('stock.destroy');
-  
-  Route::get('/stock/restock/{slug}', [RestockLogContoroller::class,'index'])->name('restock.index');  
-  Route::post('/stock/restock/store', [RestockLogContoroller::class,'store'])->name('restock.store');  
-  Route::put('/stock/restock/{restockLog}', [RestockLogContoroller::class,'update'])->name('restock.update'); 
-  Route::delete('/stock/restock/{restockLog}', [RestockLogContoroller::class,'destroy'])->name('restock.destroy');
+    Route::middleware(['role:manager'])->prefix('manager')->group(function () {
 
-  Route::get('/karyawan', [EmployeeController::class, 'index'])->name('employee.index');
-  Route::post('/karyawan', [EmployeeController::class, 'store'])->name('employee.store');
-  Route::put('karyawan/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
-  Route::delete('karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
+        Route::get('/dashboard', [ManagerController::class, 'index'])->name('dashboard.view');
+        Route::get('/dashboard/menu-management', [MenuController::class, 'index'])->name('menu.index');
+        Route::post('/dashboard/menu-management', [MenuController::class, 'store'])->name('menu.store');
+        Route::put('/dashboard/menu-management/{menu}', [MenuController::class, 'update'])->name('menu.update');
+        Route::delete('/dashboard/menu-management/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
+
+        Route::get('/dashboard/menu-management/recipies', [RecipeController::class, 'index'])->name('recipies.index');
+        Route::post('/dashboard/menu-management/recipies', [RecipeController::class, 'store'])->name('recipies.store');
+        Route::put('/dashboard/menu-management/recipies/{recipe}', [RecipeController::class, 'update'])->name('recipies.update');
+        Route::delete('/dashboard/menu-management/recipies/{recipe}', [RecipeController::class, 'destroy'])->name('recipies.destroy');
+
+        Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
+        Route::post('/stock', [StockController::class, 'store'])->name('stock.store');
+        Route::put('/stock/{stock}', [StockController::class, 'update'])->name('stock.update');
+        Route::delete('/stock/{stock}', [StockController::class, 'destroy'])->name('stock.destroy');
+
+        Route::get('/stock/restock/{slug}', [RestockLogContoroller::class, 'index'])->name('restock.index');
+        Route::post('/stock/restock/store', [RestockLogContoroller::class, 'store'])->name('restock.store');
+        Route::put('/stock/restock/{restockLog}', [RestockLogContoroller::class, 'update'])->name('restock.update');
+        Route::delete('/stock/restock/{restockLog}', [RestockLogContoroller::class, 'destroy'])->name('restock.destroy');
+
+        Route::get('/karyawan', [EmployeeController::class, 'index'])->name('employee.index');
+        Route::post('/karyawan', [EmployeeController::class, 'store'])->name('employee.store');
+        Route::put('karyawan/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
+        Route::delete('karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
     });
 
     Route::middleware(['role:waiter'])->prefix('waiter')->group(function () {
-        
+
         Route::get('/order', [OrderController::class, 'index'])->name('order.index');
         Route::post('/order/add-order', [OrderController::class, 'store'])->name('make.order');
-        Route::post('/order/add-table', [TableController::class, 'table_create'])->name('make.table');
         
+        Route::post('/order/add-table', [TableController::class, 'table_create'])->name('make.table');
         Route::get('/menu', function () {
             return view('menu');
-        })->name('menu'); 
-
+        })->name('menu');
         Route::post('/add-customer/{table}', [CustomerController::class, 'store'])->name('make.customer');
     });
 
     Route::middleware(['role:cashier'])->group(function () {
         Route::get('/transactions', [TransactionController::class, 'index'])->name('cashier.view');
     });
-
 });

@@ -100,7 +100,6 @@
         </div>
     </div>
 
-    {{-- BAGIAN GRAFIK DAN RINGKASAN --}}
     <div class="bg-white p-6 rounded-xl shadow-lg">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-xl font-bold text-gray-900">Ringkasan</h2>

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -21,6 +22,7 @@ class MenuSeeder extends Seeder
             'Category' => 'Makanan',
             'Name' => 'Soto Betawi',
             'Price' => '320000',
+            'slug' => Str::slug('Soto Betawi'),
             'Menu_Status' => 'Tersedia',
             'created_at' => now(),
             'updated_at' => now(),

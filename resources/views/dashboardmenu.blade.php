@@ -33,7 +33,7 @@
         return this.menuToEdit ? this.menuToEdit.Menu_id : null;
     },
     
-    
+   
 }" 
 class="relative p-4"> 
 
@@ -67,29 +67,22 @@ class="relative p-4">
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($menuData as $menu) 
                     
-                    <tr class="hover:bg-blue-50 cursor-pointer" @click="goToRecipePage({{ $menu->Menu_id }})"> 
-                        
+                    <tr class="hover:bg-blue-50 cursor-pointer" 
+                    @click="window.location.href = '{{ route('recipies.index', ['slug' => Str::slug($menu->nama_menu)]) }}'">
+
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                            {{-- <form 
-                                method="GET" 
-                                action="{{ route('recipies.index', ['slug' => Str::slug($menu->nama_menu)]) }}" 
-                                id="recipies-form-{{ $menu->_id }}" 
-                                class="hidden" 
-                            >
-                            <input type="hidden" name="stock_id" value="{{ $stock->Stock_id }}">
-                            </form> --}}
                             {{ $loop->iteration }}
                         </td>
                         
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                            @if ($menu->foto_menu)
-                                <img src="{{ asset('storage/' . $menu->Photo) }}" alt="{{ $menu->nama_menu }}" class="h-10 w-10 rounded object-cover">
+                            @if ($menu->foto_menu) 
+                                <img src="{{ asset('storage/' . $menu->foto_menu) }}" alt="{{ $menu->nama_menu }}" class="h-10 w-10 rounded object-cover">
                             @else
                                 -
                             @endif
                         </td>
                         
-                        <td class="px-6 py-4 whitespace-nowrap text-sm  text-gray-900">{{ $menu->nama_menu ?? '-'}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm  text-gray-900">{{ $menu->nama_menu ?? '-'}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $menu->kategori ?? '-'}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Rp {{ number_format($menu->harga_menu ?? 0, 0, ',', '.') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $menu->status_menu ?? '-'}}</td>
@@ -125,6 +118,8 @@ class="relative p-4">
         </div>
     </div>
 
+    {{-- ... Modal Edit/Create tetap sama di bawah ini ... --}}
+
     <div x-show="isFormOpen" @click="closeModal()" 
         class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
         x-cloak style="display: none;">
@@ -159,11 +154,9 @@ class="relative p-4">
                         class="text-2xl font-semibold text-primary mt-10 mb-6 font-alata text-center">
                     </p>
                     
-                    {{-- INPUT FOTO --}}
                     <div class="w-full flex flex-col items-center">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Foto Menu</p>
                         
-                        {{-- Pratinjau Foto Lama saat Edit --}}
                         <template x-if="isEdit && menuToEdit?.Photo">
                             <img x-bind:src="'{{ asset('storage') }}/' + menuToEdit.Photo" alt="Foto Lama" class="h-20 w-20 rounded-lg object-cover mb-2 border-2 border-gray-300">
                         </template>
@@ -172,16 +165,15 @@ class="relative p-4">
                             type="file" 
                             name="photo"
                             class="w-4/5 peer border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
-                                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
-                                    file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 
-                                    file:text-sm file:font-semibold file:bg-secondary file:text-white hover:file:bg-secondary/80"
+                                         py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                                         file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 
+                                         file:text-sm file:font-semibold file:bg-secondary file:text-white hover:file:bg-secondary/80"
                             accept="image/*"
-                            x-bind:required="!isEdit" {{-- Hanya wajib saat Tambah Baru --}}
+                            x-bind:required="!isEdit" 
                         />
-                         <small class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah foto.</small>
+                           <small class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah foto.</small>
                     </div>
                     
-                    {{-- INPUT NAMA MENU --}}
                     <div class="w-full flex flex-col items-center">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Nama Menu</p>
                         <input 
@@ -189,14 +181,13 @@ class="relative p-4">
                             name="Name" 
                             placeholder="Masukan Nama Menu" 
                             class="w-4/5 peer border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
-                                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
-                                    placeholder-gray-500 font-sans text-lg"
+                                         py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                                         placeholder-gray-500 font-sans text-lg"
                             x-bind:value="isEdit ? menuToEdit.Name : ''" 
                             required
                         />
                     </div>
                     
-                    {{-- INPUT HARGA JUAL --}}
                     <div class="w-full flex flex-col items-center">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Harga Jual</p>
                         <input 
@@ -204,14 +195,13 @@ class="relative p-4">
                             name="Price" 
                             placeholder="Contoh: 25000" 
                             class="w-4/5 peer border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
-                                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
-                                    placeholder-gray-500 font-sans text-lg"
+                                         py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                                         placeholder-gray-500 font-sans text-lg"
                             x-bind:value="isEdit ? menuToEdit.Price : ''" 
                             required
                         />
                     </div>
 
-                    {{-- SELECT KATEGORI --}}
                     <div class="w-full flex flex-col items-center">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Kategori</p>
                         <div class="relative w-4/5">
@@ -220,8 +210,8 @@ class="relative p-4">
                                 id="category" 
                                 required
                                 class="w-full border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
-                                        py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
-                                        placeholder-gray-500 font-sans text-lg appearance-none" 
+                                         py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                                         placeholder-gray-500 font-sans text-lg appearance-none" 
                             >
                                 <option value="" disabled x-bind:selected="!isEdit && !menuToEdit?.Category">Pilih Kategori</option>
                                 <option value="Makanan" x-bind:selected="isEdit && menuToEdit?.Category === 'Makanan'">Makanan</option>
@@ -234,17 +224,16 @@ class="relative p-4">
                         </div>
                     </div>
                     
-                    {{-- SELECT STATUS PENJUALAN --}}
                     <div class="w-full flex flex-col items-center">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Status Penjualan</p>
                         <div class="relative w-4/5">
                             <select 
-                                name="status_menu" {{-- Nama kolom di DB --}}
+                                name="status_menu" 
                                 id="menu_status" 
                                 required
                                 class="w-full border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
-                                        py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
-                                        placeholder-gray-500 font-sans text-lg appearance-none" 
+                                         py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                                         placeholder-gray-500 font-sans text-lg appearance-none" 
                             >
                                 <option value="Tersedia" x-bind:selected="isEdit && menuToEdit?.status_menu === 'Tersedia'">Tersedia (Dijual)</option>
                                 <option value="Tidak Tersedia" x-bind:selected="isEdit && menuToEdit?.status_menu === 'Tidak Tersedia'">Tidak Tersedia (Habis/Tidak Dijual)</option>

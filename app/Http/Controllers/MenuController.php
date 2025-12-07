@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\Recipe;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -50,6 +51,8 @@ class MenuController extends Controller
         'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048', 
     ]);
 
+    $validated['slug'] = Str::slug($request->input('Name'));
+
     if ($request->hasFile('photo')) {
         $path = $request->file('photo')->store('public/menu_photos');
         $validated['Photo'] = str_replace('public/', '', $path); 
@@ -57,7 +60,7 @@ class MenuController extends Controller
     
     $validated['Menu_Status'] = $validated['status_menu'];
     unset($validated['status_menu']);
-
+    
     Menu::create($validated);
     return redirect()->route('menu.index')->with('success', 'Menu berhasil dibuat!');
 

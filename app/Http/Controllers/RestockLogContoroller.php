@@ -31,8 +31,9 @@ class RestockLogContoroller extends Controller
         'restock_Log.Price as harga',
         'restock_Log.created_at as tanggal_restock',
         'restock_Log.updated_at as tanggal_restock_update',
-        DB::raw('Stock_Before + Update_Quantity AS jumlah_setelah'),
+        DB::raw('restock_Log.Stock_Before + restock_Log.Update_Quantity AS jumlah_setelah'),
     ])
+    ->where('restock_log.Stock_id', $stockId)
     ->orderBy('restock_Log.created_at','desc')
     ->get();
 
@@ -87,7 +88,7 @@ class RestockLogContoroller extends Controller
         'slug' => $slug,
         'stock_id' => $stock->Stock_id
         ])
-                     ->with('success', 'Restok **' . $stock->Name_Stock . '** berhasil ditambahkan! Stok saat ini: ' . $jumlah_setelah);
+    ->with('success', 'Restok **' . $stock->Name_Stock . '** berhasil ditambahkan! Stok saat ini: ' . $jumlah_setelah);
 }
 
     /**

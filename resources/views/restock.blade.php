@@ -39,7 +39,6 @@ class="relative p-4">
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock Setelah</th>
                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Biaya Total</th>
                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Restok</th>
-                        <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Update</th>
                         <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                     </tr>
                 </thead>
@@ -48,14 +47,13 @@ class="relative p-4">
                     
                     <tr class="hover:bg-gray-50 cursor-pointer" >
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->nama_stock }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->unit }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->nama_stock }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->jumlah_sebelum ?? 0}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->jumlah_ditambahkan ?? 0}}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->jumlah_setelah }}</td> 
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->jumlah_setelah??'-' }}</td> 
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Rp{{ number_format(($restock->jumlah_ditambahkan * ($restock->harga_restock ?? 0)) ?? 0, 0, ',', '.') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">{{ $restock->tanggal_restock ? \Carbon\Carbon::parse($restock->tanggal_restock)->format('d-m-Y') : '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">{{ $restock->tanggal_restock_update ? \Carbon\Carbon::parse($restock->tanggal_restock_update)->format('d-m-Y') : '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium flex justify-center items-center space-x-3" @click.stop>
                             
                             <button 

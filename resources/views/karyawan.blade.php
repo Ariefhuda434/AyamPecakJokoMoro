@@ -157,13 +157,13 @@ class=" relative p-4">
                     
                     <div class="w-full flex flex-col items-center">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Peran</p>
-                        <select name="role" class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
+                        <select name="role_id" class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
                      placeholder-gray-500 font-sans text-lg" required>
                             <option value="" disabled x-bind:selected="!karyawanToEdit || !karyawanToEdit.role">Pilih Peran</option>
-                            <option value="1" x-bind:selected="karyawanToEdit && karyawanToEdit.role_name === '1'">Manager</option> 
-                            <option value="2" x-bind:selected="karyawanToEdit && karyawanToEdit.role_name === '2'">Kasir</option> 
-                            <option value="3" x-bind:selected="karyawanToEdit && karyawanToEdit.role_name === '3'">Pelayan</option> 
+                            <option value="1" x-bind:selected="karyawanToEdit && karyawanToEdit.role === '1'">Manager</option> 
+                            <option value="2" x-bind:selected="karyawanToEdit && karyawanToEdit.role === '2'">Kasir</option> 
+                            <option value="3" x-bind:selected="karyawanToEdit && karyawanToEdit.role === '3'">Pelayan</option> 
                         </select>
                     </div>
                     

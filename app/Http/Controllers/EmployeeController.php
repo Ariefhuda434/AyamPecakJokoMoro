@@ -52,7 +52,7 @@ class EmployeeController extends Controller
         $validated = $request->validate([
             'name_employee' => 'required|string|max:150',
             'number_phone' => 'required|string|max:20',
-            'role' => 'required|int|max:10',
+            'role_id' => 'required|exists:roles,role_id',
             'password' => 'required|string|min:6',
         ]);
         $validated['password'] = Hash::make($request->input('password'));
@@ -85,7 +85,7 @@ class EmployeeController extends Controller
     $validated = $request->validate([
         'name_employee' => 'required|string|max:150',
         'number_phone' => 'required|string|max:20',
-        'role' => 'required|string|max:10',
+        'role_id' => 'required|exists:roles,role_id',
         'password' => 'nullable|string|min:6', 
     ]);
 

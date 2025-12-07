@@ -2,13 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\OrderController;
+use App\Http\Controllers\MenuController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TableController;
+use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\RestockLogContoroller;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', [AuthController::class,'login_view'])->name('auth.login');
 Route::post('/login', [AuthController::class,'login'])->name('login.action');
@@ -20,24 +23,34 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
     
-    Route::middleware(['role:manager'])->prefix('manager')->group(function () {
-        
-    Route::get('/dashboard', [ManagerController::class, 'index'])->name('dashboard.view');
+  Route::middleware(['role:manager'])->prefix('manager')->group(function () {      
+  Route::get('/dashboard', [ManagerController::class, 'index'])->name('dashboard.view');
+  Route::get('/dashboard/menu-menagment', [MenuController::class, 'index'])->name('menu.index');
+  Route::post('/dashboard/menu-menagment', [MenuController::class, 'store'])->name('menu.store');
+  Route::put('/dashboard/menu-menagment/{menu}', [MenuController::class, 'update'])->name('menu.update');
+  Route::delete('/dashboard/menu-menagment/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
+
+  Route::get('/dashboard/resep', [RecipeController::class, 'index'])->name('recipies.index');
         
   Route::get('/stock', [StockController::class,'index'])->name('stock.index');  
   Route::post('/stock', [StockController::class,'store'])->name('stock.store'); 
   Route::put('/stock/{stock}', [StockController::class,'update'])->name('stock.update'); 
   Route::delete('/stock/{stock}', [StockController::class,'destroy'])->name('stock.destroy');
+  
+  Route::get('/stock/restock/{slug}', [RestockLogContoroller::class,'index'])->name('restock.index');  
+  Route::post('/stock/restock/store', [RestockLogContoroller::class,'store'])->name('restock.store');  
+  Route::put('/stock/restock/{restockLog}', [RestockLogContoroller::class,'update'])->name('restock.update'); 
+  Route::delete('/stock/restock/{restockLog}', [RestockLogContoroller::class,'destroy'])->name('restock.destroy');
 
-    Route::get('/karyawan', [EmployeeController::class, 'index'])->name('employee.index');
-    Route::post('/karyawan', [EmployeeController::class, 'store'])->name('employee.store');
-    Route::put('karyawan/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
-    Route::delete('karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
+  Route::get('/karyawan', [EmployeeController::class, 'index'])->name('employee.index');
+  Route::post('/karyawan', [EmployeeController::class, 'store'])->name('employee.store');
+  Route::put('karyawan/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
+  Route::delete('karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
     });
 
-    Route::middleware(['role:waiter'])->prefix('order')->name('order.')->group(function () {
+    Route::middleware(['role:waiter'])->prefix('waiter')->group(function () {
         
-        Route::get('/order', [OrderController::class, 'index'])->name('index');
+        Route::get('/order', [OrderController::class, 'index'])->name('order.index');
         Route::post('/order/add-order', [OrderController::class, 'store'])->name('make.order');
         Route::post('/order/add-table', [TableController::class, 'table_create'])->name('make.table');
         

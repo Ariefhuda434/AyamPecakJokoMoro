@@ -23,8 +23,10 @@
            <h1 class="text-primary font-alata ml-4 text-2xl mr-auto">
             @if (Request::is('manager/karyawan*'))
                     Manajemen Karyawan
-            @elseif (Request::is('manager/stock*'))
+            @elseif (Request::is('manager/stock'))
                     Manajemen Stok
+            @elseif (Request::is('manager/stock/restock/*'))
+            Manajemen Restock
             @elseif (Request::is('order*'))
                     Pemesanan
             @elseif (Request::is('transactions*'))

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Order;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\RoleSeeder;
@@ -23,7 +24,11 @@ class DatabaseSeeder extends Seeder
             WaiterSeeder::class,
             ManagerSeeder::class,
             CashierSeeder::class,
-            StockSeeder::class
+            StockSeeder::class,
+            RestockSeeder::class,
+            TableSeeder::class,
+            CustomerSeeder::class,
+            OrderSeeder::class,
     ]);
     }
 }

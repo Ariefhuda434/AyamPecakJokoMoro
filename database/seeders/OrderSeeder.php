@@ -1,0 +1,38 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use function Symfony\Component\Clock\now;
+
+class OrderSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        $customerName = DB::table('customers')->where('Name', 'Kylian Mbappe')->first();
+        $customerId = $customerName->Customer_id;
+
+        $EmployeeName = DB::table('employees')->where('name_employee', 'Kobie Mainoo')->first();
+        $EmployeeId = $EmployeeName->Employee_id;
+        
+        $NoTable = DB::table('tables')->where('No_Table', '1')->first();
+        $NoTableId = $NoTable->No_Table;
+        
+
+         DB::table('orders')->insert([
+            'Customer_id'=>$customerId,
+            'Employee_id'=>$EmployeeId,
+            'No_Table'=> $NoTableId,
+            'Order_Status' => 'Belum_Bayar',
+            'Notes' => 'Cabai nya sikit aja',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+}

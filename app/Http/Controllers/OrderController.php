@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use App\Models\Table;
 use Illuminate\Http\Request;
 
@@ -10,11 +11,33 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $tables = Table::all();
-        return view('order',compact('tables'));
+        $status_filter = $request->query('status_table');
+
+        $query = Table::query();
+        
+        $query->with('activeCustomer'); 
+
+        if ($status_filter) {
+            $query->where('status_table', $status_filter);
+        }
+        
+        $tables = $query->get();
+
+        $totalTables = Table::count(); 
+        $availableTables = Table::where('status_table', 'Kosong')->count();
+        $occupiedTables = Table::where('status_table', 'Terisi')->count();
+        
+
+        return view('order', compact(
+            'tables', 
+            'totalTables', 
+            'availableTables', 
+            'occupiedTables'
+        ));
     }
+
 
     /**
      * Show the form for creating a new resource.

@@ -15,6 +15,7 @@ class CreateStocksTable extends Migration
             $table->integer('Current_Stock')->nullable();
             $table->integer('Min_Stock_Level');
             $table->integer('Last_Cost')->nullable();
+            $table->string('slug')->unique()->nullable();
             $table->timestamps();
         });
     }

@@ -13,7 +13,6 @@ class Menu extends Model
 
     protected $table = 'menus';
 
-    public $timestamps = false;
 
     protected $fillable = [
         'Category',
@@ -33,4 +32,9 @@ class Menu extends Model
     {
         return $this->hasMany(OrderDetail::class, 'Menu_id', 'Menu_id');
     }
+    public function recipes()
+    {
+    return $this->belongsToMany(Recipe::class, 'menu_recipe_pivot', 'Menu_id', 'Recipe_id')
+                ->withPivot('Quantity', 'Unit');
+}
 }

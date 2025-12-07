@@ -31,6 +31,10 @@
 
     getStockId() {
         return this.stockToEdit ? this.stockToEdit.Stock_id : null;
+    },
+    
+    submitRestockForm(stockId) {
+        document.getElementById('restock-form-' + stockId).submit();
     }
 }" 
 class="relative p-4"> 
@@ -62,8 +66,22 @@ class="relative p-4">
         
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($stockData as $stock) 
-                    <tr class="hover:bg-gray-50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
+                    
+                    <tr class="hover:bg-gray-50 cursor-pointer" @click="submitRestockForm({{ $stock->Stock_id }})"> 
+                        
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            
+                            <form 
+                                method="GET" 
+                                action="{{ route('restock.index', ['slug' => Str::slug($stock->nama_stock)]) }}" 
+                                id="restock-form-{{ $stock->Stock_id }}" 
+                                class="hidden" 
+                            >
+                            <input type="hidden" name="stock_id" value="{{ $stock->Stock_id }}">
+                            </form>
+                            {{ $loop->iteration }}
+                        </td>
+                        
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $stock->nama_stock }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $stock->unit }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $stock->jumlah_terkini ?? 0}}</td>
@@ -73,8 +91,9 @@ class="relative p-4">
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">
                             {{ $stock->tanggal_restock_terakhir ? \Carbon\Carbon::parse($stock->tanggal_restock_terakhir)->format('d-m-Y') : '-' }}
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium flex justify-center items-center space-x-3">
-                            
+                        
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium flex justify-center items-center space-x-3" @click.stop>
+                        
                             <button 
                                 @click="openEditModal({{ json_encode($stock) }})" 
                                 class="text-indigo-600 hover:text-indigo-900 transition"
@@ -117,8 +136,6 @@ class="relative p-4">
         x-cloak style="display: none;">
         
         <div class="w-full max-w-md relative">
-         
-
             <form 
                 x-bind:action="isEdit 
                     ? '{{ route('stock.update', ['stock' => '__stock_id__']) }}'.replace('__stock_id__', getStockId())
@@ -141,7 +158,7 @@ class="relative p-4">
                             type="text" 
                             name="Name_Stock" 
                             placeholder="Masukan Nama Stok" 
-                            class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
+                            class="w-4/5 peer border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
                      placeholder-gray-500 font-sans text-lg"
                             x-bind:value="isEdit ? stockToEdit.nama_stock : ''" 
@@ -149,42 +166,42 @@ class="relative p-4">
                         />
                     </div>
                     
-                 <div class="w-full flex flex-col items-center">
-    <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Jenis Satuan</p>
-    
-    <div class="relative w-4/5">
-        <select 
-            name="Unit" 
-            id="unit" 
-            required
-            class="w-full border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
-                   py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
-                   placeholder-gray-500 font-sans text-lg appearance-none" 
-        >
-            <option value="" disabled x-bind:selected="!isEdit">Pilih Satuan</option>
-            <option value="Kilogram" x-bind:selected="isEdit && stockToEdit.Unit === 'Kilogram'">Kilogram (kg)</option>
-            <option value="Gram" x-bind:selected="isEdit && stockToEdit.Unit === 'Gram'">Gram (gr)</option>
-            <option value="Pcs" x-bind:selected="isEdit && stockToEdit.Unit === 'Pcs'">Pcs (Satuan)</option>
-            <option value="Potong" x-bind:selected="isEdit && stockToEdit.Unit === 'Potong'">Potong</option>
-            <option value="Liter" x-bind:selected="isEdit && stockToEdit.Unit === 'Liter'">Liter</option>
-            <option value="Botol" x-bind:selected="isEdit && stockToEdit.Unit === 'Botol'">Botol</option>
-            <option value="Kotak" x-bind:selected="isEdit && stockToEdit.Unit === 'Kotak'">Kotak</option>
-            
-        </select>
-        
-        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-        </div>
-    </div>
-</div>
-                    
+                   <div class="w-full flex flex-col items-center">
+                        <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Jenis Satuan</p>
+                        
+                        <div class="relative w-4/5">
+                            <select 
+                                name="Unit" 
+                                id="unit" 
+                                required
+                                class="w-full border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
+                                            py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                                            placeholder-gray-500 font-sans text-lg appearance-none" 
+                            >
+                                <option value="" disabled x-bind:selected="!isEdit">Pilih Satuan</option>
+                                <option value="Kilogram" x-bind:selected="isEdit && stockToEdit.Unit === 'Kilogram'">Kilogram (kg)</option>
+                                <option value="Gram" x-bind:selected="isEdit && stockToEdit.Unit === 'Gram'">Gram (gr)</option>
+                                <option value="Pcs" x-bind:selected="isEdit && stockToEdit.Unit === 'Pcs'">Pcs (Satuan)</option>
+                                <option value="Potong" x-bind:selected="isEdit && stockToEdit.Unit === 'Potong'">Potong</option>
+                                <option value="Liter" x-bind:selected="isEdit && stockToEdit.Unit === 'Liter'">Liter</option>
+                                <option value="Botol" x-bind:selected="isEdit && stockToEdit.Unit === 'Botol'">Botol</option>
+                                <option value="Kotak" x-bind:selected="isEdit && stockToEdit.Unit === 'Kotak'">Kotak</option>
+                                
+                            </select>
+                            
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                        
                     <div class="w-full flex flex-col items-center">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Level Stok Minimum (pcs/unit)</p>
                         <input 
                             type="number" 
                             name="Min_Stock_Level" 
                             placeholder="Contoh: 10"
-                            class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
+                            class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
                      placeholder-gray-500 font-sans text-lg"
                             x-bind:value="isEdit ? stockToEdit.jumlah_minimum : ''" 
@@ -195,7 +212,7 @@ class="relative p-4">
                     
                     <button 
                         type="submit" 
-                        class="bg-primary w-4/5 py-3 rounded-[10px] text-background  mt-3 hover:bg-red-900 transition font-alata"
+                        class="bg-primary w-4/5 py-3 rounded-[10px] text-background  mt-3 hover:bg-red-900 transition font-alata"
                         x-text="isEdit ? 'Simpan Perubahan' : 'Tambahkan Stok'">
                     </button> 
                 </div>

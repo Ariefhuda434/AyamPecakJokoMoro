@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\Table;
 use Illuminate\Http\Request;
 
-class CustomerController extends Controller
+class RecipeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,24 +25,10 @@ class CustomerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request,Table $table)
+    public function store(Request $request)
     {
-        $validated = $request->validate([
-            'Name' => 'required|string|max:20',
-            'Phone_Number' => 'required|string|max:14',
-            'No_Table' => 'required|numeric|min:1',
-            'Notes' => 'nullable|string|max:200',
-        ]);
-        Customer::create($validated);
-
-        $table = Table::findOrFail($validated['No_Table']);
-        
-        $table->update([
-             'status_table' => 'Terisi', 
-        ]);
-
-        return redirect()->route('order.index')->with('success', 'Data customer berhasil ditambahkan!');
-    }   
+        //
+    }
 
     /**
      * Display the specified resource.

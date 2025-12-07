@@ -8,4 +8,4 @@
     ini transaksi
 </div>
 
-@endsection
+@endsection 

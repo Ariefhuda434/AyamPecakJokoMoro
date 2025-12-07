@@ -16,6 +16,7 @@ class CreateMenusTable extends Migration
             $table->string('Menu_Status');
             $table->foreignId('Recipe_id')->nullable()->constrained('Recipies','Recipe_id')->onDelete('cascade');
             $table->string('photo')->nullable(); 
+            $table->timestamps(); 
         });
     }
     public function down()

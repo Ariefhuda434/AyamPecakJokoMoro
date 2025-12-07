@@ -5,13 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Menu;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MenuController extends Controller
 {
     public function index()
     {
-        $menus = Menu::with('recipe')->get(); 
-        return view('menu.index', compact('menus'));
+        $countMenu = Menu::Count();
+        $menuData = DB::table('menus')
+        ->join('recipies','menus.Recipe_id','=','recipies.Recipe_id')
+        ->select([
+            'menus.Menu_id as Menu_id',
+            'menus.Name as nama_menu',
+            'menus.Category as kategori',
+            'menus.Menu_Status as status_menu',
+            'menus.Photo as foto_menu',
+            'menus.Price as harga',
+            'recipies.Name as nama_resep',
+            'recipies.Keterangan as keterangan_resep',
+        ])
+        ->orderBy('menus.created_at','desc')
+        ->get();
+        return view('dashboardmenu', [
+            'menuData' =>$menuData,
+            'countMenu' =>$countMenu
+        ]);
     }
 
     public function create()
@@ -28,7 +46,7 @@ class MenuController extends Controller
             'Price' => 'required|numeric',
             'Menu_Status' => 'required',
             'Recipe_id' => 'required|exists:recipe,Recipe_id',
-        ]);
+        ]); 
 
         Menu::create($request->all());
 

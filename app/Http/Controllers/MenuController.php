@@ -49,7 +49,7 @@ public function store(Request $request)
         'Name' => 'required|string|max:255',
         'Price' => 'required|numeric|min:0',
         'Menu_Status' => 'nullable|string', 
-        'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048', 
+        'photo' => 'required|image|mimes:jp eg,png,jpg|max:2048', 
         'Name_Resep' =>'required|string|max:255',
         'Keterangan' =>'nullable|string', 
     ]);

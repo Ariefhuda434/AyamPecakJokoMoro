@@ -3,70 +3,75 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
-use App\Models\Recipe;
+use App\Models\RecipePivot; // Pastikan model ini ada
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
 
 class RecipeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(string $slug)
+    public function index(Request $request, string $slug)
     {
         $menu = Menu::where('slug', $slug)->firstOrFail();
 
-        $recipes = $menu->recipes;
-         return view('recipies', [
-        'menu' => $menu,
-        'recipes' => $recipes
-    ]);
+        $resepid = $menu->Recipe_id;
+        
+        $resepData = DB::table('recipe_pivot')
+            ->join('recipies', 'recipies.Recipe_id', '=', 'recipe_pivot.Recipe_id')
+            ->join('stocks', 'recipe_pivot.Stock_id', '=', 'stocks.Stock_id')
+            ->select([
+                'recipies.Name_Resep as nama_resep',
+                'recipies.Keterangan as keterangan_resep',
+                'recipies.Recipe_id as Recipe_id', 
+                'stocks.Stock_id as stock_id', 
+                'stocks.Name_Stock as nama_stock_resep',
+                'stocks.Unit as Satuan_resep',
+                'recipe_pivot.Quantity as jumlah_stock_resep'
+            ])
+            ->where('recipe_pivot.Recipe_id', $resepid)
+            ->get();
+
+        $stockData = DB::table('stocks')
+            ->select([
+                'stocks.Name_Stock as nama_stock_resep',
+                'stocks.Stock_id as Stock_id',
+                'stocks.Unit as satuan_resep'
+            ])
+            ->get();
+
+        return view('recipies', [
+            'menu' => $menu,
+            'resepData' => $resepData,
+            'stockData' => $stockData
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'Stock_id' => 'required|numeric',
+            'Recipe_id' => 'required|numeric',
+            'Quantity' => 'required|numeric|min:0',
+        ]);
+        
+        RecipePivot::updateOrCreate(
+            [
+                'Recipe_id' => $validated['Recipe_id'],
+                'Stock_id' => $validated['Stock_id'],
+            ],
+            [
+                'Quantity' => $validated['Quantity']
+            ]
+        );
+        
+        $menu = Menu::where('Recipe_id', $validated['Recipe_id'])->first();
+
+        if ($menu) {
+            return redirect()->route('recipies.index', ['slug' => $menu->slug])
+                             ->with('success','Bahan resep berhasil ditambahkan/diperbarui.');
+        }
+
+        return back()->with('success','Bahan resep berhasil ditambahkan/diperbarui.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

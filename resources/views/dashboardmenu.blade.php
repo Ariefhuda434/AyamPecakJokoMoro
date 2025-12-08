@@ -62,7 +62,6 @@ class="relative p-4">
         </ul>
     </div>
 @endif
- 
 
     <div class="bg-white shadow-xl rounded-lg overflow-hidden p-4">
         <div class="overflow-x-auto">
@@ -84,11 +83,9 @@ class="relative p-4">
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($menuData as $menu) 
                     
-                    <tr class="hover:bg-blue-50 cursor-pointer">
-<a href="{{ route('recipies.index', ['slug' => $menu->slug]) }}" 
-               class="text-blue-600 hover:underline">
-                Lihat Detail Resep
-            </a>
+                    <tr class="hover:bg-blue-50 cursor-pointer"
+                    @click="window.location.href = '{{ route('recipies.index', ['slug' => $menu->slug]) }}'"
+                    >
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {{ $loop->iteration }}
                         </td>
@@ -101,7 +98,7 @@ class="relative p-4">
                             @endif
                         </td>
                         
-                        <td class="px-6 py-4 whitespace-nowrap text-sm  text-gray-900">{{ $menu->nama_menu ?? '-'}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $menu->nama_menu ?? '-'}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $menu->kategori ?? '-'}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Rp {{ number_format($menu->harga_menu ?? 0, 0, ',', '.') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $menu->status_menu ?? '-'}}</td>

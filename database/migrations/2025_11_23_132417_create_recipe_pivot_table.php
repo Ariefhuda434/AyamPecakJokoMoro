@@ -11,7 +11,6 @@ class CreateRecipePivotTable extends Migration
         Schema::create('recipe_pivot', function (Blueprint $table) {
             $table->foreignId('Stock_id')->constrained('Stocks','Stock_id')->onDelete('cascade');
             $table->integer('Quantity');
-            $table->string('Unit');
             $table->foreignId('Recipe_id')->constrained('Recipies','Recipe_id')->onDelete('cascade');
         });
     }

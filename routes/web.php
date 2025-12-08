@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/dashboard/menu-management/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
 
         Route::get('/dashboard/menu-management/recipies/{slug}', [RecipeController::class, 'index'])->name('recipies.index');
-        Route::post('/dashboard/menu-management/recipies', [RecipeController::class, 'store'])->name('recipies.store');
+        Route::post('/dashboard/menu-management/recipies/{slug}/store', [RecipeController::class, 'store'])->name('recipies.store');
         Route::put('/dashboard/menu-management/recipies/{recipe}', [RecipeController::class, 'update'])->name('recipies.update');
         Route::delete('/dashboard/menu-management/recipies/{recipe}', [RecipeController::class, 'destroy'])->name('recipies.destroy');
 

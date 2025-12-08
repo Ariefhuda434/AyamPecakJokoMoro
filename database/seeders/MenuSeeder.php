@@ -14,7 +14,7 @@ class MenuSeeder extends Seeder
      */
     public function run(): void
     {
-        $recipe = DB::table('recipies')->where('Name', 'Soto Betawi Lada Hitam')->first();
+        $recipe = DB::table('recipies')->where('Name_Resep', 'Soto Betawi Lada Hitam')->first();
         $recipeId = $recipe->Recipe_id;
         
         DB::table('menus')->insert([
@@ -28,4 +28,5 @@ class MenuSeeder extends Seeder
             'updated_at' => now(),
         ]);
     }
+    
 }

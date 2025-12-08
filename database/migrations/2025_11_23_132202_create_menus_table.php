@@ -13,7 +13,7 @@ class CreateMenusTable extends Migration
             $table->string('Category');
             $table->string('Name');
             $table->integer('Price');
-            $table->string('Menu_Status');
+            $table->string('Menu_Status')->nullable();
             $table->foreignId('Recipe_id')->nullable()->constrained('Recipies','Recipe_id')->onDelete('cascade');
             $table->string('photo')->nullable(); 
             $table->string('slug')->unique()->nullable();

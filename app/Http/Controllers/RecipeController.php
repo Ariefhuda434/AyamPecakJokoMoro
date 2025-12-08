@@ -13,15 +13,9 @@ class RecipeController extends Controller
      */
     public function index(string $slug)
     {
-        $namaMenuAsli = str_replace('-', ' ', $slug);
+        $menu = Menu::where('slug', $slug)->firstOrFail();
 
-        
-        $menu = Menu::where('slug', $namaMenuAsli)->firstOrFail();
-        if (!$menu) {
-        abort(404, 'Menu tidak ditemukan berdasarkan slug.');
-        }
-        $recipes = Recipe::where('menu_id', $menu->Menu_id)->get(); 
-    
+        $recipes = $menu->recipes;
          return view('recipies', [
         'menu' => $menu,
         'recipes' => $recipes

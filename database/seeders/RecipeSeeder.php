@@ -14,11 +14,11 @@ class RecipeSeeder extends Seeder
     public function run(): void
     {
         DB::table('recipies')->insert([
-            'Name' => 'Soto Betawi Lada Hitam',
+            'Name_Resep' => 'Soto Betawi Lada Hitam',
             'Keterangan' => 'Dimasak yah',
         ]);
         DB::table('recipies')->insert([
-            'Name' => 'Ayam Pecak Joko Anwar',
+            'Name_Resep' => 'Ayam Pecak Joko Anwar',
             'Keterangan' => 'Dimasak yah',
         ]);
     }

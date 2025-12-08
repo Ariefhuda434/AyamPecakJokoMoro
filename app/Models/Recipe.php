@@ -10,14 +10,14 @@ class Recipe extends Model
 protected $primaryKey = 'Recipe_id';
 
     protected $table = 'recipies';
-
+public $timestamps = false;
     protected $fillable = [
-        'Recipe_id',
-        'Name',
+        'Name_Resep',
         'Keterangan',
     ];      
+    
     public function menus()
-{
-    return $this->belongsToMany(Menu::class, 'menu_recipe_pivot', 'Recipe_id', 'Menu_id');
-}
+    {
+        return $this->hasOne(Menu::class, 'Recipe_id', 'Recipe_id');
+    }
 }

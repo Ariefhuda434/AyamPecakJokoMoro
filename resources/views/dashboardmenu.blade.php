@@ -45,7 +45,24 @@ class="relative p-4">
             + Tambah Menu Baru
         </button>
     </div>
-    
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong class="font-bold">Berhasil!</strong>
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
+    @if ($errors->any())
+    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative mb-4" role="alert">
+        <strong class="font-bold">Validasi Gagal!</strong>
+        <span class="block sm:inline">Periksa input berikut:</span>
+        <ul class="mt-2 list-disc list-inside text-sm">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+ 
 
     <div class="bg-white shadow-xl rounded-lg overflow-hidden p-4">
         <div class="overflow-x-auto">
@@ -67,9 +84,11 @@ class="relative p-4">
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse ($menuData as $menu) 
                     
-                    <tr class="hover:bg-blue-50 cursor-pointer" 
-                    @click="window.location.href = '{{ route('recipies.index', ['slug' => Str::slug($menu->nama_menu)]) }}'">
-
+                    <tr class="hover:bg-blue-50 cursor-pointer">
+<a href="{{ route('recipies.index', ['slug' => $menu->slug]) }}" 
+               class="text-blue-600 hover:underline">
+                Lihat Detail Resep
+            </a>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {{ $loop->iteration }}
                         </td>
@@ -118,7 +137,6 @@ class="relative p-4">
         </div>
     </div>
 
-    {{-- ... Modal Edit/Create tetap sama di bawah ini ... --}}
 
     <div x-show="isFormOpen" @click="closeModal()" 
         class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
@@ -132,7 +150,7 @@ class="relative p-4">
         x-transition:leave="ease-in duration-300"
         x-transition:leave-start="opacity-100 translate-y-0"
         x-transition:leave-end="opacity-0 translate-y-full"
-        class="h-3/4 bottom-0 rounded-tl-3xl rounded-tr-3xl border-t-5 border-l-5 border-primary flex justify-center p-4 w-full bg-background fixed z-50 overflow-y-auto shadow-2xl" 
+        class="h-11/12 bottom-0 rounded-tl-3xl rounded-tr-3xl border-t-5 border-l-5 border-primary flex justify-center p-4 w-full bg-background fixed z-50 overflow-y-auto shadow-2xl" 
         x-cloak style="display: none;">
         
         <div class="w-full max-w-md relative">
@@ -140,6 +158,7 @@ class="relative p-4">
                 x-bind:action="isEdit 
                     ? '{{ route('menu.update', ['menu' => '__menu_id__']) }}'.replace('__menu_id__', getMenuId())
                     : '{{ route('menu.store') }}'" 
+                    
                 method="POST" 
                 class="w-full"
                 enctype="multipart/form-data"
@@ -171,7 +190,10 @@ class="relative p-4">
                             accept="image/*"
                             x-bind:required="!isEdit" 
                         />
-                           <small class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah foto.</small>
+                         <template x-if="isEdit">
+                    <small class="text-xs text-gray-500 mt-1">Kosongkan jika tidak ingin mengubah foto.</small>
+                </template>
+                
                     </div>
                     
                     <div class="w-full flex flex-col items-center">
@@ -228,7 +250,7 @@ class="relative p-4">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Status Penjualan</p>
                         <div class="relative w-4/5">
                             <select 
-                                name="status_menu" 
+                                name="Menu_Status" 
                                 id="menu_status" 
                                 required
                                 class="w-full border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
@@ -243,12 +265,41 @@ class="relative p-4">
                             </div>
                         </div>
                     </div>
+                      <div class="w-full flex flex-col items-center">
+                        <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Nama Resep</p>
+                        <input 
+                            type="text" 
+                            name="Name_Resep" 
+                            placeholder="Masukan Nama Resep" 
+                            class="w-4/5 peer border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
+                                         py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                                         placeholder-gray-500 font-sans text-lg"
+                            x-bind:value="isEdit ? menuToEdit.Name_Resep : ''" 
+                            required
+                        />
+                    </div>
+
+                      <div class="w-full flex flex-col items-center">
+                        <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Keterangan Resep</p>
+                        <input 
+                            type="text" 
+                            name="Keterangan" 
+                            placeholder="Masukan Keterangan" 
+                            class="w-4/5 peer border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
+                                         py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
+                                         placeholder-gray-500 font-sans text-lg"
+                            x-bind:value="isEdit ? menuToEdit.Keterangan : ''" 
+                            required
+                        />
+                    </div>
 
                     <button 
                         type="submit" 
                         class="bg-primary w-4/5 py-3 rounded-[10px] text-white mt-3 hover:bg-red-900 transition font-alata"
                         x-text="isEdit ? 'Simpan Perubahan Menu' : 'Tambahkan Menu Baru'">
                     </button> 
+                    
+
                 </div>
             </form>
         </div>

@@ -212,7 +212,7 @@ class="relative p-4">
                     
                     <button 
                         type="submit" 
-                        class="bg-primary w-4/5 py-3 rounded-[10px] text-background  mt-3 hover:bg-red-900 transition font-alata"
+                        class="bg-primary w-4/5 py-3 rounded-[10px] text-background mt-3 hover:bg-red-900 transition font-alata"
                         x-text="isEdit ? 'Simpan Perubahan' : 'Tambahkan Stok'">
                     </button> 
                 </div>

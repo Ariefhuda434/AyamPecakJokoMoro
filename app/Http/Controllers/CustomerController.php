@@ -2,79 +2,72 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
 use App\Models\Table;
+use App\Models\Customer;
 use Illuminate\Http\Request;
+use PDO;
 
 class CustomerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar semua meja dengan opsi filter.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $statusFilter = $request->get('status_table');
+
+        $querytable = Table::with('customer');
+
+        if ($statusFilter) {
+            $querytable->where('status_table', $statusFilter);
+        }
+      
+        $tables = $querytable->get();
+        
+
+        $totalTables = Table::count();
+        $availableTables = Table::where('status_table', 'Kosong')->count();
+        $occupiedTables = Table::where('status_table', 'Terisi')->count(); 
+        
+        return view('order', [
+            'tables' => $tables,
+            'totalTables' => $totalTables,
+            'availableTables' => $availableTables,
+            'occupiedTables' => $occupiedTables,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request,Table $table)
+    public function store(Request $request)
     {
         $validated = $request->validate([
             'Name' => 'required|string|max:20',
             'Phone_Number' => 'required|string|max:14',
             'No_Table' => 'required|numeric|min:1',
-            'Notes' => 'nullable|string|max:200',
         ]);
+        
         Customer::create($validated);
 
-        $table = Table::findOrFail($validated['No_Table']);
+        $table = Table::where('No_Table', $validated['No_Table'])->firstOrFail();
         
         $table->update([
              'status_table' => 'Terisi', 
         ]);
 
-        return redirect()->route('order.index')->with('success', 'Data customer berhasil ditambahkan!');
-    }   
+        return redirect()->route('customer.index')->with('success', 'Customer berhasil duduk dan meja terisi!');
+    } 
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function out(Request $request, Table $table)
     {
-        //
+        if ($table->status_table !== 'Terisi') {
+            return redirect()->route('customer.index')->with('error', 'Meja ini sudah kosong atau tidak terisi.');
+        }
+
+        $table->update([
+             'status_table' => 'Kosong', 
+             'customer_id' => null, 
+        ]);
+        
+        return redirect()->route('customer.index')->with('success', 'Meja ' . $table->No_Table . ' berhasil dikosongkan!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 }

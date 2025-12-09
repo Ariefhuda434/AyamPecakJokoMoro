@@ -54,17 +54,16 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:waiter'])->prefix('waiter')->group(function () {
 
-        Route::get('/order', [OrderController::class, 'index'])->name('order.index');
-        Route::post('/order/add-order', [OrderController::class, 'store'])->name('make.order');
-        
+        Route::get('/order',[CustomerController::class,'index'])->name('customer.index');
         Route::post('/order/add-table', [TableController::class, 'table_create'])->name('make.table');
-        Route::get('/menu', function () {
-            return view('menu');
-        })->name('menu');
-        Route::post('/add-customer/{table}', [CustomerController::class, 'store'])->name('make.customer');
+        Route::post('order/add-customer/{table}', [CustomerController::class, 'store'])->name('make.customer');
+        Route::put('/order/menu/clear',[CustomerController::class,'out'])->name('customer.out');
+
+        Route::get('/order/menu/{table}',[OrderController::class,'index'])->name('order.index');
+        Route::post('/order/menu/{table}/add-to-cart',[OrderController::class,'index'])->name('add.to.cart');
     });
 
-    Route::middleware(['role:cashier'])->group(function () {
-        Route::get('/transactions', [TransactionController::class, 'index'])->name('cashier.view');
+    Route::middleware(['role:cashier'])->group(function () {    
+        Route::get('/transactions', [TransactionController::class, 'addToCart'])->name('cashier.view');
     });
 });

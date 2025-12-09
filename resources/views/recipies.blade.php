@@ -41,8 +41,8 @@ class="relative p-4">
             Detail Resep: {{ $menu->Name }}
         </p>
         
-        <button @click="openBahanModal()" class="bg-indigo-600 p-2 text-white font-alata rounded-lg transition hover:bg-indigo-700">
-            + Tambah/Kelola Bahan
+        <button @click="openBahanModal()" class="bg-secondary p-2 text-white font-alata rounded-lg transition hover:bg-yellow-500">
+            + Tambah Bahan
         </button>
     </div>
 
@@ -85,7 +85,6 @@ class="relative p-4">
         <div class="md:w-2/3">
             <h3 class="text-lg font-alata font-semibold mb-3 border-b pb-2 text-primary">Detail Resep</h3>
 
-            {{-- HEADER RESEP (NAMA & KETERANGAN) --}}
             <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
                 <p class="text-sm font-alata text-gray-500 mb-1">Nama Resep:</p>
                 <p class="text-lg font-semibold text-gray-800 mb-4">
@@ -93,14 +92,13 @@ class="relative p-4">
                 </p>
 
                 <p class="text-sm font-alata text-gray-500 mb-1">Keterangan Resep:</p>
-                <p class="text-base text-gray-700 italic">
+                <p class="text-base text-gray-700 ">
                     {{ $resepData->isNotEmpty() ? $resepData->first()->keterangan_resep : 'Tidak ada keterangan resep.' }}
                 </p>
             </div>
 
             <h3 class="text-lg font-alata font-semibold mb-3 border-b pb-2 text-secondary">Daftar Bahan</h3>
             
-            {{-- TABEL BAHAN --}}
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200">
                     <thead class="bg-gray-50">
@@ -118,14 +116,12 @@ class="relative p-4">
                                 {{ $resep->nama_stock_resep }}
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
-                                {{-- Kuantitas bahan saat ini (contoh: 1.5) --}}
                                 <span class="font-bold text-gray-800" x-text="qty">{{ $resep->jumlah_stock_resep }}</span>
                                 
-                                {{-- Jika Anda ingin mengedit kuantitas di sini, gunakan form yang terpisah --}}
                             </td>
                             <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
                                 {{ $resep->Satuan_resep }}
-                            </td>                           
+                            </td> 
                             <td class="px-4 py-3 whitespace-nowrap text-center text-sm font-medium">
                                 <button class="text-red-600 hover:text-red-900 transition text-xs">Hapus</button>
                             </td>
@@ -143,7 +139,6 @@ class="relative p-4">
         </div>
     </div>
     
-    {{-- MODAL FORM TAMBAH BAHAN --}}
     <div x-show="isBahanFormOpen" @click="closeBahanModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" x-cloak style="display: none;"></div>
 
     <div x-show="isBahanFormOpen" x-transition class="h-3/4 bottom-0 rounded-tl-3xl rounded-tr-3xl border-t-5 border-l-5 border-primary flex justify-center p-4 w-full bg-background fixed z-50 overflow-y-auto shadow-2xl" x-cloak style="display: none;">
@@ -194,11 +189,10 @@ class="relative p-4">
                         </div>
                     </div>
                     
-                    <button type="submit" class="bg-primary w-4/5 py-3 rounded-[10px] text-white mt-3 font-alata hover:bg-indigo-700 transition">Tambahkan</button> 
+                    <button type="submit" class="bg-primary w-4/5 py-3 rounded-[10px] text-white mt-3 font-alata hover:bg-red-800 transition">Tambahkan</button> 
                 </div>
             </form>
             
-            {{-- SCRIPT JAVASCRIPT UNTUK MEMPERBARUI SATUAN BAHAN --}}
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     const selectElement = document.getElementById('Stock_id_select');
@@ -206,15 +200,12 @@ class="relative p-4">
 
                     function updateUnitDisplay() {
                         const selectedOption = selectElement.options[selectElement.selectedIndex];
-                        // Ambil nilai dari atribut data-unit yang kita set di <option>
                         const unit = selectedOption.getAttribute('data-unit');
                         unitDisplay.textContent = unit || 'Satuan';
                     }
 
-                    // Panggil saat halaman pertama kali dimuat
                     updateUnitDisplay();
 
-                    // Panggil setiap kali pilihan di dropdown berubah
                     selectElement.addEventListener('change', updateUnitDisplay);
                 });
             </script>

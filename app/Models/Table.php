@@ -15,8 +15,9 @@ class Table extends Model
     ];
 public function activeOrder()
 {
-    return $this->hasOne(Order::class, 'No_Table', 'No_Table')
-                ->where('Order_Status', 'Belum_Bayar');
+  return $this->hasOne(Order::class,'No_Table','No_Table')
+                ->whereNotIn('Order_Status', ['Selesai', 'Batal']) 
+                ->latestOfMany('Order_id');
 }
 public function activeCustomer()
 {
@@ -28,4 +29,11 @@ public function activeCustomer()
         'Customer_id' 
     )->where('orders.Order_Status', 'Belum_Bayar'); 
 }
+public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'Customer_id');
+    }
+    public function order(){
+        return $this->hasMany(Order::class);
+    }
 }

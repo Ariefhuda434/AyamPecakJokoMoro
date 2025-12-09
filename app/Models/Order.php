@@ -25,6 +25,7 @@ class Order extends Model
         return $this->belongsTo(Table::class, 'No_Table', 'No_Table');
     }
 
+
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'Employee_id', 'Employee_id');

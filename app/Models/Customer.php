@@ -19,4 +19,9 @@ class Customer extends Model
     {
         return $this->hasMany(Order::class, 'Customer_id', 'Customer_id');
     }
+    public function table()
+    {
+        return $this->belongsTo(Table::class, 'No_Table');
+    }
+  
 }

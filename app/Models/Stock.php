@@ -26,5 +26,6 @@ class Stock extends Model
     {
         return $this->hasMany(RecipePivot::class, 'Stock_id', 'Stock_id');
     }
+    
 
 }

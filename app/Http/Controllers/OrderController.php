@@ -2,65 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Table;
+use App\Models\Customer;
+use App\Models\Menu;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan menu dan keranjang aktif untuk meja tertentu.
      */
-    public function index()
+    public function index(Request $request, $No_Table)
     {
-        $tables = Table::all();
-        return view('order',compact('tables'));
+        $menus = Menu::all(); 
+        
+        $categoryFilter = $request->get('category', 'Semua');
+        if ($categoryFilter !== 'Semua') {
+            $menus = $menus->where('Category', $categoryFilter);
+        }
+
+        $activeOrder = Order::with('orderItems.menu')
+                            ->where('No_Table', $No_Table)
+                            ->where('Order_Status', 'memesan')
+                            ->first();
+
+
+        return view('menu', [
+            'menus' => $menus,
+            'No_Table' => $No_Table,
+            'activeOrder' => $activeOrder,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    
+    public function addToCart(Request $request, $No_Table,$Customer_id)
     {
-        //
-    }
+        $request->validate([
+            'menu_id' => 'required|exists:menus,id',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        $order = Order::firstOrCreate(
+            ['table_No_Table' => $No_Table, 'status_pesanan' => 'memesan'],
+            ['customer_id' => $Customer_id]
+        );
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $orderItem = $order->orderItems()->where('menu_id', $request->menu_id)->first();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if ($orderItem) {
+            $orderItem->increment('quantity');
+        } else {
+            $order->orderItems()->create([
+                'menu_id' => $request->menu_id,
+                'quantity' => 1,
+            ]);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return redirect()->back()->with('success', 'Item berhasil ditambahkan ke keranjang!');
     }
 }

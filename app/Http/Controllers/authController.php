@@ -24,7 +24,7 @@ class AuthController extends Controller
         if ($roleSlug === 'manager') {
             return route('dashboard.view'); 
         } elseif ($roleSlug === 'waiter') {
-            return route('order.index'); 
+            return route('customer.index'); 
         } elseif ($roleSlug === 'cashier') {
             return route('cashier.view'); 
         }

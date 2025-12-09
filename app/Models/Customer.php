@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    protected $table = 'customer'; 
+    protected $table = 'customers'; 
     protected $primaryKey = 'Customer_id'; 
     public $timestamps = true; 
     
@@ -19,4 +19,9 @@ class Customer extends Model
     {
         return $this->hasMany(Order::class, 'Customer_id', 'Customer_id');
     }
+    public function table()
+    {
+        return $this->belongsTo(Table::class, 'No_Table');
+    }
+  
 }

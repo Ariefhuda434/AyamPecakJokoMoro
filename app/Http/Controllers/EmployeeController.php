@@ -17,24 +17,18 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $countEmployee = Employee::Count();
-        $employeeData = DB::table('employees')
-        ->join('roles','employees.role_id', '=', 'roles.role_id')
-        ->select([
-            'employees.Employee_id as Employee_id',
-            'employees.name_employee as name_employee',
-            'employees.number_phone as number_phone',
-            'employees.created_at as date_join',
-            'roles.role_name as role_name',
-        ])
-        ->orderBy('employees.created_at','desc')
-        ->get();
-        
-        return view('karyawan',[
+        $countEmployee = Employee::count();
+
+        $employeeData = DB::table('view_employees')
+            ->orderBy('date_join', 'desc')
+            ->get();
+
+        return view('karyawan', [
             'employeeData' => $employeeData,
             'countEmployee' => $countEmployee
-        ]);   
+        ]);
     }
+
     
      /**
          * Show the form for creating a new resource.

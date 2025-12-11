@@ -44,7 +44,7 @@
                 <p class="font-alata text-gray-500 text-xl">Meja {{ $table ->No_Table }}</p>
                 <p class="text-xs font-semibold px-3 py-1 bg-red-100 text-red-700 rounded-full">{{ $table ->status_table }}</p>
             </div>
-            <form action="{{ route('make.customer', $table->No_Table) }}" method="POST">
+<form action="{{ route('make.customer', [$table->No_Table, $customer->Customer_id]) }}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <input type="text" name="Name" placeholder="Nama" value="{{ old('Name') }}"
@@ -100,7 +100,7 @@
                
                 
                 <div class="flex flex-col items-center">
-                <form action="{{ route('order.index', $table->No_Table) }}" class="w-full" method="GET"> 
+<form action="{{ route('order.index', [$table->No_Table, $customer->Customer_id]) }}" method="GET" class="w-full">
                     @csrf
                     <button type="submit" class="bg-primary hover:bg-red-900 transtion-all duration-600 text-background h-10 w-full rounded-lg text-sm font-semibold mb-1">
                         Pesan Menu

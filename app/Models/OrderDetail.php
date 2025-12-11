@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderDetail extends Model
 {
-    protected $table = 'order_detail'; 
+    protected $table = 'detail_order'; 
     protected $primaryKey = 'Detail_id';
     public $timestamps = true;
 
@@ -14,6 +14,7 @@ class OrderDetail extends Model
         'Order_id',
         'Menu_id',
         'Quantity',
+        'Notes',
         'Price',
         'Sub_total'
     ];

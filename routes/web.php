@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\RecipeController;
@@ -11,7 +13,6 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\RestockLogContoroller;
 use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\OrderController;
 
 Route::get('/', [AuthController::class, 'login_view'])->name('auth.login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.action');
@@ -59,8 +60,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('order/add-customer/{table}', [CustomerController::class, 'store'])->name('make.customer');
         Route::put('/order/menu/clear',[CustomerController::class,'out'])->name('customer.out');
 
-        Route::get('/order/menu/{table}',[OrderController::class,'index'])->name('order.index');
-        Route::post('/order/menu/{table}/add-to-cart',[OrderController::class,'index'])->name('add.to.cart');
+        Route::get('/order/menu/{table}/{customer}',[OrderController::class,'index'])->name('order.index');
+        Route::post('/order/cart', [OrderController::class, 'addToCart'])->name('cart.add');
+        Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('checkout');
     });
 
     Route::middleware(['role:cashier'])->group(function () {    

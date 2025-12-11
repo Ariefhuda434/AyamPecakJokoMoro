@@ -13,7 +13,7 @@ class Order extends Model
         'Employee_id',
         'No_Table',
         'Order_Status',
-        'Notes'
+        'Total',
     ];
 
      public function customer()

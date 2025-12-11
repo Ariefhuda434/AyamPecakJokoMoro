@@ -1,62 +1,115 @@
-<?php
+    <?php
 
-namespace App\Http\Controllers;
+    namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\Menu;
-use App\Models\Order;
-use Illuminate\Http\Request;
+    use App\Models\Menu;
+    use App\Models\Order;
+    use App\Models\Customer;
+    use App\Models\OrderDetail;
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\Facades\Auth;
 
-class OrderController extends Controller
-{
-    /**
-     * Menampilkan menu dan keranjang aktif untuk meja tertentu.
-     */
-    public function index(Request $request, $No_Table)
+    class OrderController extends Controller
     {
-        $menus = Menu::all(); 
-        
-        $categoryFilter = $request->get('category', 'Semua');
-        if ($categoryFilter !== 'Semua') {
-            $menus = $menus->where('Category', $categoryFilter);
-        }
+        /**
+         * Menampilkan menu dan keranjang aktif untuk meja tertentu.
+         */
+        public function index(Request $request, $No_Table,$Customer_id)
+        {
+            $menus = Menu::all(); 
+            $employee = Auth::user(); 
+            $employeeId = $employee->Employee_id;
 
-        $activeOrder = Order::with('orderItems.menu')
-                            ->where('No_Table', $No_Table)
-                            ->where('Order_Status', 'memesan')
-                            ->first();
+            $categoryFilter = $request->get('category', 'Semua');
+            if ($categoryFilter !== 'Semua') {
+                $menus = $menus->where('Category', $categoryFilter);
+            }
 
-
-        return view('menu', [
-            'menus' => $menus,
-            'No_Table' => $No_Table,
-            'activeOrder' => $activeOrder,
-        ]);
-    }
-
-    
-    public function addToCart(Request $request, $No_Table,$Customer_id)
-    {
-        $request->validate([
-            'menu_id' => 'required|exists:menus,id',
-        ]);
-
-        $order = Order::firstOrCreate(
-            ['table_No_Table' => $No_Table, 'status_pesanan' => 'memesan'],
-            ['customer_id' => $Customer_id]
-        );
-
-        $orderItem = $order->orderItems()->where('menu_id', $request->menu_id)->first();
-
-        if ($orderItem) {
-            $orderItem->increment('quantity');
-        } else {
-            $order->orderItems()->create([
-                'menu_id' => $request->menu_id,
-                'quantity' => 1,
+            $activeOrder = Order::with('orderItems.menu')
+                                ->where('No_Table', $No_Table)
+                                ->where('Order_Status', 'memesan')
+                                ->first();
+            $sessionCart = session()->get('cart', []);
+            return view('menu', [
+                'menus' => $menus,
+                'No_Table' => $No_Table,
+                'sessionCart' => $sessionCart,
+                'activeOrder' => $activeOrder,
+                'employeeId' => $employeeId,
+                'customerId' => $Customer_id
             ]);
         }
 
-        return redirect()->back()->with('success', 'Item berhasil ditambahkan ke keranjang!');
+        public function addToCart(Request $request)
+    {
+        $request->validate(['Menu_id' => 'required|exists:menus,Menu_id', 'Quantity' => 'required|integer|min:1']);
+        
+        $menu = Menu::find($request->Menu_id);
+        $quantity = $request->Quantity;
+        
+        $cart = session()->get('cart', []);
+        $itemId = $menu->Menu_id; 
+        
+        if(isset($cart[$itemId])) {
+            $cart[$itemId]['Quantity'] += $quantity;
+        } else {
+            $cart[$itemId] = [
+                "Menu_id" => $menu->Menu_id,
+                "Name" => $menu->Name,
+                "Quantity" => $quantity,
+                "Price" => $menu-> Price,   
+                "Notes" => $request->Notes ?? '', 
+            ];
+        }
+        
+        session()->put('cart', $cart);
+
+        return redirect()->back()->with('success', $menu->name . ' berhasil ditambahkan ke pesanan.');
     }
-}
+    public function checkout(Request $request)
+    {
+        $cart = session()->get('cart');
+        if (empty($cart)) {
+            return redirect()->route('order.index')->with('error', 'Pesanan masih kosong.');
+        }
+        $request->validate([
+            'No_Table' => 'required',
+            'Employee_id' => 'required|exists:employees,Employee_id',
+            'Customer_id' => 'required|exists:customers,Customer_id',
+        ]);             
+        $totalPrice = array_sum(array_map(function($item) {
+            return $item['Price'] * $item['Quantity'];
+        }, $cart));
+        
+        DB::beginTransaction();
+        try {
+            $order = Order::create([
+                'No_Table' => $request->No_Table,
+                'Employee_id' => $request->Employee_id,
+                'Customer_id' => $request->Customer_id,
+                'Total' => $totalPrice,
+                'Order_Status' => 'Memesan', 
+            ]);
+
+            foreach ($cart as $item) {
+                OrderDetail::create([
+                    'Order_id' => $order->Order_id,
+                    'Menu_id' => $item['Menu_id'],
+                    'Quantity' => $item['Quantity'],
+                    'Subtotal' => $totalPrice,
+                    'Notes' => $item['Notes'],
+                ]);
+            }
+
+            session()->forget('cart');
+            DB::commit();
+            return redirect()->route('order.index', $order->Order_id)->with('success', 'Order berhasil dibuat!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan order: ' . $e->getMessage());
+        }
+    }
+
+    }

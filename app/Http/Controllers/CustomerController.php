@@ -45,7 +45,7 @@ class CustomerController extends Controller
             'No_Table' => 'required|numeric|min:1',
         ]);
         
-        Customer::create($validated);
+        $customers = Customer::create($validated);
 
         $table = Table::where('No_Table', $validated['No_Table'])->firstOrFail();
         
@@ -53,7 +53,9 @@ class CustomerController extends Controller
              'status_table' => 'Terisi', 
         ]);
 
-        return redirect()->route('customer.index')->with('success', 'Customer berhasil duduk dan meja terisi!');
+        return redirect()->route('customer.index',[
+        'customers' => $customers
+        ])->with('success', 'Customer berhasil duduk dan meja terisi!');
     } 
 
     public function out(Request $request, Table $table)

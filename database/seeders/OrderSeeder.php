@@ -29,8 +29,8 @@ class OrderSeeder extends Seeder
             'Customer_id'=>$customerId,
             'Employee_id'=>$EmployeeId,
             'No_Table'=> $NoTableId,
-            'Order_Status' => 'Belum_Bayar',
-            'Notes' => 'Cabai nya sikit aja',
+            'Order_Status' => 'Belum Memesan',
+            'Total' => '200000',    
             'created_at' => now(),
             'updated_at' => now(),
         ]);

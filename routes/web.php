@@ -57,7 +57,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/order',[CustomerController::class,'index'])->name('customer.index');
         Route::post('/order/add-table', [TableController::class, 'table_create'])->name('make.table');
-        Route::post('order/add-customer/{table}', [CustomerController::class, 'store'])->name('make.customer');
+        Route::post('order/add-customer/', [CustomerController::class, 'store'])->name('make.customer');
         Route::put('/order/menu/clear',[CustomerController::class,'out'])->name('customer.out');
 
         Route::get('/order/menu/{table}/{customer}',[OrderController::class,'index'])->name('order.index');
@@ -66,6 +66,6 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::middleware(['role:cashier'])->group(function () {    
-        Route::get('/transactions', [TransactionController::class, 'addToCart'])->name('cashier.view');
+        Route::get('/transactions', [TransactionController::class, 'index'])->name('cashier.view');
     });
 });

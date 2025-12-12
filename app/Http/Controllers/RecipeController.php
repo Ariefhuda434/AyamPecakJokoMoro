@@ -10,41 +10,31 @@ use Illuminate\Support\Facades\DB;
 
 class RecipeController extends Controller
 {
-    public function index(Request $request, string $slug)
-    {
-        $menu = Menu::where('slug', $slug)->firstOrFail();
+   public function index(Request $request, string $slug)
+{
+    $menu = Menu::where('slug', $slug)->firstOrFail();
 
-        $resepid = $menu->Recipe_id;
-        
-        $resepData = DB::table('recipe_pivot')
-            ->join('recipies', 'recipies.Recipe_id', '=', 'recipe_pivot.Recipe_id')
-            ->join('stocks', 'recipe_pivot.Stock_id', '=', 'stocks.Stock_id')
-            ->select([
-                'recipies.Name_Resep as nama_resep',
-                'recipies.Keterangan as keterangan_resep',
-                'recipies.Recipe_id as Recipe_id', 
-                'stocks.Stock_id as stock_id', 
-                'stocks.Name_Stock as nama_stock_resep',
-                'stocks.Unit as Satuan_resep',
-                'recipe_pivot.Quantity as jumlah_stock_resep'
-            ])
-            ->where('recipe_pivot.Recipe_id', $resepid)
-            ->get();
+    $resepid = $menu->Recipe_id;
 
-        $stockData = DB::table('stocks')
-            ->select([
-                'stocks.Name_Stock as nama_stock_resep',
-                'stocks.Stock_id as Stock_id',
-                'stocks.Unit as satuan_resep'
-            ])
-            ->get();
+    $resepData = DB::table('view_resep_stok')
+        ->where('Recipe_id', $resepid)
+        ->get();
 
-        return view('recipies', [
-            'menu' => $menu,
-            'resepData' => $resepData,
-            'stockData' => $stockData
-        ]);
-    }
+    $stockData = DB::table('stocks')
+        ->select([
+            'Stock_id',
+            'Name_Stock as nama_stock_resep',
+            'Unit as satuan_resep'
+        ])
+        ->get();
+
+    return view('recipies', [
+        'menu' => $menu,
+        'resepData' => $resepData,
+        'stockData' => $stockData
+    ]);
+}
+
 
     public function store(Request $request)
     {
@@ -62,8 +52,7 @@ class RecipeController extends Controller
             [
                 'Quantity' => $validated['Quantity']
             ]
-        );
-        
+        );        
         $menu = Menu::where('Recipe_id', $validated['Recipe_id'])->first();
 
         if ($menu) {

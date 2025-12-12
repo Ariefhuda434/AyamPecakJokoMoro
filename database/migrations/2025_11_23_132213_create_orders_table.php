@@ -12,7 +12,6 @@ class CreateOrdersTable extends Migration
             $table->id('Order_id');
             $table->foreignId('Customer_id')->constrained('customers','Customer_id')->onDelete('cascade');
             $table->foreignId('Employee_id')->constrained('employees','Employee_id')->onDelete('cascade');
-            $table->foreignId('No_Table')->constrained('tables','No_Table')->nullable();
             $table->integer('Total');
             $table->enum('Order_Status', ['Belum Memesan','Memesan'])->default('Belum Memesan');
             $table->timestamps();

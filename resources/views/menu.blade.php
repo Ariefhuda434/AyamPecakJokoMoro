@@ -173,7 +173,6 @@
                     <form action="{{ route('checkout') }}" method="POST">
                         @csrf
                         
-                        <input type="hidden" name="No_Table" value="{{ $No_Table }}">
                         <input type="hidden" name="Employee_id" value="{{ $employeeId }}"> 
                         
                         <input type="hidden" name="Customer_id" value="{{ $customerId }}">

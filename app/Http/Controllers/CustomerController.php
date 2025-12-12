@@ -50,11 +50,12 @@ class CustomerController extends Controller
         $table = Table::where('No_Table', $validated['No_Table'])->firstOrFail();
         
         $table->update([
-             'status_table' => 'Terisi', 
+             'status_table' => 'Terisi',
         ]);
 
         return redirect()->route('customer.index',[
-        'customers' => $customers
+        'No_Table' => $table->No_Table,
+        'customers' => $customers->Customer_id
         ])->with('success', 'Customer berhasil duduk dan meja terisi!');
     } 
 
@@ -63,11 +64,17 @@ class CustomerController extends Controller
         if ($table->status_table !== 'Terisi') {
             return redirect()->route('customer.index')->with('error', 'Meja ini sudah kosong atau tidak terisi.');
         }
-
+        $activeCustomer = $table->activeCustomer;
+        if ($activeCustomer) {
+        $activeCustomer->update(['No_Table' => null]);
+    }
         $table->update([
              'status_table' => 'Kosong', 
              'customer_id' => null, 
         ]);
+        $table->update([
+         'status_table' => 'Kosong', 
+    ]);
         
         return redirect()->route('customer.index')->with('success', 'Meja ' . $table->No_Table . ' berhasil dikosongkan!');
     }

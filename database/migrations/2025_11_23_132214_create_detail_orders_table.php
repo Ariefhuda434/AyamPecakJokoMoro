@@ -9,7 +9,7 @@ class CreateDetailOrdersTable extends Migration
     public function up()
     {
         Schema::create('detail_order', function (Blueprint $table) {
-            // $table->id('Order_Detail');
+            // $table->id('Order_Detail');  
             $table->foreignId('Menu_id')->constrained('menus','Menu_id')->onDelete('cascade');
             $table->foreignId('Order_id')->constrained('orders','Order_id');
             $table->decimal('Quantity',10,2);

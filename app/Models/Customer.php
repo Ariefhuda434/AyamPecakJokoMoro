@@ -12,16 +12,16 @@ class Customer extends Model
     
     protected $fillable = [
         'Name',
-        'Phone_Number'
+        'Phone_Number',
+        'No_Table'
     ];
-    
+      public function table()
+    {
+        return $this->belongsTo(Table::class, 'No_Table', 'No_Table');
+    }
+
     public function orders()
     {
         return $this->hasMany(Order::class, 'Customer_id', 'Customer_id');
     }
-    public function table()
-    {
-        return $this->belongsTo(Table::class, 'No_Table');
-    }
-  
 }

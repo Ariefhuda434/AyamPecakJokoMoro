@@ -21,19 +21,10 @@ public function activeOrder()
 }
 public function activeCustomer()
 {
-    return $this->hasOneThrough(
-        Customer::class,
-        Order::class,
-        'No_Table', 
-        'Customer_id', 
-        'Customer_id' 
-    )->where('orders.Order_Status', 'Belum_Bayar'); 
+   return $this->hasOne(Customer::class, 'No_Table', 'No_Table');
 }
 public function customer()
     {
-        return $this->belongsTo(Customer::class, 'Customer_id');
-    }
-    public function order(){
-        return $this->hasMany(Order::class);
+        return $this->belongsTo(Customer::class, 'Customer_id','Customer_id');
     }
 }

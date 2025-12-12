@@ -11,30 +11,20 @@ use Illuminate\Support\Facades\Log;
 
 class MenuController extends Controller
 {
-    public function index(Request $request)
+ public function index(Request $request)
     {
-        $countMenu = Menu::Count();
-        $menuId = $request->query('menu_id');
-        $menuData = DB::table('menus')
-        ->join('recipies','menus.Recipe_id','=','recipies.Recipe_id')
-        ->select([
-            'menus.Menu_id as Menu_id',
-            'menus.Name as nama_menu',
-            'menus.Category as kategori',
-            'menus.slug as slug',
-            'menus.Menu_Status as status_menu',
-            'menus.photo as foto_menu',
-            'menus.Price as harga',
-            'recipies.Name_Resep as nama_resep',
-            'recipies.Keterangan as keterangan_resep',
-        ])
-        ->orderBy('menus.created_at','desc')
-        ->get();
+        $countMenu = Menu::count();
+
+        $menuData = DB::table('view_menu_with_recipe')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
         return view('dashboardmenu', [
-            'menuData' =>$menuData,
-            'countMenu' =>$countMenu
+            'menuData' => $menuData,
+            'countMenu' => $countMenu
         ]);
     }
+
 
     public function create()
     {

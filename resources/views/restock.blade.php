@@ -49,10 +49,10 @@ class="relative p-4">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $loop->iteration }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->unit }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->nama_stock }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->jumlah_sebelum ?? 0}}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->jumlah_ditambahkan ?? 0}}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->jumlah_setelah??'-' }}</td> 
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Rp{{ number_format(($restock->jumlah_ditambahkan * ($restock->harga_restock ?? 0)) ?? 0, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->stock_sebelum ?? 0}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->jumlah_ditambah ?? 0}}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $restock->stock_setelah??'-' }}</td> 
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"> {{ $restock->biaya_total }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-700">{{ $restock->tanggal_restock ? \Carbon\Carbon::parse($restock->tanggal_restock)->format('d-m-Y') : '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium flex justify-center items-center space-x-3" @click.stop>
                             
@@ -65,7 +65,7 @@ class="relative p-4">
                                 Edit
                             </button>
                             
-                            <form action="{{ route('restock.destroy', ['restockLog' => $restock->Stock_id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus log restok ini?');">
+                            <form action="{{ route('restock.destroy', ['restockLog' => $restock->stock_id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus log restok ini?');">
                                 @csrf 
                                 @method('DELETE')       
                                 <button type="submit" class="text-red-600 hover:text-red-900 transition">Hapus</button>

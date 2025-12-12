@@ -13,34 +13,21 @@ class RestockLogContoroller extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(String $slug,Request $request)
+   public function index(String $slug, Request $request)
     {
-    $stockId = $request->query('stock_id');
-    
-    $stock = Stock::findOrFail($stockId); 
+        $stockId = $request->query('stock_id');
 
-    
-    $restockData = DB::table('restock_log')
-    ->join('stocks','stocks.Stock_id', '=', 'restock_log.Stock_id')
-    ->select([
-        'restock_log.Stock_id as Stock_id',
-        'stocks.Name_Stock as nama_stock',
-        'stocks.Unit as unit',
-        'restock_Log.Stock_Before as jumlah_sebelum',
-        'restock_Log.Update_Quantity as jumlah_ditambahkan',
-        'restock_Log.Price as harga',
-        'restock_Log.created_at as tanggal_restock',
-        'restock_Log.updated_at as tanggal_restock_update',
-        DB::raw('restock_Log.Stock_Before + restock_Log.Update_Quantity AS jumlah_setelah'),
-    ])
-    ->where('restock_log.Stock_id', $stockId)
-    ->orderBy('restock_Log.created_at','desc')
-    ->get();
+        $stock = Stock::findOrFail($stockId);
 
-    return view('restock',[
-        'stock' => $stock,
-        'restockData' => $restockData
-    ]);
+        $restockData = DB::table('view_restock_log')
+            ->where('Stock_id', $stockId)
+            ->orderBy('tanggal_restock', 'desc')
+            ->get();
+
+        return view('restock', [
+            'stock' => $stock,
+            'restockData' => $restockData
+        ]);
     }
 
     /**

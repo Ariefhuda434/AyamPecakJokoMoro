@@ -1,4 +1,4 @@
-    <?php
+<?php
 
     namespace App\Http\Controllers;
 
@@ -26,10 +26,11 @@
                 $menus = $menus->where('Category', $categoryFilter);
             }
 
-            $activeOrder = Order::with('orderItems.menu')
-                                ->where('No_Table', $No_Table)
-                                ->where('Order_Status', 'memesan')
-                                ->first();
+            $activeOrder = Order::where('Customer_id', $Customer_id)
+        ->whereNotIn('Order_Status', ['Selesai', 'Batal']) 
+        ->with('orderDetails.menu')
+        ->latest('Order_id') 
+        ->first();
             $sessionCart = session()->get('cart', []);
             return view('menu', [
                 'menus' => $menus,
@@ -74,7 +75,6 @@
             return redirect()->route('order.index')->with('error', 'Pesanan masih kosong.');
         }
         $request->validate([
-            'No_Table' => 'required',
             'Employee_id' => 'required|exists:employees,Employee_id',
             'Customer_id' => 'required|exists:customers,Customer_id',
         ]);             
@@ -85,7 +85,6 @@
         DB::beginTransaction();
         try {
             $order = Order::create([
-                'No_Table' => $request->No_Table,
                 'Employee_id' => $request->Employee_id,
                 'Customer_id' => $request->Customer_id,
                 'Total' => $totalPrice,

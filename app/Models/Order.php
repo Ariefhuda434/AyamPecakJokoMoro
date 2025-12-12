@@ -11,7 +11,6 @@ class Order extends Model
        protected $fillable = [
         'Customer_id',
         'Employee_id',
-        'No_Table',
         'Order_Status',
         'Total',
     ];
@@ -20,11 +19,7 @@ class Order extends Model
     {
         return $this->belongsTo(Customer::class, 'Customer_id', 'Customer_id');
     }
-     public function table()
-    {
-        return $this->belongsTo(Table::class, 'No_Table', 'No_Table');
-    }
-
+   
 
     public function employee()
     {

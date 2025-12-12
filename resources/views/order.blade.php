@@ -39,12 +39,13 @@
         <div class="flex flex-wrap justify-start gap-6 mt-4">
         @foreach ($tables as $table) 
             @if ($table->status_table == 'Kosong')
+        {{-- BLOK MEJA KOSONG (SUDAH BENAR) --}}
         <div class="w-full p-4 bg-white border-4 border-gray-300 rounded-2xl shadow-lg max-w-sm">
             <div class="flex justify-between items-center mb-4">
                 <p class="font-alata text-gray-500 text-xl">Meja {{ $table ->No_Table }}</p>
                 <p class="text-xs font-semibold px-3 py-1 bg-red-100 text-red-700 rounded-full">{{ $table ->status_table }}</p>
             </div>
-<form action="{{ route('make.customer', [$table->No_Table, $customer->Customer_id]) }}" method="POST">
+            <form action="{{ route('make.customer') }}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <input type="text" name="Name" placeholder="Nama" value="{{ old('Name') }}"
@@ -71,22 +72,22 @@
             </form>
 
             @else
+            @php
+                $currentCustomer = $table->activeCustomer ?? null; 
+                $customerId = $currentCustomer->Customer_id ?? null;
+            @endphp
            
              <div class="w-full p-4 border-4 border-primary bg-background rounded-2xl shadow-lg max-w-sm">
             <div class="flex justify-between items-center mb-4">
                 <p class="font-alata text-primary font-semibold text-xl">Meja {{ $table ->No_Table }}</p>
                 <p class="text-xs font-semibold px-3 py-1 bg-green-500 text-primary rounded-full">{{ $table ->status_table }}</p>
             </div>
-            @php
-            $customer = $table->activeOrder->customer ?? null;
-            $orderStatus = $table->activeOrder->status_pesanan ?? 'Tidak Ada Pesanan Aktif';
-            @endphp
             
                 <div class="mb-3">
                     <p class="w-full h-11 border-4 border-primary rounded-xl rounded-bl-3xl 
                             px-4 py-2 outline-none transition-all focus:border-secondary duration-300 ease-in-out
                             placeholder-gray-500 font-sans text-base">
-                            {{ $customer->Name ?? 'Data Tidak Ditemukan' }}
+                            {{ $currentCustomer->Name ?? 'Data Tidak Ditemukan' }} 
                     </p>
                 </div>
                 
@@ -94,18 +95,24 @@
                     <p class="w-full h-11 border-4 border-primary rounded-xl rounded-bl-3xl 
                             px-4 py-2 outline-none transition-all focus:border-secondary duration-300 ease-in-out
                             placeholder-gray-500 font-sans text-base" >
-                            {{ $customer->Phone_Number ?? '-' }}
+                            {{ $currentCustomer->Phone_Number ?? '-' }} 
                         </p>
                 </div>
                
                 
                 <div class="flex flex-col items-center">
-<form action="{{ route('order.index', [$table->No_Table, $customer->Customer_id]) }}" method="GET" class="w-full">
+                @if ($customerId)
+                <form action="{{ route('order.index', [$table->No_Table, $customerId]) }}" method="GET" class="w-full">
                     @csrf
                     <button type="submit" class="bg-primary hover:bg-red-900 transtion-all duration-600 text-background h-10 w-full rounded-lg text-sm font-semibold mb-1">
                         Pesan Menu
                     </button>
                 </form>
+                @else
+                <button disabled class="bg-gray-400 text-background h-10 w-full rounded-lg text-sm font-semibold mb-1 cursor-not-allowed">
+                    Customer Tidak Ditemukan
+                </button>
+                @endif
                 
                 <form action="{{ route('customer.out', $table->No_Table) }}" method="POST">
                     @csrf

@@ -20,15 +20,11 @@ class OrderSeeder extends Seeder
 
         $EmployeeName = DB::table('employees')->where('name_employee', 'Kobie Mainoo')->first();
         $EmployeeId = $EmployeeName->Employee_id;
-        
-        $NoTable = DB::table('tables')->where('No_Table', '1')->first();
-        $NoTableId = $NoTable->No_Table;
-        
+   
 
          DB::table('orders')->insert([
             'Customer_id'=>$customerId,
             'Employee_id'=>$EmployeeId,
-            'No_Table'=> $NoTableId,
             'Order_Status' => 'Belum Memesan',
             'Total' => '200000',    
             'created_at' => now(),

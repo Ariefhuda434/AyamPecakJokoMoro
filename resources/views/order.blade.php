@@ -39,7 +39,6 @@
         <div class="flex flex-wrap justify-start gap-6 mt-4">
         @foreach ($tables as $table) 
             @if ($table->status_table == 'Kosong')
-        {{-- BLOK MEJA KOSONG (SUDAH BENAR) --}}
         <div class="w-full p-4 bg-white border-4 border-gray-300 rounded-2xl shadow-lg max-w-sm">
             <div class="flex justify-between items-center mb-4">
                 <p class="font-alata text-gray-500 text-xl">Meja {{ $table ->No_Table }}</p>

@@ -1,0 +1,60 @@
+* [33m545e4e9[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/arief[m[33m)[m ni bil
+* [33mb76b675[m ini mau pindah bentar
+*   [33m8f307b5[m test
+[32m|[m[33m\[m  
+[32m|[m * [33mb97de8d[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m lanjutan
+[32m|[m *   [33m11a17d7[m Merge pull request #1 from Ariefhuda434/arief
+[32m|[m [34m|[m[35m\[m  
+* [34m|[m [35m|[m [33m47718a3[m parah men
+[35m|[m [34m|[m[35m/[m  
+[35m|[m[35m/[m[34m|[m   
+* [34m|[m [33md2d0005[m menambahkan fitur menu dan keranjang
+* [34m|[m [33mc85d4f4[m bisa cui resep letsgooooo,ayo order nian
+* [34m|[m [33m9fe197d[m resep bisa cui ahay
+* [34m|[m [33m6af3a71[m esok lagi
+* [34m|[m [33m04f7ed8[m sedihnya sakit kepala ku
+* [34m|[m [33ma0178b5[m belum sama recipe masih menu
+[34m|[m[34m/[m  
+* [33m6e6bcaf[m crud karyawan dan stock ke restock
+*   [33mf0897ab[m Merge branch 'arief' of https://github.com/Ariefhuda434/AyamPecakJokoMoro into arief
+[36m|[m[1;31m\[m  
+* [1;31m|[m [33m4157e3c[m memperbaiki middlewre,database lifecycle dan juga table view buat manajemen karyawan
+[1;31m|[m [1;31m|[m * [33m3110d26[m[33m ([m[1;32marief[m[33m)[m haha
+[1;31m|[m [1;31m|[m[1;31m/[m  
+[1;31m|[m * [33me0ac899[m ketua tumbang
+[1;31m|[m * [33m6cbd444[m model sebagian rep
+[1;31m|[m * [33mf8eec87[m model dulu rep
+[1;31m|[m[1;31m/[m  
+* [33mafec2aa[m middleware fixed
+[1;32m|[m * [33mbac4877[m[33m ([m[1;31morigin/nahya[m[33m)[m cek ombak
+[1;32m|[m * [33mccc9ddb[m update fe lagi we
+[1;32m|[m *   [33mc2c0978[m Merge branch 'arief' into nahya
+[1;32m|[m [1;34m|[m[1;32m\[m  
+[1;32m|[m [1;34m|[m[1;32m/[m  
+[1;32m|[m[1;32m/[m[1;34m|[m   
+* [1;34m|[m [33m3f8aead[m middlewere prah
+* [1;34m|[m [33m3683c2e[m menambahkan data customer
+* [1;34m|[m [33m914ff87[m tambah table
+* [1;34m|[m   [33m9a00f53[m dari nahya
+[1;36m|[m[31m\[m [1;34m\[m  
+* [31m|[m [1;34m|[m [33mfcc18e2[m login belum siap
+[31m|[m [31m|[m * [33mfb09b3f[m update form stok
+[31m|[m [31m|[m[31m/[m  
+[31m|[m * [33m3d5dda4[m Stock page
+[31m|[m[31m/[m  
+* [33me395c9e[m karyawan siap
+* [33m6769ce6[m migration rep
+* [33mdb7e421[m bentar yah we disuruh jemput bokap
+* [33mbfdc916[m dashboard page
+* [33mde819f0[m update footer and register page
+* [33m389f103[m Resolve merge: remove register page
+*   [33m69a814a[m Resolve merge: keep my version of register page
+[32m|[m[33m\[m  
+[32m|[m * [33m014855c[m menu page prototype
+[32m|[m * [33m7576429[m order prototype first
+[32m|[m * [33m2835a91[m pembuatan warna,font,login,navbar
+[32m|[m * [33m94a5546[m layouting content and login mobile
+* [33m|[m [33mbd27206[m Update regist page
+[33m|[m[33m/[m  
+* [33m5e25f30[m Register page sementara
+* [33m14f58c4[m First Commit

@@ -10,7 +10,7 @@ class RestockLog extends Model
 
     protected $primaryKey = 'Restock_id';
 
-    public $timestamps = false;
+    // public $timestamps = false;
     
     protected $fillable = [
         'Stock_id',

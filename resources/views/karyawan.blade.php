@@ -58,11 +58,11 @@ class=" relative p-4">
                     @forelse ($employeeData as $employee) 
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->name_employee }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->number_phone }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->role_name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->Nama_manajer }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->Nomor_handphone }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->role }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                            {{ \Carbon\Carbon::parse($employee->date_join)->format('d-m-Y') }}
+                            {{ \Carbon\Carbon::parse($employee->Tanggal_bergabung)->format('d-m-Y') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium flex justify-center items-center space-x-3">
                             

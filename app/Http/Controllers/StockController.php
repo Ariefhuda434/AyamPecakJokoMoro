@@ -17,4 +17,26 @@ class StockController extends Controller
 
     return view('stock', compact('stockData'));
 }
+public function store(Request $request){
+        $validated = $request->validate([
+            'Name_Stock'=>'required|string|max:150',
+            'Unit'=>'required|string|max:50',
+            'Min_Stock_Level'=>'required|int|max:10'
+        ]);
+        Stock::create($validated);
+        return Redirect()->route('stock.index')->with('succes','stok berhasil ditambahkan');
+    }
+    public function update(Request $request,Stock $stock){
+        $validated = $request->validate([
+            'Name_Stock'=>'required|string|max:150',
+            'Unit'=>'required|string|max:50',
+            'Min_Stock_Level'=>'required|int|max:10'
+        ]);
+        $stock->update($validated);
+        return Redirect()->route('stock.index')->with('succes','stok berhasil diupdate');
+    }
+    public function destroy(Stock $stock){
+        $stock->delete();
+        return Redirect()->route('stock.index')->with('succes','stok berhasil dihapus');
+    }
 }

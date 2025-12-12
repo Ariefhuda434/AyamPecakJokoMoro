@@ -21,7 +21,7 @@ public function store(Request $request){
    $validated = $request->validate([
     'Name_Stock' => 'required|string|max:150', 
      'Unit'=>'required|string|max:50',
-    'Min_Stock_Level'=>'required|numeric|min:500'
+    'Min_Stock_Level'=>'required|numeric|min:1'
 ]);
 
 $StockData = [

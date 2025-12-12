@@ -28,12 +28,10 @@
 @endif
 <div x-data="{ isCartOpen: false }" class="h-full min-h-screen max-w-full">
     
-    {{-- BAR ATAS (HEADER) --}}
     <div class="h-18 w-full flex items-center justify-between px-3 py-2 border-b">
         <div class="flex items-center">
             <p class="text-primary font-alata text-xl md:text-2xl ml-2">Menu Meja {{ $No_Table }}</p>
         </div>
-        
         {{-- Tombol Keranjang: Menampilkan item dari SESSION --}}
         <button @click="isCartOpen = true" class="flex items-center bg-white rounded-full border-2 border-primary p-2 shadow-md hover:bg-gray-50 transition">
             <span class="text-xs font-semibold text-primary mr-2 hidden sm:inline">
@@ -43,7 +41,6 @@
         </button>
     </div>
 
-    {{-- KATEGORI MENU (Tetap Sama) --}}
     <div class="w-full flex mt-4 justify-start px-3 gap-3 overflow-x-auto pb-4">
         {{-- ... (Kode Kategori) ... --}}
     </div> 
@@ -51,7 +48,6 @@
     <h3 class="text-xl font-alata mt-6 mb-4 px-3">Daftar Menu</h3>
     <hr class="mx-3 border-primary/50">
 
-    {{-- DAFTAR MENU + FORM ADD TO CART --}}
     <div class="w-full flex flex-wrap justify-center md:justify-start lg:justify-center gap-4 py-6 pb-20 px-3">
         @forelse ($menus as $menu)
             <div class="h-auto w-40 sm:w-44 md:w-48 flex flex-col items-center bg-white border-4 rounded-[1rem] border-primary shadow-lg overflow-hidden transition-shadow hover:shadow-xl p-2 pb-4">

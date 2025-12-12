@@ -12,7 +12,7 @@ class CreateDetailOrdersTable extends Migration
             // $table->id('Order_Detail');  
             $table->foreignId('Menu_id')->constrained('menus','Menu_id')->onDelete('cascade');
             $table->foreignId('Order_id')->constrained('orders','Order_id');
-            $table->decimal('Quantity',10,2);
+            $table->integer('Quantity');
             $table->text('notes')->nullable();
             $table->timestamps();
         });

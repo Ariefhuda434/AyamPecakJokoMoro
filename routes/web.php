@@ -63,9 +63,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/order/menu/{table}/{customer}',[OrderController::class,'index'])->name('order.index');
         Route::post('/order/cart', [OrderController::class, 'addToCart'])->name('cart.add');
         Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('checkout');
+        Route::get('/order/{order}/show', [\App\Http\Controllers\OrderController::class, 'show'])->name('order.show');
     });
 
     Route::middleware(['role:cashier'])->group(function () {    
         Route::get('/transactions', [TransactionController::class, 'index'])->name('cashier.view');
+        // Route::Post('/transactions/save', [TransactionController::class, 'saveToSession'])->name('cashier.pay');
     });
 });

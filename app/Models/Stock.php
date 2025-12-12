@@ -21,11 +21,16 @@ class Stock extends Model
     {
         return $this->hasMany(RestockLog::class, 'Stock_id', 'Stock_id');
     }
-
-    public function recipePivots()
-    {
-        return $this->hasMany(RecipePivot::class, 'Stock_id', 'Stock_id');
-    }
     
+    
+    public function recipes()
+{
+    return $this->belongsToMany(
+        Recipe::class, 
+        'recipe_pivot', 
+        'Stock_id',               
+        'Recipe_id'               
+    );
+}
 
 }

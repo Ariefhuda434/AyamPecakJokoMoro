@@ -96,7 +96,7 @@ class OrderController extends Controller
             foreach ($cart as $item) {
                
                 $menu = Menu::with('recipe.stocks')->find($item['Menu_id']);
-                
+                // dd($menu->recipe );
                 if (!$menu || !$menu->recipe || $menu->recipe->stocks->isEmpty()) {
                     DB::rollBack();
                     return redirect()->back()->with('error', 'Resep atau bahan baku untuk menu ' . $menu->Name . ' tidak ditemukan/belum didaftarkan.');
@@ -149,23 +149,23 @@ class OrderController extends Controller
         }
     }
     
-    public function show($orderId)
+    public function show($order_id)
     {
-        $order = Order::with(['customer.table', 'employee', 'details.menu'])
-                      ->findOrFail($orderId);
+        $order = Order::with(['customer.table', 'employee', 'orderDetails.menu'])
+        ->findOrFail($order_id);
                       
         return view('order.show', compact('order'));
     }
 
-    public function printStruk($orderId)
+    public function printStruk($order_id)
     {
-        $order = Order::with(['customer.table', 'employee', 'details.menu'])
-                      ->findOrFail($orderId);
+        $order = Order::with(['customer.table', 'employee', 'orderDetails.menu'])
+                      ->findOrFail($order_id);
         
         $tableName = $order->customer->table->No_Table ?? 'TAKEAWAY';
-        $pdfFileName = 'kot_meja_' . $tableName . '_order_' . $orderId . '.pdf';
+        $pdfFileName = 'kot_meja_' . $tableName . '_order_' . $order_id . '.pdf';
 
-        $pdf = Pdf::loadView('struk.kot_template', compact('order'));
+        $pdf = Pdf::loadView('struk.template', compact('order'));
 
         return $pdf->stream($pdfFileName); 
     }

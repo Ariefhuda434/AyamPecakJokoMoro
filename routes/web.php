@@ -63,11 +63,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/order/menu/{table}/{customer}',[OrderController::class,'index'])->name('order.index');
         Route::post('/order/cart', [OrderController::class, 'addToCart'])->name('cart.add');
         Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('checkout');
-        Route::get('/order/{order}/show', [\App\Http\Controllers\OrderController::class, 'show'])->name('order.show');
+        Route::get('/order/{order}/show', [OrderController::class, 'show'])->name('order.show');
+        Route::get('/order/{order}/show/print', [OrderController::class, 'printStruk'])->name('order.print');
     });
 
     Route::middleware(['role:cashier'])->group(function () {    
         Route::get('/transactions', [TransactionController::class, 'index'])->name('cashier.view');
-        // Route::Post('/transactions/save', [TransactionController::class, 'saveToSession'])->name('cashier.pay');
+        Route::post('/transactions/payment', [TransactionController::class, 'payment'])->name('cashier.pay');
+        Route::get('/transactions/payment/{transaction}', [TransactionController::class, 'paymentindex'])->name('payment.index');
     });
 });

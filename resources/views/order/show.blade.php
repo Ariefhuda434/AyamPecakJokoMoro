@@ -17,7 +17,7 @@
             🖨️ Cetak Struk (PDF)
         </a>
         
-        <a href="{{ route('home') }}" 
+        <a href="{{ route('customer.index') }}" 
            class="block mt-4 text-sm text-primary hover:underline"
         >
             Kembali ke Beranda / Daftar Meja

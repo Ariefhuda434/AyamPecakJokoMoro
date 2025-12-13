@@ -26,7 +26,7 @@
     <div class="info-section">
         <p><strong>ORDER ID:</strong> {{ $order->Order_id }}</p>
         <p><strong>MEJA:</strong> <span style="font-size: 18px; color: red;">{{ $order->customer->table->No_Table ?? 'TAKEAWAY' }}</span></p>
-        <p><strong>PELAYAN:</strong> {{ $order->employee->Name_Employee ?? 'N/A' }}</p>
+        <p><strong>PELAYAN:</strong> {{ $order->employee->name_employee ?? 'N/A' }}</p>
         <p><strong>CUSTOMER:</strong> {{ $order->customer->Name ?? 'Umum' }}</p>
         <p><strong>STATUS ORDER:</strong> <span style="font-weight: bold; color: blue;">{{ $order->Order_Status }}</span></p>
     </div>
@@ -39,7 +39,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($order->details as $detail)
+            @foreach ($order->orderDetails as $detail)
             <tr>
                 <td style="font-size: 18px; font-weight: bold;">{{ $detail->Quantity }}</td>
                 <td>

@@ -20,10 +20,13 @@
                 : 'border-gray-200 hover:border-secondary';
         @endphp
         
-        <form 
+        <form method="POST" action="{{ route('cashier.pay') }}"
            class="block bg-white border-4 p-5 rounded-xl shadow-lg cursor-pointer transition-all duration-300 ease-in-out {{ $cardClasses }}">
+           @csrf
+           <input value="{{ $transaksi->Order_id }}" hidden name="Order_id" id="">
+           <input value="{{ $transaksi->Employee_id }}" hidden name="Employee_id" id="">
+           <input value="{{ $transaksi->total_harga }}" hidden name="Total_Price" id="">
            <p class="font-alata text-2xl font-bold">Meja: {{ $transaksi->nomor_meja }}</p>
-            
             <div class="flex items-center gap-2 mt-1 text-lg">
                 <p class="text-primary font-semibold">{{ $transaksi->nama_customer }}</p> 
                 <span class="text-gray-400">|</span>

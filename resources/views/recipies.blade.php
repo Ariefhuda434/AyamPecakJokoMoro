@@ -87,12 +87,12 @@ class="relative p-4">
             <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
                 <p class="text-sm font-alata text-gray-500 mb-1">Nama Resep:</p>
                 <p class="text-lg font-semibold text-gray-800 mb-4">
-                    {{ $Data->Nama_resep ?? 'Belum ada Nama Resep' }}
+                    {{ $resepData->Nama_resep ?? 'Belum ada Nama Resep' }}
                 </p>
 
                 <p class="text-sm font-alata text-gray-500 mb-1">Keterangan Resep:</p>
                 <p class="text-base text-gray-700 ">
-                    {{  $Data->keterangan_resep ?? 'Tidak ada keterangan resep.' }}
+                    {{  $resepData->keterangan_resep ?? 'Tidak ada keterangan resep.' }}
                 </p>
             </div>
 
@@ -109,7 +109,7 @@ class="relative p-4">
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse ($stockData  as $resep) 
+                        @forelse ($Data as $resep) 
                         <tr x-data="{ qty: {{ $resep->jumlah_stock_resep }} }" class="hover:bg-gray-50">
                             <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                                 {{ $resep->nama_stock_resep }}
@@ -122,7 +122,12 @@ class="relative p-4">
                                 {{ $resep->Satuan_resep }}
                             </td> 
                             <td class="px-4 py-3 whitespace-nowrap text-center text-sm font-medium">
-                                <button class="text-red-600 hover:text-red-900 transition text-xs">Hapus</button>
+                                <form action="{{ route('recipies.destroy', ['stock'=> $resep->Stock_id,'recipe' => $resepData->Id_resep,
+                                ]) }}" method="POST">
+                                @csrf
+                                    @method('DELETE')
+                                    <button class="text-red-600 hover:text-red-900 transition text-xs">Hapus</button>
+                                </form>
                             </td>
                         </tr>
                         @empty

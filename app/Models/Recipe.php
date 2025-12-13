@@ -21,11 +21,11 @@ public $timestamps = false;
         return $this->hasOne(Menu::class, 'Recipe_id', 'Recipe_id');
     }
 
-    public function stocks()
+    public function stocksMagic()
 {
     return $this->belongsToMany(
-        Stock::class, 
-        'recipe_pivot', 'Recipe_id','Stock_id'
+        Stock::class,'recipe_pivot', 
+        'Recipe_id','Stock_id'
     )->withPivot('Quantity'); 
 }
 }

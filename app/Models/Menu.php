@@ -26,7 +26,7 @@ class Menu extends Model
 
       public function recipe()
     {
-        return $this->belongsTo(Recipe::class, 'Recipe_id', 'Recipe_id');
+        return $this->hasOne(Recipe::class, 'Recipe_id', 'Recipe_id');
     }
 
     public function orderDetails()

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use PDO;
 use App\Models\Table;
 use App\Models\Customer;
 use Illuminate\Http\Request;
-use PDO;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -26,12 +27,18 @@ class CustomerController extends Controller
         $totalTables = Table::count();
         $availableTables = Table::where('status_table', 'Kosong')->count();
         $occupiedTables = Table::where('status_table', 'Terisi')->count(); 
-        
+        // $tables = Table::with('activeCustomer')->get();
+        $sudahMemesan = DB::table('orders')
+        ->join('customers','customers.Customer_id','=','orders.Customer_id')
+        ->join('tables','tables.No_Table','=','customers.No_Table')
+        ->where('orders.Order_Status', 'Memesan')
+        ->exists();
         return view('order', [
             'tables' => $tables,
             'totalTables' => $totalTables,
             'availableTables' => $availableTables,
             'occupiedTables' => $occupiedTables,
+            'sudahMemesan' => $sudahMemesan,
         ]);
     }
 
@@ -39,7 +46,6 @@ class CustomerController extends Controller
     {
         try {
             DB::beginTransaction();
-
             $validated = $request->validate([
                 'Name' => 'required|string|max:20',
                 'Phone_Number' => 'required|string|max:14',
@@ -49,6 +55,7 @@ class CustomerController extends Controller
             $customers = Customer::create([
                 'Name' => $validated['Name'],
                 'Phone_Number' => $validated['Phone_Number'],
+                'No_Table' => $validated['No_Table'],
             ]);
 
             $table = Table::where('No_Table', $validated['No_Table'])->firstOrFail();

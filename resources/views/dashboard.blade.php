@@ -8,18 +8,18 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
-        <div class="bg-white p-5 rounded-lg shadow-md border-t-4 border-primary">
+        <div class="bg-white p-5 rounded-lg shadow-md border-t-4 border-primary transform transition duration-300 hover:scale-105">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-base font-medium text-gray-500">Rekap Penjualan Hari Ini</h3>
                 <span class="text-xl text-primary">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
                 </span>
             </div>
-            <p class="text-3xl font-bold text-gray-900 mb-1">Rp 9.000.000</p>
-            <p class="text-xs text-gray-400">25 November 2025</p>
+            <p class="text-3xl font-bold text-gray-900 mb-1">RP {{ number_format($penjualanHariIni, 0, ',', '.') }}</p>
+            <p class="text-xs text-gray-400">{{ $tanggalHariIni }}</p>
         </div>
 
-        <div class="bg-white p-5 rounded-lg shadow-md border-t-4 border-green-600">
+        <div class="bg-white p-5 rounded-lg shadow-md border-t-4 border-primary transform transition duration-300 hover:scale-105">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-base font-medium text-gray-500">Pendapatan Bulanan</h3>
                 <span class="text-xl text-green-600">
@@ -30,21 +30,21 @@
             <p class="text-xs text-gray-400">1 Nov - 1 Des</p>
         </div>
 
-        <div class="bg-white p-5 rounded-lg shadow-md border-t-4 border-yellow-600">
+        <div class="bg-white p-5 rounded-lg shadow-md border-t-4 border-primary transform transition duration-300 hover:scale-105">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-base font-medium text-gray-500">Meja Terpakai Saat Ini</h3>
                 <span class="text-xl text-yellow-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <svg class="w-6 h-6" fill="primary" stroke="primary" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 </span>
             </div>
-            <p class="text-3xl font-bold text-gray-900 mb-1">25 Meja</p>
-            <p class="text-xs text-gray-400">Total 30 Meja</p>
+            <p class="text-3xl font-bold text-gray-900 mb-1">{{ $mejaTerpakai}} Meja</p>
+            <p class="text-xs text-gray-400">Total {{ $mejaTotal }} Meja</p>
         </div>
     </div>
+      
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md transform transition duration-300 hover:scale-105">
             <div class="flex justify-between items-center pb-4 border-b border-gray-200 mb-4">
                 <h2 class="text-xl font-bold text-gray-800">Aktivitas Log Terbaru</h2>
                 <form action="{{ route('log.index') }}">
@@ -88,28 +88,27 @@
             @endfor
         </div>
 
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md transform transition duration-300 hover:scale-105">
             <div class="flex justify-between items-center pb-4 border-b border-gray-200 mb-4">
                 <h2 class="text-xl font-bold text-gray-800">Menu Populer</h2>
                 <form action="{{ route('menu.index') }}" method="get">
                     <button type="submit" class="text-sm font-semibold text-gray-600 hover:text-primary transition">Lihat Menu &rarr;</button>
                 </form>
             </div>
-
-            @for ($i = 0; $i < 4; $i++)
-                <div class="flex items-center py-3 border-b border-gray-100 last:border-b-0">
-                    <img src="https://via.placeholder.com/60/421512/FFFFFF?text=MP" alt="Menu Populer" class="w-12 h-12 object-cover rounded-md mr-4 shadow-sm">
-                    <div class="flex-grow">
-                        <p class="font-semibold text-gray-800">Ayam Goreng Pecak</p>
-                        <p class="text-sm font-bold text-gray-900">Rp 15.000</p>
-                    </div>
-                    <p class="text-sm text-green-600 font-semibold">Tersedia</p>
+            @foreach($menuData as $data)    
+            <div class="flex items-center py-3 border-b border-gray-100 last:border-b-0">
+                <img src="https://via.placeholder.com/60/421512/FFFFFF?text=MP" alt="Menu Populer" class="w-12 h-12 object-cover rounded-md mr-4 shadow-sm">
+                <div class="flex-grow">
+                    <p class="font-semibold text-gray-800">{{ $data->nama_menu }}</p>
+                    <p class="text-sm font-bold text-gray-900">{{ $data->harga }}</p>
                 </div>
-            @endfor
+                <p class="text-sm text-green-600 font-semibold">{{ $data->status_menu }}</p>
+            </div>
+            @endforeach
         </div>
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow-md">
+    <div class="bg-white p-6 rounded-lg shadow-md transform transition duration-300 hover:scale-105">
         <div class="flex justify-between items-center pb-4 border-b border-gray-200 mb-6">
             <h2 class="text-xl font-bold text-gray-800">Ringkasan Penjualan dan Pendapatan</h2>
             <div class="flex items-center space-x-3">
@@ -145,5 +144,21 @@
         </div>
     </div>
 </div>
-
+  <div class="mt-8 pt-4 border-t border-gray-200">
+            <h2 class="text-xl font-alata mb-3">Tambah Meja Baru</h2>
+            <form action="{{ route('make.table') }}" method="POST" class="flex items-end gap-4">
+                @csrf
+                <div class="flex flex-col">
+                    <label for="number_table" class="text-sm text-gray-600 mb-1">Nomor Meja</label>
+                    <select name="number_table" id="number_table" class="h-10 border border-gray-300 rounded-lg p-2 focus:ring-primary focus:border-primary">
+                        @for ($i = 1; $i <= 8; $i++)
+                        <option value="{{ $i }}">{{ $i }}</option>
+                        @endfor
+                    </select>
+                </div>
+                <button type="submit" class="bg-secondary text-background h-10 px-6 rounded-lg font-semibold hover:bg-opacity-90 transition duration-300">
+                    Tambah
+                </button>
+            </form>
+        </div>
 @endsection

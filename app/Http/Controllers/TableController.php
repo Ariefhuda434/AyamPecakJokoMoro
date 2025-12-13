@@ -15,6 +15,6 @@ class TableController extends Controller
             'number_table' => 'required|int|max:6',
         ]);
         Table::create($validated);  
-        return redirect()->route('customer.index')->with('success', 'Jumlah meja berhasil ditambahkan!');
+        return redirect()->route('dashboard.view')->with('success', 'Jumlah meja berhasil ditambahkan!');
     }
 }

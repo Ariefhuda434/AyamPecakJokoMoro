@@ -14,39 +14,60 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class OrderController extends Controller
 {
+public function index(Request $request, $No_Table, $Customer_id)
+{
+    
+    $menuQuery = Menu::query(); 
+    
+    $categoryFilter = $request->get('category', 'Semua');
+    
+    if ($categoryFilter !== 'Semua') {
+        $menuQuery->where('Category', $categoryFilter);
+    }
+    
+    $menus = $menuQuery->get(); 
 
-    public function index(Request $request, $No_Table, $Customer_id)
-    {
-        $menus = Menu::all(); 
-        $employee = Auth::user(); 
-        $employeeId = $employee->Employee_id;
+    
+    $employee = Auth::user(); 
+    $employeeId = $employee->Employee_id;
 
-        $categoryFilter = $request->get('category', 'Semua');
-        if ($categoryFilter !== 'Semua') {
-            $menus = $menus->where('Category', $categoryFilter);
-        }
-        
-        $activeOrder = Order::where('Customer_id', $Customer_id)
-            ->whereNotIn('Order_Status', ['Selesai', 'Lunas', 'Batal']) 
-            ->with('orderDetails.menu')
-            ->latest('Order_id') 
-            ->first();
-            
-        $sessionCart = session()->get('cart', []);
+    $activeOrder = Order::where('Customer_id', $Customer_id)
+        ->whereNotIn('Order_Status', ['Selesai', 'Lunas', 'Batal']) 
+        ->with('orderDetails.menu')
+        ->latest('Order_id') 
+        ->first();
 
-        return view('menu', [
-            'menus' => $menus,
-            'No_Table' => $No_Table,
-            'sessionCart' => $sessionCart,
-            'activeOrder' => $activeOrder,
-            'employeeId' => $employeeId,
-            'customerId' => $Customer_id
-        ]);
+    $totalmenu = Menu::count();
+    $MenuMakanan = Menu::where('Category', 'Makanan')->count();
+    $MenuMinuman = Menu::where('Category', 'Minuman')->count();
+    $MenuCemilan = Menu::where('Category', 'Cemilan')->count();
+
+    return view('menu', [
+        'menus' => $menus, 
+        'No_Table' => $No_Table,
+        'sessionCart' => session()->get('cart', []),
+        'activeOrder' => $activeOrder,
+        'employeeId' => $employeeId,
+        'customerId' => $Customer_id,
+        'categoryFilter' => $categoryFilter, 
+        'totalmenu' => $totalmenu,
+        'MenuMakanan' => $MenuMakanan,
+        'MenuMinuman' => $MenuMinuman,
+        'MenuCemilan' => $MenuCemilan,
+    ]);
+}
+
+    public function destroyCart($menu_id){
+        $cart = session()->get('cart', []);
+
+    if (isset($cart[$menu_id])) {
+        unset($cart[$menu_id]);
+        session()->put('cart', $cart);
+        return back()->with('success', 'Item berhasil dihapus dari keranjang.');
     }
 
-    /**
-     * Menambahkan item ke keranjang (Session Cart).
-     */
+    return back()->with('error', 'Item tidak ditemukan di keranjang.');
+    }
     public function addToCart(Request $request)
     {
         $request->validate(['Menu_id' => 'required|exists:menus,Menu_id', 'Quantity' => 'required|integer|min:1']);
@@ -76,7 +97,6 @@ class OrderController extends Controller
     public function checkout(Request $request)
     {
         $cart = session()->get('cart');
-
         if (empty($cart)) {
             return redirect()->back()->with('error', 'Pesanan masih kosong.');
         }
@@ -89,20 +109,20 @@ class OrderController extends Controller
         $totalPrice = array_sum(array_map(function($item) {
             return $item['Price'] * $item['Quantity'];
         }, $cart));
+        // dd($cart);
         
         DB::beginTransaction();
         try {
             foreach ($cart as $item) {
-               
-                $menu = Menu::with('recipe.stocks')->find($item['Menu_id']);
-                if (!$menu || !$menu->recipe || $menu->recipe->stocks->isEmpty()) {
+                
+                $menu = Menu::with('recipe.stocksMagic')->find($item['Menu_id']);
+                if (!$menu || !$menu->recipe || $menu->recipe->stocksMagic->isEmpty()) {
                     DB::rollBack();
                     return redirect()->back()->with('error', 'Resep atau bahan baku untuk menu ' . $menu->Name . ' tidak ditemukan/belum didaftarkan.');
                 }   
-                foreach ($menu->recipe->stocks as $stock) {    
+                foreach ($menu->recipe->stocksMagic as $stock) {    
                     $quantityNeeded = $stock->pivot->Quantity; 
                     $quantityUsed = $quantityNeeded * $item['Quantity']; 
-                    // dd($stock->Current_Stock);
                     if ($stock->Current_Stock < $quantityUsed) {
                         DB::rollBack();
                         return redirect()->back()->with('error', 'Stok ' . $stock->Name . ' tidak cukup (' . $stock->Current_Quantity . ' tersedia) untuk pesanan ini.');

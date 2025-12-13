@@ -32,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/menu-management', [MenuController::class, 'store'])->name('menu.store');
         Route::put('/dashboard/menu-management/{menu}', [MenuController::class, 'update'])->name('menu.update');
         Route::delete('/dashboard/menu-management/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
+        
+        Route::post('/dashboard/add-table', [TableController::class, 'table_create'])->name('make.table');
 
         Route::get('/dashboard/menu-management/recipies/{slug}', [RecipeController::class, 'index'])->name('recipies.index');
         Route::post('/dashboard/menu-management/recipies/{slug}/store', [RecipeController::class, 'store'])->name('recipies.store');
@@ -59,12 +61,12 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:waiter'])->prefix('waiter')->group(function () {
 
         Route::get('/order',[CustomerController::class,'index'])->name('customer.index');
-        Route::post('/order/add-table', [TableController::class, 'table_create'])->name('make.table');
         Route::post('order/add-customer/', [CustomerController::class, 'store'])->name('make.customer');
         Route::put('/order/menu/clear',[CustomerController::class,'out'])->name('customer.out');
 
         Route::get('/order/menu/{table}/{customer}',[OrderController::class,'index'])->name('order.index');
         Route::post('/order/cart', [OrderController::class, 'addToCart'])->name('cart.add');
+        Route::delete('/order/cart/{menu}', [OrderController::class, 'destroyCart'])->name('cart.destroy');
         Route::post('/order/checkout', [OrderController::class, 'checkout'])->name('checkout');
         Route::get('/order/{order}/show', [OrderController::class, 'show'])->name('order.show');
         Route::get('/order/{order}/show/print', [OrderController::class, 'printStruk'])->name('order.print');

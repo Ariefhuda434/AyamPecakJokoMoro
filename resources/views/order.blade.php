@@ -64,9 +64,6 @@
                     <button type="submit" class="bg-gray-400 hover:bg-gray-600 transtion-all duration-600 text-background h-10 w-full rounded-lg text-sm font-semibold mb-1">
                         Pesan
                     </button>
-                    <a href="#" class="underline text-xs text-gray-500 hover:text-red-500 transition duration-300">
-                        Pesan Sekarang 
-                    </a>
                 </div>
             </form>
 
@@ -101,6 +98,7 @@
                 
                 <div class="flex flex-col items-center">
                 @if ($customerId)
+               
                 <form action="{{ route('order.index', [$table->No_Table, $customerId]) }}" method="GET" class="w-full">
                     @csrf
                     <button type="submit" class="bg-primary hover:bg-red-900 transtion-all duration-600 text-background h-10 w-full rounded-lg text-sm font-semibold mb-1">
@@ -113,13 +111,7 @@
                 </button>
                 @endif
                 
-                <form action="{{ route('customer.out', $table->No_Table) }}" method="POST">
-                    @csrf
-                    @method('PUT') 
-                    <button type="submit" class="underline text-xs text-gray-500 hover:text-red-500 transition duration-300">
-                        Batalkan Pesanan (Kosongkan Meja)
-                    </button>
-                </form>
+                
 
                 </div>
             @endif
@@ -128,7 +120,7 @@
             
         </div>
 
-        <div class="mt-8 pt-4 border-t border-gray-200">
+        {{-- <div class="mt-8 pt-4 border-t border-gray-200">
             <h2 class="text-xl font-alata mb-3">Tambah Meja Baru</h2>
             <form action="{{ route('make.table') }}" method="POST" class="flex items-end gap-4">
                 @csrf
@@ -144,7 +136,7 @@
                     Tambah
                 </button>
             </form>
-        </div>
+        </div> --}}
 
     </div>
 

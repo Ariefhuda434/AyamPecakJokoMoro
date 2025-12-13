@@ -38,68 +38,116 @@
     </div>
 
     <div class="w-full flex mt-4 justify-start px-3 gap-3 overflow-x-auto pb-4">
-        {{-- ... (Kode Kategori) ... --}}
+         <div class="flex gap-5">
+        <a href="{{ route('menu.index') }}" class="flex gap-4 mb-8">
+            <div class="flex p-4 w-53 h-23 bg-secondary text-primary rounded-2xl shadow-md hover:text-background transition-all duration-400 hover:scale-[1.02] hover:shadow-lg ease-in-out hover:bg-primary shadow-md">
+                <img src="{{ asset('images/all.png') }}" alt="Home Icon" class="h-15 w-15  mr-3 rounded-md">
+                <div class="flex flex-col">
+                    <p class="font-alata text-lg">Semua Meja</p>
+                    <p class="font-alata text-lg font-bold">{{ $totalmenu }}</p>
+                </div>
+            </div>
+        </a>
+        <a href="{{ route('menu.index',['Category' => 'Makanan']) }}" class="flex gap-4 mb-8">
+            <div class="flex p-4 w-53 h-23 bg-secondary text-primary rounded-2xl shadow-md hover:text-background transition-all duration-400 hover:scale-[1.02] hover:shadow-lg ease-in-out hover:bg-primary shadow-md">
+                <img src="{{ asset('images/kosong.png') }}" alt="Home Icon" class="h-15 w-14  mr-3 rounded-md">
+                <div class="flex flex-col">
+                    <p class="font-alata text-lg">Makanan</p>
+                    <p class="font-alata text-lg font-bold">{{ $MenuMakanan }}</p>
+                </div>
+            </div>
+        </a>
+        <a href="{{ route('menu.index',['Category' => 'Minuman']) }}" class="flex gap-4 mb-8">
+            <div class="flex p-4 w-53 h-23 bg-secondary text-primary rounded-2xl shadow-md hover:text-background transition-all duration-400 hover:scale-[1.02] hover:shadow-lg ease-in-out hover:bg-primary shadow-md">
+                <img src="{{ asset('images/berisi.png') }}" alt="Home Icon" class="h-15 w-15  mr-3 rounded-md">
+                <div class="flex flex-col">
+                    <p class="font-alata text-lg">Minuman</p>
+                    <p class="font-alata text-lg font-bold">{{ $MenuMinuman }}</p>
+                </div>
+            </div>
+        </a>
+        <a href="{{ route('menu.index',['Category' => 'Cemilan']) }}" class="flex gap-4 mb-8">
+            <div class="flex p-4 w-53 h-23 bg-secondary text-primary rounded-2xl shadow-md hover:text-background transition-all duration-400 hover:scale-[1.02] hover:shadow-lg ease-in-out hover:bg-primary shadow-md">
+                <img src="{{ asset('images/berisi.png') }}" alt="Home Icon" class="h-15 w-15  mr-3 rounded-md">
+                <div class="flex flex-col">
+                    <p class="font-alata text-lg">Cemilan</p>
+                    <p class="font-alata text-lg font-bold">{{ $MenuCemilan }}</p>
+                </div>
+            </div>
+        </a>
+
+        </div>
     </div> 
     
     <h3 class="text-xl font-alata mt-6 mb-4 px-3">Daftar Menu</h3>
     <hr class="mx-3 border-primary/50">
 
-    <div class="w-full flex flex-wrap justify-center md:justify-start lg:justify-center gap-4 py-6 pb-20 px-3">
-        @forelse ($menus as $menu)
-            <div class="h-auto w-40 sm:w-44 md:w-48 flex flex-col items-center bg-white border-4 rounded-[1rem] border-primary shadow-lg overflow-hidden transition-shadow hover:shadow-xl p-2 pb-4">
-                <div class="h-28 w-11/12 bg-gray-300 mt-2 rounded-[0.5rem] flex items-center justify-center text-gray-500 text-sm">
-                    
+   <div class="w-full flex flex-wrap justify-center md:justify-start lg:justify-center gap-6 py-6 pb-20 px-3">
+    @forelse ($menus as $menu)
+    <div class="
+        h-auto w-56 sm:w-64 flex flex-col items-center bg-white 
+        border border-gray-200 rounded-xl shadow-lg 
+        transform transition duration-300 hover:scale-[1.02] hover:shadow-xl
+        p-3 
+    ">
+        <div class="h-36 w-full bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 text-sm overflow-hidden">
+             <p>Foto Menu </p> 
+        </div>
+        
+        <div class="w-full pt-3 pb-1">
+            <p class="font-semibold line-clamp-2 text-lg text-gray-800 h-14">
+                {{ $menu->Name }}
+            </p>
+            
+            <div class="flex justify-between items-center  mb-3">
+                <p class="font-extrabold font-alata text-2xl text-primary">
+                    Rp {{ number_format($menu->Price ?? 0, 0, ',', '.') }}
+                </p>
+            </div>
+        </div>
+
+        <form action="{{ route('cart.add') }}" method="POST" class="w-full">
+            @csrf
+            
+            <input type="hidden" name="Menu_id" value="{{ $menu->Menu_id }}">
+            
+            <div class="flex items-end space-x-2 mb-2">
+                <div class="flex-grow-0">
+                    <label for="Quantity-{{ $menu->Menu_id }}" class="text-xs font-medium block mb-1">Jumlah:</label>
+                    <input 
+                        type="number" 
+                        name="Quantity" 
+                        id="Quantity-{{ $menu->Menu_id }}" 
+                        value="1" 
+                        min="1" 
+                        class="w-full border border-gray-300 rounded-lg text-center p-2 text-sm focus:border-primary focus:ring-primary"
+                        required
+                    >
                 </div>
                 
-                <div class="w-11/12 h-10 flex justify-center text-center p-1">
-                    <p class="font-semibold line-clamp-2 text-sm">{{ $menu->Name }}</p>
+                <div class="flex-grow">
+                    <label for="Notes-{{ $menu->Menu_id }}" class="text-xs font-medium block mb-1">Catatan (Opsional):</label>
+                    <input 
+                        type="text" 
+                        name="Notes" 
+                        id="Notes-{{ $menu->Menu_id }}" 
+                        class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:border-primary focus:ring-primary"
+                        placeholder="Pedas/Tanpa gula"
+                    >
                 </div>
-                <div class="w-full h-10 flex justify-between px-4">
-                    <p class="font-bold font-alata mt-2 text-lg text-primary">
-                        RP{{ number_format($menu->Price, 0, ',', '.') }}
-                    </p>
-                </div>
-
-                <form action="{{ route('cart.add') }}" method="POST" class="w-full px-2">
-                    @csrf
-                    
-                    <input type="hidden" name="Menu_id" value="{{ $menu->Menu_id }}">
-                    
-                    <div class="form-group mb-2">
-                        <label for="Quantity-{{ $menu->Menu_id }}" class="text-xs font-medium block">Jumlah:</label>
-                        <input 
-                            type="number" 
-                            name="Quantity" 
-                            id="Quantity-{{ $menu->Menu_id }}" 
-                            value="1" 
-                            min="1" 
-                            class="w-full border border-gray-300 rounded-lg text-center p-1 text-sm"
-                            required
-                        >
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label for="Notes-{{ $menu->Menu_id }}" class="text-xs font-medium block">Catatan:</label>
-                        <input 
-                            type="text" 
-                            name="Notes" 
-                            id="Notes-{{ $menu->Menu_id }}" 
-                            class="w-full border border-gray-300 rounded-lg p-1 text-sm"
-                            placeholder="Pedas/Tanpa gula"
-                        >
-                    </div>
-                    
-                    <button type="submit" class="w-full bg-primary text-white py-2 rounded-lg font-bold text-sm hover:bg-primary/80 transition">
-                        Tambah ke Pesanan
-                    </button>
-                </form>
             </div>
-        @empty
-            <p class="text-gray-500 mt-10">Tidak ada menu yang tersedia saat ini.</p>
-        @endforelse
+            
+            <button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-semibold text-base hover:bg-primary/90 transition shadow-md mt-2 flex justify-center items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
+                <span>Tambah ke Pesanan</span>
+            </button>
+        </form>
     </div>
+    @empty
+        <p class="text-gray-500 mt-10">Tidak ada menu yang tersedia saat ini.</p>
+    @endforelse
+</div>
     
-    {{-- SIDEBAR KERANJANG (Diambil dari SESSION) --}}
     <div x-cloak x-show="isCartOpen" 
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
@@ -117,35 +165,69 @@
              x-transition:leave="transition ease-in duration-300 transform"
              x-transition:leave-start="translate-x-0"
              x-transition:leave-end="translate-x-full"
-             class="fixed top-0 right-0 w-full md:w-96 h-full bg-white shadow-2xl flex flex-col">
+             class="fixed top-0 right-0 w-full md:w-110 h-full bg-white shadow-2xl rounded-l-[5rem] border-l-10 border-t-10 border-b-10 border-primary flex flex-col">
             
-            <div class="p-4 border-b flex justify-between items-center bg-gray-50">
-                <h3 class="text-2xl font-alata text-primary">Pesanan Meja {{ $No_Table }}</h3>
-                <button @click="isCartOpen = false" class="text-gray-600 hover:text-red-500 transition">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            <div class="p-4  flex justify-between items-center mt-8 rounded-t-[5rem] bg-gray-50">
+                <h3 class="text-3xl font-neue text-primary">Pesanan Meja {{ $No_Table }}</h3>
+                <button @click="isCartOpen = false" class=" bg-primary rounded-full p-1 hover:bg-red-900 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
             </div>
 
             <div class="flex-grow p-4 overflow-y-auto space-y-4">
                 @if (count($cartItems) > 0)
                     @foreach ($cartItems as $itemId => $item)
-                        <div class="flex items-start justify-between border-b pb-2">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-16 h-16 bg-gray-200 rounded-lg flex-shrink-0"></div>
-                                <div>
-                                    <p class="font-semibold text-sm">{{ $item['Name'] }} (x{{ $item['Quantity'] }})</p>
-                                    <p class="text-xs text-gray-500">Harga Satuan: RP{{ number_format($item['Price'], 0, ',', '.') }}</p>
-                                    @if($item['Notes'])
-                                        <p class="text-xs text-red-500 italic">Catatan: {{ $item['Notes'] }}</p>
-                                    @endif
-                                </div>
-                            </div>
-                            
-                            <p class="font-bold text-sm">
-                                RP{{ number_format($item['Price'] * $item['Quantity'], 0, ',', '.') }}
-                            </p>
-                            cu
-                        </div>
+<div class="flex mb-4">
+    
+<div class="flex items-start border-4 border-primary rounded-l-lg p-3 flex-grow">
+    <div class="flex items-center space-x-4 w-full">
+        
+        <div class="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0">
+        </div>
+        
+        <div class="flex-grow min-w-0"> 
+            
+            <p class="font-semibold text-xl text-gray-800 break-words">{{ $item['Name'] }}</p>
+
+            <p class="text-xs text-gray-500 mt-1 whitespace-nowrap">
+                Satuan: Rp{{ number_format($item['Price'], 0, ',', '.') }}
+            </p>
+            
+            @if($item['Notes'])
+                <p class="text-xs text-red-500 italic mt-1 break-words">Catatan: {{ $item['Notes'] }}</p>
+            @endif
+            
+        </div>
+
+        <div class="flex-shrink-0 text-right ml-4">
+            <p class="font-bold text-xl text-primary whitespace-nowrap">
+                Rp{{ number_format($item['Price'] * $item['Quantity'], 0, ',', '.') }}
+            </p>
+            <p class="font-bold text-lg text-gray-600 mt-1 whitespace-nowrap">
+                (x{{ $item['Quantity'] }})
+            </p>
+        </div>
+        
+    </div>
+</div>
+<form action="{{ route('cart.destroy', ['menu' => $item['Menu_id']]) }}" method="POST">
+    @csrf
+    @method('DELETE')
+    
+    <button type="submit" 
+            class="
+                w-8 h-full flex items-center justify-center 
+                bg-secondary border-t-4 border-b-4 border-r-4 border-primary 
+                rounded-r-lg flex-shrink-0 
+                hover:bg-accent transition duration-200
+            "
+            onclick="return confirm('Yakin hapus item ini?')"
+            title="Hapus Item">
+    </button>
+</form>
+    
+</div>
+
                     @endforeach
                 @else
                     <p class="text-gray-500 text-center mt-10">Keranjang masih kosong.</p>
@@ -154,28 +236,38 @@
             {{-- @foreach ($customerId as $test )
                 {{ $test['Name'] }}
             @endforeach --}}
-            <div class="p-4 border-t shadow-lg">
-                <div class="flex justify-between font-bold text-lg mb-3">
-                    <span>Total Keseluruhan:</span>
-                    <span>RP{{ number_format($cartTotal, 0, ',', '.') }}</span>
-                </div>
-                @if (count($cartItems) > 0)
-                    <form action="{{ route('checkout') }}" method="POST">
-                        @csrf
-                        
-                        <input type="hidden" name="Employee_id" value="{{ $employeeId }}"> 
-                        
-                        <input type="hidden" name="Customer_id" value="{{ $customerId }}">
-                        <input type="hidden" name="Total" value="{{ $cartTotal }}">
-                        
-                        <p class="text-sm text-gray-600 mb-2">Meja: <strong>{{ $No_Table }}</strong> | Staf ID: <strong>{{ $employeeId }}</strong>Customer ID: <strong>{{ $customerId ?? 'Tamu' }}</strong></p>
-                        
-                        <button type="submit" class="w-full block text-center bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 transition font-bold">
-                            Konfirmasi Pesanan
-                        </button>
-                    </form>
-                @endif
+          <div class="p-4 mb-5 rounded-b-[5rem] border-t bg-white sticky bottom-0 z-10">
+    
+    <div class="flex justify-between font-alata font-bold text-xl mb-4 text-gray-800">
+        <span>Total Keseluruhan:</span>
+        <span class="text-primary-dark">Rp{{ number_format($cartTotal, 0, ',', '.') }}</span>
+    </div>
+    
+    @if (count($cartItems) > 0)
+        <form action="{{ route('checkout') }}" method="POST">
+            @csrf
+            
+            <input type="hidden" name="Employee_id" value="{{ $employeeId }}"> 
+            <input type="hidden" name="Customer_id" value="{{ $customerId }}">
+            <input type="hidden" name="Total" value="{{ $cartTotal }}">
+            
+            <div class="text-xs text-gray-500 flex mb-3 border-t pt-2 ">
+                <p>Meja:  <strong>{{ $No_Table }} </strong></p> | 
+                <p> Staf ID:  <strong>{{ $employeeId }} </strong></p> | 
+                <p> Customer ID:  <strong>{{ $customerId ?? 'Tamu' }} </strong></p>
             </div>
+            <button type="submit" 
+                class="w-full block text-center bg-primary text-white py-3 rounded-lg hover:bg-red-900 transition font-alata font-bold text-lg shadow-md">
+                Konfirmasi Pesanan
+            </button>
+        </form>
+    @else
+        <button type="button" disabled
+            class="w-full block text-center bg-gray-400 text-white py-3 rounded-lg cursor-not-allowed font-alata font-bold text-lg">
+            Keranjang Kosong
+        </button>
+    @endif
+</div>
             
         </div>
     </div>

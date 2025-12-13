@@ -9,7 +9,9 @@
 
 </head>
 <body class="bg-[#421512]">
-
+       <div class="text-center mt-15">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="mx-auto w-24">
+            </div>
 <div class="h-3/4 bg-[#FFF8E7] w-full fixed bottom-0 rounded-tl-[5rem] flex justify-center p-4"> 
     <form action="{{ route('login.action') }}" method="POST" class="w-full">
     @if ($errors->any())

@@ -20,6 +20,11 @@ class RecipeController extends Controller
         ->where('id_resep', $resepid)
         ->get();
 
+    $Data = DB::table('view_resep_stok')
+        ->where('id_resep', $resepid)
+        ->first();
+        
+        // dd($resepData);
     $stockData = DB::table('stocks')
         ->select([
             'Stock_id',
@@ -27,11 +32,12 @@ class RecipeController extends Controller
             'Unit as satuan_resep'
         ])
         ->get();
-
+        // dd($stockData);
     return view('recipies', [
         'menu' => $menu,
         'resepData' => $resepData,
-        'stockData' => $stockData
+        'stockData' => $stockData,
+        'Data' => $Data
     ]);
 }
 

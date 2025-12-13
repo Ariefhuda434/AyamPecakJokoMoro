@@ -72,7 +72,7 @@ class OrderController extends Controller
 
         return redirect()->back()->with('success', $menu->Name . ' berhasil ditambahkan ke pesanan.');
     }
- 
+
     public function checkout(Request $request)
     {
         $cart = session()->get('cart');
@@ -92,22 +92,16 @@ class OrderController extends Controller
         
         DB::beginTransaction();
         try {
-            
             foreach ($cart as $item) {
                
                 $menu = Menu::with('recipe.stocks')->find($item['Menu_id']);
-                // dd($menu->recipe );
                 if (!$menu || !$menu->recipe || $menu->recipe->stocks->isEmpty()) {
                     DB::rollBack();
                     return redirect()->back()->with('error', 'Resep atau bahan baku untuk menu ' . $menu->Name . ' tidak ditemukan/belum didaftarkan.');
-                }
-                
-                foreach ($menu->recipe->stocks as $stock) { 
-                    
+                }   
+                foreach ($menu->recipe->stocks as $stock) {    
                     $quantityNeeded = $stock->pivot->Quantity; 
-                    
                     $quantityUsed = $quantityNeeded * $item['Quantity']; 
-                    
                     // dd($stock->Current_Stock);
                     if ($stock->Current_Stock < $quantityUsed) {
                         DB::rollBack();

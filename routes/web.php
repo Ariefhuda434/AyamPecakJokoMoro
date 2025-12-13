@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MenuController;
@@ -36,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/dashboard/menu-management/recipies/{slug}/store', [RecipeController::class, 'store'])->name('recipies.store');
         Route::put('/dashboard/menu-management/recipies/{recipe}', [RecipeController::class, 'update'])->name('recipies.update');
         Route::delete('/dashboard/menu-management/recipies/{recipe}', [RecipeController::class, 'destroy'])->name('recipies.destroy');
+        Route::get('/dashboard/log',[LogController::class,'indexLog'])->name('log.index');
 
         Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
         Route::post('/stock', [StockController::class, 'store'])->name('stock.store');
@@ -51,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/karyawan', [EmployeeController::class, 'store'])->name('employee.store');
         Route::put('karyawan/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
         Route::delete('karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
+
     });
 
     Route::middleware(['role:waiter'])->prefix('waiter')->group(function () {
@@ -71,7 +74,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/transactions', [TransactionController::class, 'index'])->name('cashier.view');
         Route::post('/transactions/payment', [TransactionController::class, 'payment'])->name('cashier.pay');
         Route::get('/transactions/payment/{transaction}', [TransactionController::class, 'paymentindex'])->name('payment.index');
-        Route::get('/payment/status', [TransactionController::class, 'paymentStatus'])->name('cashier.paymentStatus');
+        Route::put('/transactions/payment/konfirmasi', [TransactionController::class, 'paymentkonfirmasi'])->name('payment.konfirmasi');
 
     });
 });

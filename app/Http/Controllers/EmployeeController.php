@@ -20,7 +20,7 @@ class EmployeeController extends Controller
         $countEmployee = Employee::count();
 
         $employeeData = DB::table('view_employees')
-            ->orderBy('date_join', 'desc')
+            ->orderBy('Tanggal_bergabung', 'desc')
             ->get();
 
         return view('karyawan', [

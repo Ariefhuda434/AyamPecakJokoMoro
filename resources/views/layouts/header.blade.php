@@ -75,72 +75,72 @@
         @click.stop
         class="fixed top-0 left-0 h-screen bg-primary w-64 z-40 flex flex-col justify-between 
                         transition-transform duration-300 ease-in-out shadow-xl">
-
         <nav class="px-4 py-6 overflow-y-auto flex-grow">
-            <div class="text-center mb-6">
-                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="mx-auto w-24">
-            </div>
+    <div class="text-center mb-6">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo Ayam Pecak JM" class="mx-auto w-24 rounded-full">
+    </div>
 
-            <ul class="flex flex-col gap-2 text-white font-medium">
-                
-                <li>
-                    <a href="{{ $dashboardRoute }}" 
-                       class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
-                              {{ $isActive($dashboardRoute) ? 'bg-[#D4A017] text-[#421512]' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
-                        <span class="rounded-full bg-white h-6 w-6"></span>
-                        Dashboard
-                    </a>
-                </li>
-                
-                @if ($roleSlug === 'manager')
-                <li>
-                    <a href="{{ route('employee.index') }}" 
-                       class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
-                              {{ $isActive('manager/karyawan*') ? 'bg-[#D4A017] text-[#421512]' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
-                        <span class="rounded-full bg-white h-6 w-6"></span>
-                        Manajemen Karyawan
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('stock.index') }}" 
-                       class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
-                              {{ $isActive('manager/stock*') ? 'bg-[#D4A017] text-[#421512]' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
-                        <span class="rounded-full bg-white h-6 w-6"></span>
-                        Manajemen Stok
-                    </a>
-                </li>
-                @endif
-                
-                @if ($roleSlug === 'waiter') 
-                <li>
-                    <a href="{{ route('customer.index') }}" 
-                       class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
-                              {{ $isActive('order*') ? 'bg-[#D4A017] text-[#421512]' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
-                        <span class="rounded-full bg-white h-6 w-6"></span>
-                        Order
-                    </a>
-                </li>
-                @endif
-                
-                @if ($roleSlug === 'cashier') 
-                <li>
-                    <a href="{{ route('cashier.view') }}" 
-                       class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
-                              {{ $isActive('transactions*') ? 'bg-[#D4A017] text-[#421512]' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
-                        <span class="rounded-full bg-white h-6 w-6"></span>
-                        Transaksi
-                    </a>
-                </li>
-                @endif
-            </ul>
-        </nav>
+    <ul class="flex flex-col gap-2 text-white font-medium">
+        
+        <li>
+            <a href="{{ $dashboardRoute }}" 
+                class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
+                        {{ $isActive($dashboardRoute) ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
+                <img src="{{ asset('images/home.png') }}" alt="Home Icon" class="rounded-full bg-white p-1 h-6 w-6 object-contain">
+                Dashboard
+            </a>
+        </li>
+        
+        @if ($roleSlug === 'manager')
+        <li>
+            <a href="{{ route('employee.index') }}" 
+                class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
+                        {{ $isActive('manager/karyawan*') ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
+                <img src="{{ asset('images/karyawan.png') }}" alt="Karyawan Icon" class="rounded-full bg-white p-1 h-6 w-6 object-contain">
+                Manajemen Karyawan
+            </a>
+        </li>
+        <li>
+            <a href="{{ route('stock.index') }}" 
+                class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
+                        {{ $isActive('manager/stock*') ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
+                <img src="{{ asset('images/stock.png') }}" alt="Stok Icon" class="rounded-full bg-white p-1 h-6 w-6 object-contain">
+                Manajemen Stok
+            </a>
+        </li>
+        @endif
+        
+        @if ($roleSlug === 'waiter') 
+        <li>
+            <a href="{{ route('customer.index') }}" 
+                class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
+                        {{ $isActive('customer*') || $isActive('order*') ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 5a2 2 0 00-2 2v2a2 2 0 002 2h1a2 2 0 002-2V7a2 2 0 00-2-2H4zm10-2a1 1 0 00-1 1v1a1 1 0 102 0V4a1 1 0 00-1-1zM7 7a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H8a1 1 0 01-1-1V7z" clip-rule="evenodd"></path></svg>
+                Order
+            </a>
+        </li>
+        @endif
+        
+        @if ($roleSlug === 'cashier') 
+        <li>
+            <a href="{{ route('cashier.view') }}" 
+                class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
+                        {{ $isActive('transactions*') ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v8a2 2 0 002 2h12a2 2 0 002-2V9zM5 13a1 1 0 110-2 1 1 0 010 2zm4 0a1 1 0 110-2 1 1 0 010 2zm4 0a1 1 0 110-2 1 1 0 010 2z" clip-rule="evenodd"></path></svg>
+                Transaksi
+            </a>
+        </li>
+        @endif
+    </ul>
+</nav>
+      
 
         <div class="px-4 pb-4">
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit"
-                        class="flex items-center gap-3 text-white font-medium hover:bg-red-600 transition-colors px-3 py-2 rounded-lg w-full bg-[#C84B31]">
-                    <span class="rounded-full bg-white h-6 w-6"></span>
+                        class="flex items-center gap-3 text-white font-medium hover:bg-red- transition-colors px-3 py-2 rounded-lg w-full bg-primary">
+                              <img src="{{ asset('images/logout.png') }}" alt="Logo" class="rounded-full h-6 w-6">
                     Keluar
                 </button>
             </form>

@@ -36,7 +36,7 @@
 
         </div>
 
-        <div class="flex flex-wrap justify-start gap-6 mt-4">
+        <div class="flex w-full border-t-1 pt-10 flex-wrap justify-start gap-6 mt-4">
         @foreach ($tables as $table) 
             @if ($table->status_table == 'Kosong')
         <div class="w-full p-4 bg-white border-4 border-gray-300 rounded-2xl shadow-lg max-w-sm">

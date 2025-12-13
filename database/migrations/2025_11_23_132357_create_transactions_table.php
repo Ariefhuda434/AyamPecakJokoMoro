@@ -10,8 +10,8 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id('Transaction_id');
-            $table->foreignId('Order_id')->constrained('orders','Order_id')->onDelete('cascade');
-            $table->foreignId('Employee_id')->constrained('employees','Employee_id')->onDelete('cascade');
+            $table->foreignId('Order_id')->constrained('orders','Order_id');
+            $table->foreignId('Employee_id')->constrained('employees','Employee_id');
             $table->string('Method_Payment')->nullable();
             $table->string('snap_token')->nullable();
             // $table->string('Status');

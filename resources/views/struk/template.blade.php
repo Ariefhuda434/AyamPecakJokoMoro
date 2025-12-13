@@ -1,51 +1,112 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pesanan Dapur (KOT) #{{ $order->Order_id }}</title>
-    {{-- CSS Inline adalah penting untuk DomPDF --}}
+    <title>KOT #{{ $order->Order_id }}</title>
     <style>
-        body { font-family: sans-serif; font-size: 11px; margin: 0; padding: 10px; }
-        .header { text-align: center; margin-bottom: 15px; border-bottom: 2px solid black; padding-bottom: 5px; }
-        .title { font-size: 16px; font-weight: bold; margin-bottom: 3px; }
-        .info-section { margin-bottom: 10px; }
-        .info-section p { margin: 3px 0; }
-        .items-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .items-table th, .items-table td { text-align: left; padding: 5px 0; }
-        .items-table th { border-bottom: 1px dashed black; font-size: 12px; }
-        .item-name { font-weight: bold; font-size: 14px; }
-        .notes { font-style: italic; color: #555; font-size: 10px; }
-        .footer { text-align: center; margin-top: 20px; border-top: 1px dashed black; padding-top: 5px; }
+        body { 
+            font-family: 'Consolas', monospace; 
+            font-size: 8px; 
+            margin: 0; 
+            padding: 5px; 
+            width: 80mm; 
+        }
+        .header { 
+            text-align: center; 
+            margin-bottom: 8px; 
+            border-bottom: 1px dashed black; 
+            padding-bottom: 5px; 
+        }
+        .title { 
+            font-size: 14px; 
+            font-weight: bold; 
+        }
+        .info-section { 
+            margin-bottom: 8px; 
+        }
+        .info-section p { 
+            margin: 2px 0; 
+        }
+        
+        .table-highlight {
+            font-size: 24px; 
+            font-weight: 900; 
+            color: #CC0000; 
+            display: block;
+            text-align: center;
+            padding: 4px 0;
+            border: 1px dashed #CC0000;
+            margin-top: 4px;
+        }
+
+        .items-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+        }
+        .items-table th, .items-table td { 
+            text-align: left; 
+            padding: 3px 0; 
+            vertical-align: top;
+        }
+        .items-table th { 
+            border-bottom: 1px solid black; 
+            font-size: 8px;
+            padding-bottom: 3px;
+        }
+        
+        .item-name { 
+            font-weight: bold; 
+            font-size: 10px; 
+        }
+        .item-qty {
+            font-size: 16px; 
+            font-weight: bold; 
+            text-align: center;
+            color: #CC0000; 
+            width: 15%; 
+        }
+        .notes { 
+            font-style: italic; 
+            color: #555; 
+            font-size: 7px; 
+        }
+        .footer { 
+            text-align: center; 
+            margin-top: 15px; 
+            border-top: 1px dashed black; 
+            padding-top: 5px; 
+            font-size: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="title">ORDER DAPUR / KOT</div>
-        <p style="font-size: 10px;">Dicetak pada: {{ now()->format('d/m/Y H:i:s') }}</p>
+        <div class="title">ORDER DAPUR</div>
+        <p>Tgl: {{ now()->format('d/m H:i') }} | ID: {{ $order->Order_id }}</p>
     </div>
 
     <div class="info-section">
-        <p><strong>ORDER ID:</strong> {{ $order->Order_id }}</p>
-        <p><strong>MEJA:</strong> <span style="font-size: 18px; color: red;">{{ $order->customer->table->No_Table ?? 'TAKEAWAY' }}</span></p>
         <p><strong>PELAYAN:</strong> {{ $order->employee->name_employee ?? 'N/A' }}</p>
         <p><strong>CUSTOMER:</strong> {{ $order->customer->Name ?? 'Umum' }}</p>
-        <p><strong>STATUS ORDER:</strong> <span style="font-weight: bold; color: blue;">{{ $order->Order_Status }}</span></p>
+        
+        <span class="table-highlight">{{ $order->customer->table->No_Table ?? 'TAKEAWAY' }}</span>
     </div>
 
     <table class="items-table">
         <thead>
             <tr>
-                <th style="width: 10%;">QTY</th>
-                <th style="width: 90%;">NAMA MASAKAN / ITEM</th>
+                <th style="width: 15%; text-align: center;">QTY</th>
+                <th style="width: 85%;">MENU</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($order->orderDetails as $detail)
             <tr>
-                <td style="font-size: 18px; font-weight: bold;">{{ $detail->Quantity }}</td>
+                <td class="item-qty">{{ $detail->Quantity }}</td>
                 <td>
                     <div class="item-name">{{ $detail->menu->Name }}</div>
                     @if (!empty($detail->Notes))
-                        <div class="notes">Catatan: {{ $detail->Notes }}</div>
+                        <div class="notes">({{ $detail->Notes }})</div>
                     @endif
                 </td>
             </tr>
@@ -54,7 +115,8 @@
     </table>
 
     <div class="footer">
-        <p style="font-weight: bold;">MOHON SEGERA DIPROSES</p>
+        <p>ORDER STATUS: {{ $order->Order_Status }}</p>
+        <p style="font-weight: bold;">— SEGERA PROSES —</p>
     </div>
 </body>
 </html>

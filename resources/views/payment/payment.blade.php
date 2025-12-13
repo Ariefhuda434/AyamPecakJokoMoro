@@ -30,7 +30,7 @@
                     <div class="flex justify-between items-center pb-2 border-b border-gray-100 last:border-b-0">
                         <div>
                             <p class="font-medium text-gray-800">
-                                {{ $item->jumlah_pesanan }}x **{{ $item->nama_menu }}**
+                                {{ $item->jumlah_pesanan }}x {{ $item->nama_menu }}
                             </p>
                             @if($item->catatan)
                                 <p class="text-xs text-red-500 italic">Catatan: {{ $item->catatan }}</p>
@@ -56,7 +56,7 @@
                 <form id="payment-form" method="POST" action="{{ route('payment.konfirmasi') }}" class="mt-6">
                     @csrf
                     @method('PUT') 
-                    <input type="hidden" name="Transaction_id" value="{{ $transact  ion->Transaction_id }}">
+                    <input type="hidden" name="Transaction_id" value="{{ $transaction->Transaction_id }}">
 
                     <div class="mb-4">
                         <label for="Method_Payment" class="block text-sm font-medium text-gray-700 mb-1">Metode Pembayaran</label>

@@ -10,7 +10,7 @@ class CreateDetailOrdersTable extends Migration
     {
         Schema::create('detail_order', function (Blueprint $table) {
             // $table->id('Order_Detail');  
-            $table->foreignId('Menu_id')->constrained('menus','Menu_id')->onDelete('cascade');
+            $table->foreignId('Menu_id')->constrained('menus','Menu_id');
             $table->foreignId('Order_id')->constrained('orders','Order_id');
             $table->integer('Quantity');
             $table->text('notes')->nullable();

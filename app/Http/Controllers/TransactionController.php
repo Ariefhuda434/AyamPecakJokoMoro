@@ -133,7 +133,7 @@ public function paymentkonfirmasi(Request $request)
                       ->where('orders.Order_id', $orderId)
                       ->select('customers.Customer_id', 'customers.Name', 'customers.No_Table')
                       ->first();
-    dd($customerData);
+    // dd($customerData);
     if ($customerData) {
         $customerId = $customerData->Customer_id;
         $customerName = $customerData->Name;
@@ -150,11 +150,11 @@ public function paymentkonfirmasi(Request $request)
             'Change_time' => $currentTime,
         ]);
 
-        $oldTableStatus = DB::table('tables')->where('No_Table', $tableNumber)->value('Status');
+        $oldTableStatus = DB::table('tables')->where('No_Table', $tableNumber)->value('status_table');
         
         DB::table('tables')
             ->where('No_Table', $tableNumber)
-            ->update(['Status' => 'Available']); 
+            ->update(['status_table' => 'Kosong']); 
         
         DB::table('audit_logs')->insert([
             'Table_Name' => 'tables',
@@ -166,7 +166,7 @@ public function paymentkonfirmasi(Request $request)
             'Employee_id' => $employeeId,
             'Change_time' => $currentTime,
         ]);
-
+        
         DB::table('customers')->where('Customer_id', $customerId)->delete();
     }
 

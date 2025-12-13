@@ -46,7 +46,7 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         try {
-            DB::beginTransaction(); 
+            $currentEmployeeId = \Illuminate\Support\Facades\Auth::user()->Employee_id;
 
             $validated = $request->validate([
                 'name_employee' => 'required|string|max:150',

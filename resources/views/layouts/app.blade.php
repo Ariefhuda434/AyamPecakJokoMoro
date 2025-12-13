@@ -12,14 +12,6 @@
 
     @include('layouts.header')
 
-
-    <main id="main-content" class="min-h-screen">
-        @yield('content')
-    </main>
-    
-    @include('layouts.footer')
-
-
     @yield('scripts')
 
 </body>

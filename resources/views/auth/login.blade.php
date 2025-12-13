@@ -12,10 +12,12 @@
 
 <div class="h-3/4 bg-[#FFF8E7] w-full fixed bottom-0 rounded-tl-[5rem] flex justify-center p-4"> 
     <form action="{{ route('login.action') }}" method="POST" class="w-full">
-    @if (session('error'))
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-        <span class="block sm:inline">{{ session('error') }}</span>
-    </div>
+    @if ($errors->any())
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">
+                {{ $errors->first('name_employee') }}
+            </span>
+        </div>
     @endif
     @csrf
    <div class="flex justify-center w-full"> 
@@ -32,7 +34,7 @@
             type="text" 
             name="name_employee" 
             placeholder="Masukan Nama Pengguna" 
-            value="{{ old('username') }}"
+            value="{{ old('name_employee') }}"
             class="peer w-full border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
                      placeholder-gray-500 font-sans text-lg" 
@@ -52,7 +54,7 @@
         </div>
         <div class="w-4/5 flex justify-between items-center mt-2">
             <label class="flex items-center space-x-1 cursor-pointer">
-                <input type="checkbox" name="remember_token" id="remember" 
+                <input type="checkbox" name="remember" id="remember" 
                        class="form-checkbox h-4 w-4 text-[#421512] border-gray-300 rounded focus:ring-[#421512]">
                 <p class="text-primary text-sm font-medium select-none font-sans">Ingat Saya</p>
             </label>

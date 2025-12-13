@@ -12,8 +12,9 @@ class CreateCustomersTable extends Migration
             $table->id('Customer_id');
             $table->string('Name');
             $table->string('Phone_Number');
-            $table->foreignId('No_Table')->constrained('tables','No_Table');
-            $table->timestamp('Created_at')->nullable();
+            $table->foreignId('No_Table')->constrained('tables','No_Table')->nullable();
+            $table->enum('order_status', ['memesan', 'menunggu_bayar', 'selesai', 'batal'])->default('memesan');
+            $table->timestamps();
         });
     }
 

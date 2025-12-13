@@ -62,7 +62,7 @@ return [
     */
 
     'providers' => [
-        'employees' => [ // <--- TAMBAHKAN provider 'employees'
+        'employees' => [ 
             'driver' => 'eloquent',
             'model' => Employee::class, 
         ]

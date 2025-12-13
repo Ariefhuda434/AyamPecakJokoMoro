@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\RoleMiddleware;
 use App\Models\Employee;
 use Illuminate\Foundation\Application;
 use Illuminate\Auth\Middleware\Authenticate;
@@ -15,13 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->web(append: [
-        ]);
         $middleware->alias([
-            'role' => CheckRole::class, 
             'auth' => Authenticate::class,
+            'role' => RoleMiddleware::class, 
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
     })->create();

@@ -6,13 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Stock extends Model
 {
-    protected $table = 'stock';
+    protected $table = 'stocks';
     protected $primaryKey = 'Stock_id';
-    public $timestamps = false; // Kalau tabel tidak memakai created_at & updated_at
 
     protected $fillable = [
         'Name_Stock',
-        'unit',
+        'Unit',
         'Current_Stock',
         'Min_Stock_Level',
         'Last_Cost'
@@ -22,10 +21,16 @@ class Stock extends Model
     {
         return $this->hasMany(RestockLog::class, 'Stock_id', 'Stock_id');
     }
-
-    public function recipePivots()
-    {
-        return $this->hasMany(RecipePivot::class, 'Stock_id', 'Stock_id');
-    }
+    
+    
+    public function recipes()
+{
+    return $this->belongsToMany(
+        Recipe::class, 
+        'recipe_pivot', 
+        'Stock_id',               
+        'Recipe_id'               
+    );
+}
 
 }

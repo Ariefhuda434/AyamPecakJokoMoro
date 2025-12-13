@@ -9,14 +9,17 @@ class Order extends Model
     protected $primaryKey = 'Order_id';
     protected $table = 'orders';
        protected $fillable = [
-        'NO_Table',
-        'status_table',
+        'Customer_id',
+        'Employee_id',
+        'Order_Status',
+        'Total',
     ];
 
      public function customer()
     {
         return $this->belongsTo(Customer::class, 'Customer_id', 'Customer_id');
     }
+   
 
     public function employee()
     {

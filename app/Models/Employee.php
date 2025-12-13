@@ -14,18 +14,18 @@ use Illuminate\Notifications\Notifiable;
 class Employee extends Authenticatable 
 {
     use Notifiable;
+    protected $table = 'employees';
     
     protected $primaryKey = 'Employee_id';
     
-    public function getAuthIdentifierName()
-    {
-        return 'name_employee'; 
-    }
-
+    // public function getAuthIdentifierName()
+    // {
+    //     return 'name_employee'; 
+    // }
     protected $fillable = [
         'name_employee',
         'password',
-        'role', 
+        'role_id', 
         'number_phone',
         'date_join',
     ];
@@ -45,9 +45,14 @@ class Employee extends Authenticatable
     {
         return $this->hasMany(Order::class, 'Employee_id', 'Employee_id');
     }
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 
     // public function transactions()
     // {
     //     return $this->hasMany(Transaction::class, 'Employee_id', 'Employee_id');
     // }
+    
 }

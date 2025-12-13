@@ -12,8 +12,10 @@ class CreateTransactionsTable extends Migration
             $table->id('Transaction_id');
             $table->foreignId('Order_id')->constrained('orders','Order_id')->onDelete('cascade');
             $table->foreignId('Employee_id')->constrained('employees','Employee_id')->onDelete('cascade');
-            $table->string('Method_Payment');
-            $table->string('Status');
+            $table->string('Method_Payment')->nullable();
+            $table->string('snap_token')->nullable();
+            // $table->string('Status');
+            $table->enum('Status', ['Unpaid','Paid'])->default('Unpaid');
             $table->integer('Total_Price');
             $table->timestamp('Date')->nullable();
         });

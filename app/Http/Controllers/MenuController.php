@@ -4,15 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\Recipe;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class MenuController extends Controller
 {
-    public function index()
+ public function index(Request $request)
     {
-        $menus = Menu::with('recipe')->get(); 
-        return view('menu.index', compact('menus'));
+        $countMenu = Menu::count();
+
+        $menuData = DB::table('view_menu_with_recipe')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('dashboardmenu', [
+            'menuData' => $menuData,
+            'countMenu' => $countMenu
+        ]);
     }
+
 
     public function create()
     {
@@ -20,9 +32,62 @@ class MenuController extends Controller
         return view('menu.create', compact('recipes'));
     }
 
-    public function store(Request $request)
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'Category' => 'required',
+        'Name' => 'required|string|max:255',
+        'Price' => 'required|numeric|min:0',
+        'Menu_Status' => 'nullable|string', 
+        'photo' => 'required|image|mimes:jp eg,png,jpg|max:2048', 
+        'Name_Resep' =>'required|string|max:255',
+        'Keterangan' =>'nullable|string', 
+    ]);
+    
+    DB::beginTransaction(); 
+    try {
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $path = $request->file('photo')->store('public/menu_photos');
+            $photoPath = str_replace('public/', '', $path); 
+        }
+
+        
+        $path = $request->file('photo')->store('menu', 'public');
+        $foto = $validated['photo'] = $path;
+
+        $recipeData = Recipe::create([
+            'Name_Resep' => $validated['Name_Resep'],
+            'Keterangan' => $validated['Keterangan'] ?? null, 
+        ]);
+        $newRecipeId = $recipeData->Recipe_id; 
+        
+        Menu::create([
+            'Category' => $validated['Category'],
+            'Name' => $validated['Name'],
+            'Price' => $validated['Price'],
+            'Menu_Status' => $validated['Menu_Status'] ?? 'Tidak Tersedia', 
+            'photo' => $foto, 
+            'Recipe_id' => $newRecipeId, 
+        ]);
+        DB::commit(); 
+        return redirect()->route('menu.index')->with('success', 'Menu dan Resep berhasil dibuat!');
+
+    } catch (\Exception $e) {
+        DB::rollBack(); 
+        
+        Log::error("Gagal menyimpan Menu atau Resep: " . $e->getMessage()); 
+        
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Gagal menyimpan data menu. Mohon periksa log atau hubungi administrator. Pesan teknis: ' . $e->getMessage());
+    
+}
+}
+
+    public function update(Request $request, Menu $menu)
     {
-        $request->validate([
+        $validated=$request->validate([
             'Category' => 'required',
             'Name' => 'required',
             'Price' => 'required|numeric',
@@ -30,37 +95,14 @@ class MenuController extends Controller
             'Recipe_id' => 'required|exists:recipe,Recipe_id',
         ]);
 
-        Menu::create($request->all());
-
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil ditambahkan!');
-    }
-
-    public function edit($id)
-    {
-        $menu = Menu::findOrFail($id);
-        $recipes = Recipe::all();
-        return view('menu.edit', compact('menu', 'recipes'));
-    }
-
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'Category' => 'required',
-            'Name' => 'required',
-            'Price' => 'required|numeric',
-            'Menu_Status' => 'required',
-            'Recipe_id' => 'required|exists:recipe,Recipe_id',
-        ]);
-
-        $menu = Menu::findOrFail($id);
-        $menu->update($request->all());
+        $menu->update($validated);
 
         return redirect()->route('menu.index')->with('success', 'Menu berhasil diupdate!');
     }
 
-    public function destroy($id)
+    public function destroy(Menu $menu)
     {
-        Menu::destroy($id);
+        $menu->delete();
         return redirect()->route('menu.index')->with('success', 'Menu berhasil dihapus!');
     }
 }

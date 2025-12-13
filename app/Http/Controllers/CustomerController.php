@@ -9,9 +9,7 @@ use PDO;
 
 class CustomerController extends Controller
 {
-    /**
-     * Menampilkan daftar semua meja dengan opsi filter.
-     */
+    
     public function index(Request $request)
     {
         $statusFilter = $request->get('status_table');
@@ -39,44 +37,63 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'Name' => 'required|string|max:20',
-            'Phone_Number' => 'required|string|max:14',
-            'No_Table' => 'required|numeric|min:1',
-        ]);
-        
-        $customers = Customer::create($validated);
+        try {
+            DB::beginTransaction();
 
-        $table = Table::where('No_Table', $validated['No_Table'])->firstOrFail();
-        
-        $table->update([
-             'status_table' => 'Terisi',
-        ]);
+            $validated = $request->validate([
+                'Name' => 'required|string|max:20',
+                'Phone_Number' => 'required|string|max:14',
+                'No_Table' => 'required|numeric|min:1',
+            ]);
+            
+            $customers = Customer::create([
+                'Name' => $validated['Name'],
+                'Phone_Number' => $validated['Phone_Number'],
+            ]);
 
-        return redirect()->route('customer.index',[
-        'No_Table' => $table->No_Table,
-        'customers' => $customers->Customer_id
-        ])->with('success', 'Customer berhasil duduk dan meja terisi!');
-    } 
+            $table = Table::where('No_Table', $validated['No_Table'])->firstOrFail();
+            
+            $table->update([
+                'status_table' => 'Terisi',
+                'customer_id' => $customers->id, 
+            ]);
+
+            DB::commit();
+
+            return redirect()->route('customer.index',[
+                'No_Table' => $table->No_Table,
+                'customers' => $customers->id
+            ])->with('success', 'Customer berhasil duduk dan meja terisi!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan data. Transaksi dibatalkan.');
+        }
+    }
 
     public function out(Request $request, Table $table)
     {
         if ($table->status_table !== 'Terisi') {
             return redirect()->route('customer.index')->with('error', 'Meja ini sudah kosong atau tidak terisi.');
         }
-        $activeCustomer = $table->activeCustomer;
-        if ($activeCustomer) {
-        $activeCustomer->update(['No_Table' => null]);
-    }
-        $table->update([
-             'status_table' => 'Kosong', 
-             'customer_id' => null, 
-        ]);
-        $table->update([
-         'status_table' => 'Kosong', 
-    ]);
         
-        return redirect()->route('customer.index')->with('success', 'Meja ' . $table->No_Table . ' berhasil dikosongkan!');
+        try {
+            DB::beginTransaction();
+            
+            $table->update([
+                'status_table' => 'Kosong', 
+                'customer_id' => null, 
+            ]);
+
+            DB::commit();
+        
+            return redirect()->route('customer.index')->with('success', 'Meja ' . $table->No_Table . ' berhasil dikosongkan!');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('customer.index')->with('error', 'Terjadi kesalahan saat mengosongkan meja. Transaksi dibatalkan.');
+        }
     }
 
 }
+

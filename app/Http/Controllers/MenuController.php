@@ -85,21 +85,28 @@ public function store(Request $request)
 }
 }
 
-    public function update(Request $request, Menu $menu)
+      public function update(Request $request, Menu $menu)
     {
-        $validated=$request->validate([
-            'Category' => 'required',
-            'Name' => 'required',
-            'Price' => 'required|numeric',
-            'Menu_Status' => 'required',
+        $validated = $request->validate([
+            'Category' => 'required|string|max:255',
+            'Name' => 'required|string|max:255',
+            'Price' => 'required|numeric|min:0',
+            'Menu_Status' => 'required|string', 
             'Recipe_id' => 'required|exists:recipe,Recipe_id',
         ]);
 
-        $menu->update($validated);
-
-        return redirect()->route('menu.index')->with('success', 'Menu berhasil diupdate!');
+        DB::beginTransaction();
+        try {
+            $menu->update($validated);
+            DB::commit();
+            return redirect()->route('menu.index')->with('success', 'Menu berhasil diupdate!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Gagal mengupdate Menu: " . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal mengupdate menu. Pesan teknis: ' . $e->getMessage());
+        }
     }
-
+    
     public function destroy(Menu $menu)
     {
         $menu->delete();

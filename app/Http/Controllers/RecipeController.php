@@ -35,32 +35,42 @@ class RecipeController extends Controller
     ]);
 }
 
-
-    public function store(Request $request)
+     public function store(Request $request)
     {
         $validated = $request->validate([
             'Stock_id' => 'required|numeric',
             'Recipe_id' => 'required|numeric',
             'Quantity' => 'required|numeric|min:0',
         ]);
-        
-        RecipePivot::updateOrCreate(
-            [
-                'Recipe_id' => $validated['Recipe_id'],
-                'Stock_id' => $validated['Stock_id'],
-            ],
-            [
-                'Quantity' => $validated['Quantity']
-            ]
-        );        
-        $menu = Menu::where('Recipe_id', $validated['Recipe_id'])->first();
 
-        if ($menu) {
-            return redirect()->route('recipies.index', ['slug' => $menu->slug])
-                             ->with('success','Bahan resep berhasil ditambahkan/diperbarui.');
+        DB::beginTransaction();
+        try {
+            RecipePivot::updateOrCreate(
+                [
+                    'Recipe_id' => $validated['Recipe_id'],
+                    'Stock_id' => $validated['Stock_id'],
+                ],
+                [
+                    'Quantity' => $validated['Quantity']
+                ]
+            );
+
+            DB::commit();
+
+            $menu = Menu::where('Recipe_id', $validated['Recipe_id'])->first();
+
+            if ($menu) {
+                return redirect()->route('recipies.index', ['slug' => $menu->slug])
+                                 ->with('success', 'Bahan resep berhasil ditambahkan/diperbarui.');
+            }
+
+            return back()->with('success', 'Bahan resep berhasil ditambahkan/diperbarui.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Gagal menambahkan/memperbarui bahan resep: " . $e->getMessage());
+
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan bahan resep: ' . $e->getMessage());
         }
-
-        return back()->with('success','Bahan resep berhasil ditambahkan/diperbarui.');
     }
 
 }

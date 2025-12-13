@@ -58,9 +58,6 @@
                        class="form-checkbox h-4 w-4 text-[#421512] border-gray-300 rounded focus:ring-[#421512]">
                 <p class="text-primary text-sm font-medium select-none font-sans">Ingat Saya</p>
             </label>
-            
-            <a href="#" class="underline text-sm font-medium text-[#421512] hover:text-red-700 font-sans">
-                Belum punya akun?
             </a>
         </div>
         <button 

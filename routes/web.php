@@ -71,5 +71,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/transactions', [TransactionController::class, 'index'])->name('cashier.view');
         Route::post('/transactions/payment', [TransactionController::class, 'payment'])->name('cashier.pay');
         Route::get('/transactions/payment/{transaction}', [TransactionController::class, 'paymentindex'])->name('payment.index');
+        Route::get('/payment/status', [TransactionController::class, 'paymentStatus'])->name('cashier.paymentStatus');
+
     });
 });

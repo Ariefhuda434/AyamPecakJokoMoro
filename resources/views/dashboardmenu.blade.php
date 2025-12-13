@@ -100,7 +100,7 @@ class="relative p-4">
                         
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $menu->nama_menu ?? '-'}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $menu->kategori ?? '-'}}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Rp {{ number_format($menu->harga_menu ?? 0, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Rp {{ number_format($menu->harga?? 0, 0, ',', '.') }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $menu->status_menu ?? '-'}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $menu->nama_resep ?? '-'}}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $menu->keterangan_resep ?? '-'}}</td>
@@ -243,7 +243,7 @@ class="relative p-4">
                         </div>
                     </div>
                     
-                    <div class="w-full flex flex-col items-center">
+                    {{-- <div class="w-full flex flex-col items-center">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Status Penjualan</p>
                         <div class="relative w-4/5">
                             <select 
@@ -261,7 +261,7 @@ class="relative p-4">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                       <div class="w-full flex flex-col items-center">
                         <p class="mb-2 text-sm font-medium text-gray-700 w-4/5 text-left font-alata">Nama Resep</p>
                         <input 

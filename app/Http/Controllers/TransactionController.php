@@ -65,71 +65,141 @@ class TransactionController extends Controller
             'transaksiData' => $transactionsWithDetails, 
         ]);
     }
-    public function payment(Request $request){
-       $request->validate([
-            'Employee_id' => 'required|exists:employees,Employee_id',
+
+    //fungsi bayar
+ public function payment(Request $request)
+    {
+        $request->validate([
+            'Employee_id' => 'required|exists:employees,Employee_id', 
             'Order_id' => 'required|exists:orders,Order_id',
-            'Total_Price' => 'required|numeric',
+            'Total_Price' => 'required|numeric', 
         ]);
-        // dd($validated);
-       $transaction = Transaction::create([
-                'Employee_id' => $request->Employee_id,
-                'Order_id' => $request->Order_id,
-                'Total_Price' => $request->Total_Price
-            ]);
 
-\Midtrans\Config::$serverKey = config('midtrans.server_key');
-// dd(\Midtrans\Config::$serverKey);
-\Midtrans\Config::$isProduction = config('midtrans.is_production', false);
+        $orderId = $request->Order_id;
 
-\Midtrans\Config::$isSanitized = true;
-\Midtrans\Config::$is3ds = true;
+        
+        $transaction = Transaction::firstOrNew(['Order_id' => $orderId]);
+        
+        $transaction->Employee_id = $request->Employee_id; 
+        $transaction->Total_Price = $request->Total_Price;
+        $transaction->save(); 
+        
+        
+        $orderUtama = DB::table('orders') 
+            ->join('customers', 'orders.Customer_id', '=', 'customers.Customer_id')
+            ->join('tables', 'customers.No_Table', '=', 'tables.No_Table') 
+            ->where('orders.Order_id', $orderId) 
+            ->select([
+                'orders.Order_id',
+                'orders.Total as total_harga', 
+                'orders.Employee_id', 
+                'tables.No_Table as nomor_meja',
+                'customers.Name as nama_pembeli',
+                'customers.Customer_id',
+            ])
+            ->first(); 
+        
+        if (!$orderUtama) {
+            return redirect()->back()->with('error', 'Order tidak ditemukan atau tidak lengkap.');
+        }
 
-$params = array(
+        $dataItemDetail = DB::table('detail_order')
+            ->join('menus', 'menus.Menu_id', '=', 'detail_order.Menu_id')
+            ->where('detail_order.Order_id', $orderId)
+            ->select([
+                'menus.Name as nama_menu',
+                'detail_order.Quantity as jumlah_pesanan',
+                'menus.Price as harga_satuan', 
+                'detail_order.Notes as catatan',
+                DB::raw('detail_order.Quantity * menus.Price as subtotal') 
+            ])
+            ->get();
+
+       
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        \Midtrans\Config::$isProduction = config('midtrans.is_production', false);
+        \Midtrans\Config::$isSanitized = true;
+        \Midtrans\Config::$is3ds = true;
+        
+        $itemDetails = [];
+        foreach ($dataItemDetail as $item) {
+            $itemDetails[] = [
+                'id' => $item->nama_menu, 
+                'price' => (int) $item->harga_satuan,
+                'quantity' => (int) $item->jumlah_pesanan,
+                'name' => $item->nama_menu,
+            ];
+        }
+
+        $params = array(
             'transaction_details' => array(
-            'order_id' => 'TRX-' . $transaction->Transaction_id . '-' . time(), 
-            'gross_amount' => $transaction->Total_Price, 
+                'order_id' => 'TRX-' . $transaction->Transaction_id . '-' . time(), 
+                'gross_amount' => (int) $transaction->Total_Price, 
+            ),
+            'item_details' => $itemDetails, 
+
+            'customer_details' => array(
+                'first_name' => $orderUtama->nama_pembeli, 
             ),
         );
-$snapToken = \Midtrans\Snap::getSnapToken($params);
-$transaction ->snap_token = $snapToken;
-$transaction ->save();
-           $orderId = $request->Order_id;
+        
+        try {
+            $snapToken = \Midtrans\Snap::getSnapToken($params);
+            $transaction->snap_token = $snapToken;
+            $transaction->save();
 
-    $orderUtama = DB::table('orders') 
-        ->join('customers', 'orders.Customer_id', '=', 'customers.Customer_id')
-        ->join('tables', 'customers.No_Table', '=', 'tables.No_Table') 
-        ->where('orders.Order_id', $orderId) 
-        ->select([
-            'orders.Order_id',
-            'orders.Total', 
-            'orders.Employee_id', 
-            'tables.No_Table as nomor_meja',
-            'customers.Name as nama_pembeli',
-            'customers.Customer_id',
-        ])
-        ->first(); 
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal membuat token pembayaran Midtrans: ' . $e->getMessage());
+        }
 
-    if (!$orderUtama) {
-        return redirect()->back()->with('error', 'Order tidak ditemukan.');
+        return view('payment.payment', [
+            'order' => $orderUtama,
+            'items' => $dataItemDetail,
+            'transaction' => $transaction
+        ])->with('message', 'Silakan lanjutkan pembayaran.');
     }
 
-    $dataItemDetail = DB::table('detail_order')
-        ->join('menus', 'menus.Menu_id', '=', 'detail_order.Menu_id')
-        ->where('detail_order.Order_id', $orderId)
-        ->select([
-            'menus.Name as nama_menu',
-            'detail_order.Quantity as jumlah_pesanan',
-            'menus.Price as harga_satuan', 
-            'detail_order.Notes as catatan',
-            DB::raw('detail_order.Quantity * menus.Price as subtotal') 
-        ])
-        ->get();
+public function paymentStatus(Request $request)
+{
+    $request->validate([
+        'transaction_id' => 'required|exists:transactions,Transaction_id',
+        'status' => 'required|string|in:success,pending,failure',
+    ]);
 
-    return view('payment.payment', [
-        'order' => $orderUtama,
-        'items' => $dataItemDetail,
-        'transaction' => $transaction
-    ])->with('message', 'Silakan lanjutkan pembayaran.');
+    $transactionId = $request->transaction_id;
+    $statusDariSnap = $request->status;
+
+    $transaction = Transaction::with('order.customer', 'order.employee')
+                    ->where('Transaction_id', $transactionId)
+                    ->first();
+
+    if (!$transaction) {
+        return redirect()->route('cashier.dashboard')->with('error', 'Transaksi lokal tidak ditemukan.');
+    }
+    
+    $statusText = '';
+    $statusColor = '';
+
+    switch ($statusDariSnap) {
+        case 'success':
+            $statusText = 'Pembayaran Berhasil Diterima.';
+            $statusColor = 'green';
+            break;
+        case 'pending':
+            $statusText = 'Menunggu Pembayaran (Pending).';
+            $statusColor = 'yellow';
+            break;
+        case 'failure':
+            $statusText = 'Pembayaran Dibatalkan/Gagal.';
+            $statusColor = 'red';
+            break;
+    }
+
+    return view('payment.status', [
+        'transaction' => $transaction,
+        'statusText' => $statusText,
+        'statusColor' => $statusColor,
+        'snapStatus' => $statusDariSnap,
+    ]);
 }
 }

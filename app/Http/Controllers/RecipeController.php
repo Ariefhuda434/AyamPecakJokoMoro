@@ -17,7 +17,7 @@ class RecipeController extends Controller
     $resepid = $menu->Recipe_id;
 
     $resepData = DB::table('view_resep_stok')
-        ->where('Recipe_id', $resepid)
+        ->where('id_resep', $resepid)
         ->get();
 
     $stockData = DB::table('stocks')

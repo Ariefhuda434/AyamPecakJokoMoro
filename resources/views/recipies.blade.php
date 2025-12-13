@@ -50,7 +50,8 @@ class="relative p-4">
             <h3 class="text-lg font-alata font-semibold mb-4 border-b pb-2 text-gray-700">Info Dasar Menu</h3>
             
             @if ($menu->foto_menu) 
-                <img src="{{ asset('storage/' . $menu->foto_menu) }}" alt="{{ $menu->Name }}" 
+                                <img src="{{ asset('storage/' . $menu->foto_menu) }}" alt="{{ $menu->nama_menu }}" class="h-10 w-10 rounded object-cover">
+
                     class="w-full h-48 object-cover rounded-lg shadow-md mb-4 border border-gray-200">
             @else
                 <div class="w-full h-48 flex items-center justify-center bg-gray-100 rounded-lg mb-4 text-gray-500">
@@ -86,12 +87,12 @@ class="relative p-4">
             <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
                 <p class="text-sm font-alata text-gray-500 mb-1">Nama Resep:</p>
                 <p class="text-lg font-semibold text-gray-800 mb-4">
-                    {{ $resepData->isNotEmpty() ? $resepData->first()->nama_resep : 'Belum ada Nama Resep' }}
+                    {{ $resepData->isNotEmpty() ? $resepData->nama_resep : 'Belum ada Nama Resep' }}
                 </p>
 
                 <p class="text-sm font-alata text-gray-500 mb-1">Keterangan Resep:</p>
                 <p class="text-base text-gray-700 ">
-                    {{ $resepData->isNotEmpty() ? $resepData->first()->keterangan_resep : 'Tidak ada keterangan resep.' }}
+                    {{ $resepData->isNotEmpty() ? $resepData->keterangan_resep : 'Tidak ada keterangan resep.' }}
                 </p>
             </div>
 

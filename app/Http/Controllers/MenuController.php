@@ -15,8 +15,7 @@ class MenuController extends Controller
     {
         $countMenu = Menu::count();
 
-        $menuData = DB::table('view_menu_with_recipe')
-            ->orderBy('created_at', 'desc')
+        $menuData = DB::table('view_menu_recipes')
             ->get();
 
         return view('dashboardmenu', [
@@ -38,7 +37,7 @@ public function store(Request $request)
         'Category' => 'required',
         'Name' => 'required|string|max:255',
         'Price' => 'required|numeric|min:0',
-        'Menu_Status' => 'nullable|string', 
+        // 'Menu_Status' => 'nullable|string', 
         'photo' => 'required|image|mimes:jp eg,png,jpg|max:2048', 
         'Name_Resep' =>'required|string|max:255',
         'Keterangan' =>'nullable|string', 
@@ -66,7 +65,7 @@ public function store(Request $request)
             'Category' => $validated['Category'],
             'Name' => $validated['Name'],
             'Price' => $validated['Price'],
-            'Menu_Status' => $validated['Menu_Status'] ?? 'Tidak Tersedia', 
+            // 'Menu_Status' => $validated['Menu_Status'] ?? 'Tidak Tersedia', 
             'photo' => $foto, 
             'Recipe_id' => $newRecipeId, 
         ]);

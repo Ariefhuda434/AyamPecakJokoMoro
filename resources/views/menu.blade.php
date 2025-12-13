@@ -12,10 +12,7 @@
         return $item['Price'] * $item['Quantity'];
     }, $cartItems));
     
-    // Asumsi: Kita perlu tahu siapa employee_id (staf) yang mencatat order ini.
-    // Jika sistem ini digunakan oleh staf yang login, gunakan auth()->user()->id.
-    // Jika ini adalah tablet pelanggan, ID staf harus dipilih di checkout.
-    $employeeId = 1; // Ganti dengan logika Anda untuk menentukan employee ID
+    $employeeId = 1; 
 @endphp
 @if ($errors->any())
     <div class="alert alert-danger">
@@ -32,7 +29,6 @@
         <div class="flex items-center">
             <p class="text-primary font-alata text-xl md:text-2xl ml-2">Menu Meja {{ $No_Table }}</p>
         </div>
-        {{-- Tombol Keranjang: Menampilkan item dari SESSION --}}
         <button @click="isCartOpen = true" class="flex items-center bg-white rounded-full border-2 border-primary p-2 shadow-md hover:bg-gray-50 transition">
             <span class="text-xs font-semibold text-primary mr-2 hidden sm:inline">
                 {{ $cartCount }} Item
@@ -51,12 +47,10 @@
     <div class="w-full flex flex-wrap justify-center md:justify-start lg:justify-center gap-4 py-6 pb-20 px-3">
         @forelse ($menus as $menu)
             <div class="h-auto w-40 sm:w-44 md:w-48 flex flex-col items-center bg-white border-4 rounded-[1rem] border-primary shadow-lg overflow-hidden transition-shadow hover:shadow-xl p-2 pb-4">
-                {{-- Placeholder Gambar --}}
                 <div class="h-28 w-11/12 bg-gray-300 mt-2 rounded-[0.5rem] flex items-center justify-center text-gray-500 text-sm">
                     
                 </div>
                 
-                {{-- Detail Menu --}}
                 <div class="w-11/12 h-10 flex justify-center text-center p-1">
                     <p class="font-semibold line-clamp-2 text-sm">{{ $menu->Name }}</p>
                 </div>

@@ -27,6 +27,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware(['role:manager'])->prefix('manager')->group(function () {
 
+        Route::get('/dashboard/export', [ManagerController::class, 'exportReport'])->name('export');
         Route::get('/dashboard', [ManagerController::class, 'index'])->name('dashboard.view');
         Route::get('/dashboard/menu-management', [MenuController::class, 'index'])->name('menu.index');
         Route::post('/dashboard/menu-management', [MenuController::class, 'store'])->name('menu.store');

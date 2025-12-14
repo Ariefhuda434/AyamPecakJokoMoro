@@ -114,7 +114,7 @@
         <div class="flex justify-between items-center pb-4 border-b border-gray-200 mb-6">
             <h2 class="text-xl font-bold text-gray-800">Ringkasan Penjualan dan Pendapatan</h2>
             <div class="flex items-center space-x-3">
-                <form action="{{ route('report.export.monthly') }}" method="GET"> 
+                <form action="{{ route('export') }}" method="GET"> 
                 <button type="submit" class="flex items-center text-sm font-semibold text-white bg-green-600 px-4 py-2 rounded-lg hover:bg-green-700 transition shadow-md">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
                     Export Data (Excel)
@@ -145,15 +145,17 @@
 </div>
 
 <script>
+    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
     const pendapatan = @json($chartPendapatan ?? []);
     const penjualan = @json($chartPenjualan ?? []); 
 
-    if (labels.length === 0) {
+    // Cek ketersediaan data
+    if (pendapatan.length === 0 && penjualan.length === 0) {
         document.getElementById('PenjualanChart').parentElement.innerHTML = 
-            '<p class="text-gray-400">Tidak ada data penjualan yang tersedia untuk ditampilkan.</p>';
+            '<p class="text-gray-400 text-center">Tidak ada data penjualan yang tersedia untuk ditampilkan.</p>';
         return;
     }
-
 
     const ctx = document.getElementById('PenjualanChart').getContext('2d');
     
@@ -163,7 +165,6 @@
             labels: labels, 
             datasets: [
                 {
-
                     label: 'Penjualan (Sales/Transaksi)',
                     data: penjualan, 
                     backgroundColor: 'rgba(59, 130, 246, 0.5)', 
@@ -197,19 +198,27 @@
                                 label += ': ';
                             }
                             if (context.parsed.y !== null) {
-                                if (context.dataset.yAxisID === 'y') {
+                                if (context.dataset.yAxisID === 'y') { 
                                     label += 'Rp' + context.parsed.y.toLocaleString('id-ID');
-                                } else {
+                                } else { 
                                     label += context.parsed.y + ' Transaksi';
                                 }
                             }
                             return label;
                         }
                     }
+                },
+                legend: {
+                    display: false 
                 }
             },
             scales: {
-                y: {
+                x: {
+                    grid: {
+                        display: false
+                    }
+                },
+                y: { 
                     type: 'linear',
                     display: true,
                     position: 'left',
@@ -220,11 +229,11 @@
                     },
                     ticks: {
                         callback: function(value, index, values) {
-                            return 'Rp' + (value / 1000) + 'K';
+                            return 'Rp' + (value / 1000).toLocaleString('id-ID') + 'K';
                         }
                     }
                 },
-                y1: {
+                y1: { 
                     type: 'linear',
                     display: true,
                     position: 'right',
@@ -235,6 +244,9 @@
                     title: {
                         display: true,
                         text: 'Penjualan (Transaksi)'
+                    },
+                    ticks: {
+                        precision: 0
                     }
                 }
             }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Exports\MonthlySalesExport;
 
 class ManagerController extends Controller
 {
@@ -66,6 +68,14 @@ class ManagerController extends Controller
             'chartPendapatan' => $pendapatanData,
             'chartPenjualan' => $penjualanData,
         ]);
+    }
+    public function exportReport(Request $request)
+    {
+        $year = $request->input('year', now()->year);
+        
+        $fileName = 'Laporan_Bulanan_Penjualan_Pendapatan_' . $year . '.xlsx';
+        
+        return Excel::download(new MonthlySalesExport($year), $fileName);
     }
    
 }

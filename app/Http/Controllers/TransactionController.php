@@ -90,55 +90,5 @@ public function paymentkonfirmasi(Request $request)
     return redirect()->route('cashier.view')->with('success', 'Transaksi selesai. Proses data ditangani oleh Stored Procedure.');
 }
 
-public function printStruk($order_id)
-{
-    // 1. Ambil data Order utama dari view/tabel (Order_Status pasti sudah Lunas/Selesai)
-    $order = DB::table('V_CURRENT_TRANSACTIONS')
-        ->where('Order_id', $order_id)
-        ->first(); // Menggunakan view untuk detail order
 
-    // Fallback jika tidak ditemukan di view transaksi aktif (karena sudah lunas/selesai)
-    if (!$order) {
-        $order = DB::table('orders')
-                    ->select('orders.*', 'customers.Name as nama_customer', 'tables.No_Table as nomor_meja')
-                    ->join('customers', 'customers.Customer_id', '=', 'orders.Customer_id')
-                    ->join('tables', 'tables.No_Table', '=', 'customers.No_Table')
-                    ->where('orders.Order_id', $order_id)
-                    ->first();
-    }
-
-    if (!$order) {
-        return redirect()->back()->with('error', 'Data order tidak ditemukan.');
-    }
-
-    // 2. Ambil detail pesanan (items)
-    $dataItemDetail = DB::table('V_ITEM_DETAILS')
-        ->where('Order_id', $order_id)
-        ->get();
-    
-    $transactionData = DB::table('transactions')
-        ->where('Order_id', $order_id)
-        ->latest('Transaction_id') // Ambil transaksi terakhir jika ada beberapa
-        ->first();
-        
-    if (!$transactionData) {
-        return redirect()->back()->with('error', 'Data pembayaran (transaction) belum tercatat.');
-    }
-
-    $data = [
-        'order' => $order,
-        'items' => $dataItemDetail,
-        'transaction' => $transactionData,
-        'paidAmount' => $transactionData->Total_Price ?? $order->Total,
-        'namaKasir' => Employee::find($transactionData->Employee_id)->Name_Employee ?? 'N/A',
-        'namaPelayan' => Employee::find($order->Employee_id)->Name_Employee ?? 'N/A', 
-        'paymentMethod' => $transactionData->Method_Payment ?? 'TUNAI',
-    ];
-
-    $pdfFileName = 'struk_meja_' . ($order->nomor_meja ?? 'TAKEAWAY') . '_order_' . $order_id . '.pdf';
-
-    $pdf = Pdf::loadView('struk.template', $data);
-
-    return $pdf->stream($pdfFileName);
-}
 }

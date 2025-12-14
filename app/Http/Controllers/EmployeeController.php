@@ -74,13 +74,12 @@ class EmployeeController extends Controller
                 'role_id' => 'required|exists:roles,role_id',
                 'password' => 'nullable|string|min:6', 
             ]);
-
+            // dd($request->input());
             if (empty($validated['password'])) {
                 unset($validated['password']);
             } else {
                 $validated['password'] = Hash::make($request->input('password'));
             }
-
             $employee->update($validated);
             
             DB::commit();
@@ -91,9 +90,7 @@ class EmployeeController extends Controller
             return redirect()->back()->withInput()->with('error', 'Gagal mengubah data karyawan. Transaksi dibatalkan.');
         }
     }
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(Employee $employee)
     {
         $currentEmployeeId = Auth::user()->Employee_id;

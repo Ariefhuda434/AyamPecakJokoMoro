@@ -94,7 +94,10 @@
         p-3 
     ">
         <div class="h-36 w-full bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 text-sm overflow-hidden">
-             <p>Foto Menu </p> 
+            <img src="{{ asset('storage/' . $menu->photo) }}" 
+             alt="{{ $menu->Name }}" 
+             class="w-full h-full object-cover transition duration-300 transform hover:scale-105"
+        >
         </div>
         
         <div class="w-full pt-3 pb-1">

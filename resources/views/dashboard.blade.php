@@ -22,7 +22,7 @@
     
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
 
-        <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-red-600 transform transition duration-300 hover:scale-[1.02]">
+        <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-primary transform transition duration-300 hover:scale-[1.02]">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-base font-medium text-gray-500">Rekap Penjualan Hari Ini</h3>
                 <span class="text-xl text-red-600">
@@ -35,7 +35,7 @@
             <p class="text-xs text-gray-400">{{ $tanggalHariIni }}</p>
         </div>
 
-        <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-green-600 transform transition duration-300 hover:scale-[1.02]">
+        <div class="bg-white p-5 rounded-xl shadow-lg border-t-4 border-primary transform transition duration-300 hover:scale-[1.02]">
             <div class="flex items-center justify-between mb-2">
                 <h3 class="text-base font-medium text-gray-500">Pendapatan Bulanan</h3>
                 <span class="text-xl text-green-600">
@@ -49,7 +49,7 @@
         </div>
 
         <form action="{{ route('table.index') }}" method="GET">
-            <button type="submit" class="bg-white p-5 rounded-xl w-full h-full text-left shadow-lg border-t-4 border-blue-600 transform transition duration-300 hover:scale-[1.02]">
+            <button type="submit" class="bg-white p-5 rounded-xl w-full h-full text-left shadow-lg border-t-4 border-primary transform transition duration-300 hover:scale-[1.02]">
                 <div class="flex items-center justify-between mb-2">
                     <h3 class="text-base font-medium text-gray-500">Meja Terpakai Saat Ini</h3>
                     <span class="text-xl text-blue-600">
@@ -74,32 +74,62 @@
                 </a>
             </div>
 
-            <ul class="space-y-4">
-                @forelse ($customerActivitySummary->take(6) as $activity) 
-                    <li class="flex justify-between items-start py-3 border-b border-gray-100 last:border-b-0">
-                        <div class="flex items-start space-x-3">
-                            <i class="{{ $activity['icon'] }} text-xl pt-1"></i> 
-                            
-                            <div class="flex flex-col">
-                                <p class="font-medium text-gray-800 leading-snug">
-                                    {!! $activity['description'] !!} 
-                                </p>
-                                <p class="text-xs text-gray-500 mt-0.5">
-                                    Pelaku: **{{ $activity['employee'] }}**
-                                </p>
-                            </div>
-                        </div>
-                        
-                        <p class="text-xs text-gray-400 whitespace-nowrap ml-4 pt-1">
-                            {{ $activity['time_ago'] }}
-                        </p>
-                    </li>
-                @empty
-                    <p class="text-center text-gray-500 py-6">
-                        <i class="fas fa-box-open mr-2"></i> Belum ada aktivitas operasional pelanggan/transaksi yang tercatat.
-                    </p>
-                @endforelse
-            </ul>
+           <div class="overflow-x-auto bg-white shadow sm:rounded-lg">
+    <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+            <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Waktu Perubahan
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Karyawan
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tabel
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tipe Aksi
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Nilai Baru
+                </th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            @forelse ($logData as $log)
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        {{ \Carbon\Carbon::parse($log->Change_time)->format('Y-m-d H:i:s') }}
+                    </td>
+                    
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {{ $log->employee_name ?? 'N/A' }} 
+                    </td>
+                    
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ $log->Table_Name ?? 'N/A' }} 
+                    </td>
+                    
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {{ $log->Action_Typn ?? $log->Action_Type ?? 'Tidak Dikenal' }} 
+                    </td>
+                    
+                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs overflow-hidden truncate">
+                        {{ $log->New_Value ?? '-' }} 
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" class="px-6 py-4 text-center text-sm text-gray-500">
+                        <i class="fas fa-box-open mr-2"></i> Tidak ada catatan audit ditemukan.
+                    </td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
+
         </div> 
         
         <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
@@ -113,9 +143,9 @@
             </div>
             
             @forelse($menuData->take(4) as $data) 
-            <div class="flex items-center py-3 border-b border-gray-100 last:border-b-0">
+        <div class="flex items-center py-3 border-b border-gray-100 last:border-b-0">
 
-    <div class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 mr-4 overflow-hidden rounded-lg shadow-md">
+    <div class="flex-shrink-0 w-16 h-14 md:w-20 md:h-14 mr-4 overflow-hidden rounded-lg shadow-md">
         <img src="{{ asset('storage/' . $data->foto_menu) }}" 
              alt="{{ $data->nama_menu }}" 
              class="w-full h-full object-cover transition duration-300 transform hover:scale-105"

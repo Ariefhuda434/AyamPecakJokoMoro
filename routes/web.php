@@ -56,8 +56,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/karyawan', [EmployeeController::class, 'index'])->name('employee.index');
         Route::post('/karyawan', [EmployeeController::class, 'store'])->name('employee.store');
-        Route::put('karyawan/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
-        Route::delete('karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
+        Route::put('/karyawan/{employee}', [EmployeeController::class, 'update'])->name('employee.update');
+        Route::delete('/karyawan/{employee}', [EmployeeController::class, 'destroy'])->name('employee.destroy');
 
     });
 
@@ -81,6 +81,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/transactions/payment', [TransactionController::class, 'payment'])->name('cashier.pay');
         Route::get('/transactions/payment/{transaction}', [TransactionController::class, 'paymentindex'])->name('payment.index');
         Route::post('/transactions/payment/konfirmasi', [TransactionController::class, 'paymentkonfirmasi'])->name('payment.konfirmasi');
-        Route::get('/transaksi/print/{order_id}', [TransactionController::class, 'printStruk'])->name('transaksi.print');
+        Route::get('/transaksi/struk/{transaction_id}', [TransactionController::class, 'printStruk'])->name('cashier.printStruk');
     });
 });

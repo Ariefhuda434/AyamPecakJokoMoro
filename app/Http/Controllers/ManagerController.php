@@ -36,7 +36,9 @@ public function index()
         $penjualanData = [];  
         
         foreach ($dataPenjualanBulanan as $data) {
-            
+            if (empty($data->Tahun_Bulan)) {
+        continue; 
+    }
             $bulanSingkat = Carbon::createFromFormat('Y-m', $data->Tahun_Bulan)->format('M');
             
             $labels[] = $bulanSingkat;
@@ -47,13 +49,19 @@ public function index()
             $penjualanKotor = $pendapatanBersih / 1.11; 
             $penjualanData[] = round($penjualanKotor);
         }
-
+        $query = DB::table('audit_logs')
+            ->join('employees', 'audit_logs.Employee_id', '=', 'employees.Employee_id')
+            ->select('audit_logs.*', 'employees.Name_Employee as employee_name')
+            ->orderBy('audit_logs.Change_time', 'desc');
+        $logData = $query->paginate(5)->withQueryString();
+        
         $tahunBulanSekarang = Carbon::now()->format('Y-m');
         $pendapatanBulanIni = DB::table('view_pendapatan_bulanan')
             ->where('Tahun_Bulan', $tahunBulanSekarang)
             ->first();
             // dd($penjualanHariIni);
         return view('dashboard', [
+            'logData' => $logData,
             'menuData' => $menuData,
             'mejaTerpakai' => $mejaTerpakai,
             'mejaTotal' => $mejaTotal,

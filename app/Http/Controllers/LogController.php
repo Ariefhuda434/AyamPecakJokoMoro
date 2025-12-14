@@ -16,7 +16,6 @@ class LogController extends Controller
             ->select('audit_logs.*', 'employees.Name_Employee as employee_name')
             ->orderBy('audit_logs.Change_time', 'desc');
 
-        // Filter Logika
         $actionType = $request->get('action_type');
         if ($actionType && $actionType !== 'all') {
             $query->where('audit_logs.Action_Typn', $actionType);

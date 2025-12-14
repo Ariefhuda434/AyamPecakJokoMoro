@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Employee;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-
 use function Laravel\Prompts\select;
+
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
@@ -29,24 +30,13 @@ class EmployeeController extends Controller
         ]);
     }
 
-    
-     /**
-         * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    // ... (Pastikan ada: use Illuminate\Support\Facades\DB; )
 
     public function store(Request $request)
     {
+        
         try {
-            $currentEmployeeId = \Illuminate\Support\Facades\Auth::user()->Employee_id;
+            $currentEmployeeId = Auth::user()->Employee_id;
+            DB::statement("SET @current_employee_id = ?", [$currentEmployeeId]);
 
             $validated = $request->validate([
                 'name_employee' => 'required|string|max:150',
@@ -70,31 +60,13 @@ class EmployeeController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-   // ... (Pastikan ada: use Illuminate\Support\Facades\DB; )
 
     public function update(Request $request, Employee $employee)
     {
         try {
             DB::beginTransaction(); 
+            $currentEmployeeId = Auth::user()->Employee_id;
+            DB::statement("SET @current_employee_id = ?", [$currentEmployeeId]);
 
             $validated = $request->validate([
                 'name_employee' => 'required|string|max:150',
@@ -115,7 +87,7 @@ class EmployeeController extends Controller
 
             return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil diubah!');
         } catch (\Exception $e) {
-            DB::rollBack(); // Membatalkan Transaksi
+            DB::rollBack(); 
             return redirect()->back()->withInput()->with('error', 'Gagal mengubah data karyawan. Transaksi dibatalkan.');
         }
     }
@@ -124,6 +96,9 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
+        $currentEmployeeId = Auth::user()->Employee_id;
+        DB::statement("SET @current_employee_id = ?", [$currentEmployeeId]);
+
         $employee->delete();
         return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil dihapus!');
     }

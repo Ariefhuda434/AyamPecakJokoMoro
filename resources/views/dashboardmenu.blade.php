@@ -36,15 +36,20 @@
    
 }" 
 class="relative p-4"> 
-<a href=""></a>
+    <a href="{{ route('dashboard.view') }}" class="mr-3 text-primary  hover:text-secondary transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+        </svg>
+        
+    </a>
     <div class="flex items-center justify-between mb-6 pt-2">
         <p class="text-xl font-alata font-semibold text-gray-700">
             Daftar Menu ({{ count($menuData ?? []) }}) 
         </p>
         <button @click="openCreateModal()" class="bg-secondary p-2 text-white font-alata rounded-lg transition hover:bg-secondary/90">
             + Tambah Menu Baru
-        </button>
     </div>
+
     @if (session('success'))
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
             <strong class="font-bold">Berhasil!</strong>

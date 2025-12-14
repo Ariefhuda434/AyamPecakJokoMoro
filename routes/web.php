@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/dashboard/menu-management/{menu}', [MenuController::class, 'destroy'])->name('menu.destroy');
         
         Route::post('/dashboard/add-table', [TableController::class, 'table_create'])->name('make.table');
+        Route::get('/dashboard/table-managment', [TableController::class, 'index'])->name('table.index');
+        Route::delete('/dashboard/table-managment/{table}/delete', [TableController::class, 'destroy'])->name('table.destroy');
 
         Route::get('/dashboard/menu-management/recipies/{slug}', [RecipeController::class, 'index'])->name('recipies.index');
         Route::post('/dashboard/menu-management/recipies/{slug}/store', [RecipeController::class, 'store'])->name('recipies.store');
@@ -63,6 +65,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/order',[CustomerController::class,'index'])->name('customer.index');
         Route::post('order/add-customer/', [CustomerController::class, 'store'])->name('make.customer');
         Route::put('/order/menu/clear',[CustomerController::class,'out'])->name('customer.out');
+        Route::delete('/order/out/{table}', [CustomerController::class, 'out'])->name('customer.out');
 
         Route::get('/order/menu/{table}/{customer}',[OrderController::class,'index'])->name('order.index');
         Route::post('/order/cart', [OrderController::class, 'addToCart'])->name('cart.add');

@@ -7,6 +7,7 @@ use App\Models\Table;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 class CustomerController extends Controller
 {
@@ -28,79 +29,77 @@ class CustomerController extends Controller
         $availableTables = Table::where('status_table', 'Kosong')->count();
         $occupiedTables = Table::where('status_table', 'Terisi')->count(); 
         // $tables = Table::with('activeCustomer')->get();
-        $sudahMemesan = DB::table('orders')
-        ->join('customers','customers.Customer_id','=','orders.Customer_id')
-        ->join('tables','tables.No_Table','=','customers.No_Table')
-        ->where('orders.Order_Status', 'Memesan')
-        ->exists();
+
         return view('order', [
             'tables' => $tables,
             'totalTables' => $totalTables,
             'availableTables' => $availableTables,
             'occupiedTables' => $occupiedTables,
-            'sudahMemesan' => $sudahMemesan,
         ]);
     }
 
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'Name' => 'required|string|max:20',
+            'Phone_Number' => 'required|string|max:14',
+            'No_Table' => 'required|numeric|min:1',
+        ]);
+        
         try {
-            DB::beginTransaction();
-            $validated = $request->validate([
-                'Name' => 'required|string|max:20',
-                'Phone_Number' => 'required|string|max:14',
-                'No_Table' => 'required|numeric|min:1',
-            ]);
             
-            $customers = Customer::create([
-                'Name' => $validated['Name'],
-                'Phone_Number' => $validated['Phone_Number'],
-                'No_Table' => $validated['No_Table'],
-            ]);
-
-            $table = Table::where('No_Table', $validated['No_Table'])->firstOrFail();
+            $query = "CALL SP_CustomerJoin(?, ?, ?)";
+            $result = DB::select($query, [
+            $validated['Name'],
+            $validated['Phone_Number'],
+            $validated['No_Table']
+        ]);
+        if (empty($result) || !isset($result[0]->Customer_id)) {
+             throw new \Exception("Gagal mendapatkan ID pelanggan dari Stored Procedure.");
+        }
+        
+        $newCustomerId = $result[0]->Customer_id;
+        
+        
+        return redirect()->route('customer.index', [
+            'No_Table' => $validated['No_Table'],
+            'customers' => $newCustomerId
+        ])->with('success', 'Customer berhasil duduk dan meja terisi! (ID Pelanggan: ' . $newCustomerId . ')');
+        } catch (\PDOException $e) {
+            $message = $e->getMessage();
             
-            $table->update([
-                'status_table' => 'Terisi',
-                'customer_id' => $customers->id, 
-            ]);
-
-            DB::commit();
-
-            return redirect()->route('customer.index',[
-                'No_Table' => $table->No_Table,
-                'customers' => $customers->id
-            ])->with('success', 'Customer berhasil duduk dan meja terisi!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan data. Transaksi dibatalkan.');
+            if (strpos($message, '45000') !== false) {
+                 $cleanMessage = preg_replace('/SQLSTATE\[45000\]: <<unknown error>>: /', '', $message);
+                 return redirect()->back()->withInput()->with('error', $cleanMessage);
+            }
+    
+            return redirect()->back()->withInput()->with('error', 'Terjadi kesalahan server database: ' . $message);
+            
         }
     }
 
     public function out(Request $request, Table $table)
     {
-        if ($table->status_table !== 'Terisi') {
-            return redirect()->route('customer.index')->with('error', 'Meja ini sudah kosong atau tidak terisi.');
-        }
-        
-        try {
-            DB::beginTransaction();
-            
-            $table->update([
-                'status_table' => 'Kosong', 
-                'customer_id' => null, 
-            ]);
-
-            DB::commit();
-        
-            return redirect()->route('customer.index')->with('success', 'Meja ' . $table->No_Table . ' berhasil dikosongkan!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->route('customer.index')->with('error', 'Terjadi kesalahan saat mengosongkan meja. Transaksi dibatalkan.');
-        }
+       if ($table->status_table !== 'Terisi') {
+        return redirect()->route('customer.index')->with('error', 'Meja ini sudah kosong atau tidak terisi.');
     }
+    
+    $noTable = $table->No_Table;
+
+    $logAction = 'Keluar tanpa memesan'; 
+
+      $query = "CALL SP_CustomerOut(?, ?)"; 
+        
+        DB::statement($query, [
+            $noTable,
+            $logAction
+        ]);
+        
+        $table->refresh(); 
+
+        return redirect()->route('customer.index')
+                         ->with('success', 'Meja ' . $table->No_Table . ' berhasil dikosongkan. Pelanggan batal dan data diarsipkan.');
+        }
 
 }
 

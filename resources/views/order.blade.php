@@ -105,38 +105,25 @@
                         Pesan Menu
                     </button>
                 </form>
+                {{-- <form action="{{ route('customer.out', ['table' => $table->No_Table]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan Meja {{ $table->No_Table }}? Data pelanggan akan dihapus dan dicatat.');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" 
+                        class="text-primary underline hover:text-accent font-bold py-2 px-4 rounded transition duration-150 ease-in-out">
+                    Kosongkan Meja 
+                </button>
+            </form> --}}
                 @else
                 <button disabled class="bg-gray-400 text-background h-10 w-full rounded-lg text-sm font-semibold mb-1 cursor-not-allowed">
                     Customer Tidak Ditemukan
                 </button>
                 @endif
-                
-                
-
                 </div>
             @endif
         </div>
         @endforeach
             
         </div>
-
-        {{-- <div class="mt-8 pt-4 border-t border-gray-200">
-            <h2 class="text-xl font-alata mb-3">Tambah Meja Baru</h2>
-            <form action="{{ route('make.table') }}" method="POST" class="flex items-end gap-4">
-                @csrf
-                <div class="flex flex-col">
-                    <label for="number_table" class="text-sm text-gray-600 mb-1">Nomor Meja</label>
-                    <select name="number_table" id="number_table" class="h-10 border border-gray-300 rounded-lg p-2 focus:ring-primary focus:border-primary">
-                        @for ($i = 1; $i <= 8; $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-                <button type="submit" class="bg-secondary text-background h-10 px-6 rounded-lg font-semibold hover:bg-opacity-90 transition duration-300">
-                    Tambah
-                </button>
-            </form>
-        </div> --}}
 
     </div>
 

@@ -26,20 +26,22 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8v8m0-8h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </span>
             </div>
-            <p class="text-3xl font-bold text-gray-900 mb-1">Rp 125.752.350</p>
-            <p class="text-xs text-gray-400">1 Nov - 1 Des</p>
+            <p class="text-3xl font-bold text-gray-900 mb-1">{{$pendapatanBulanIni}}</p>
+            <p class="text-xs text-gray-400">{{ $tahunBulanSekarang }}</p>
         </div>
 
-        <div class="bg-white p-5 rounded-lg shadow-md border-t-4 border-primary transform transition duration-300 hover:scale-105">
-            <div class="flex items-center justify-between mb-2">
-                <h3 class="text-base font-medium text-gray-500">Meja Terpakai Saat Ini</h3>
-                <span class="text-xl text-yellow-600">
-                    <svg class="w-6 h-6" fill="primary" stroke="primary" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
-                </span>
-            </div>
-            <p class="text-3xl font-bold text-gray-900 mb-1">{{ $mejaTerpakai}} Meja</p>
-            <p class="text-xs text-gray-400">Total {{ $mejaTotal }} Meja</p>
-        </div>
+        <form action="{{ route('table.index') }}" method="GET">
+        <button type="submit" class="bg-white p-5 rounded-lg w-full shadow-md border-t-4 border-primary transform transition duration-300 hover:scale-105">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="text-base font-medium text-gray-500">Meja Terpakai Saat Ini</h3>
+                    <span class="text-xl text-yellow-600">
+                        <svg class="w-6 h-6" fill="primary" stroke="primary" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    </span>
+                </div>
+                <p class="text-3xl font-bold text-gray-900 mb-1">{{ $mejaTerpakai}} Meja</p>
+                <p class="text-xs text-gray-400">Total {{ $mejaTotal }} Meja</p>
+            </button>
+        </form>
     </div>
       
 
@@ -112,15 +114,12 @@
         <div class="flex justify-between items-center pb-4 border-b border-gray-200 mb-6">
             <h2 class="text-xl font-bold text-gray-800">Ringkasan Penjualan dan Pendapatan</h2>
             <div class="flex items-center space-x-3">
-                <div class="bg-gray-100 p-1 rounded-lg flex space-x-1">
-                    <button class="px-4 py-1 text-sm font-semibold bg-primary text-white rounded-lg transition">Bulanan</button>
-                    <button class="px-4 py-1 text-sm font-semibold text-gray-600 hover:bg-white rounded-lg transition">Mingguan</button>
-                    <button class="px-4 py-1 text-sm font-semibold text-gray-600 hover:bg-white rounded-lg transition">Harian</button>
-                </div>
-                <button class="flex items-center text-sm font-semibold text-white bg-primary px-4 py-2 rounded-lg hover:opacity-90 transition">
+                <form action="{{ route('report.export.monthly') }}" method="GET"> 
+                <button type="submit" class="flex items-center text-sm font-semibold text-white bg-green-600 px-4 py-2 rounded-lg hover:bg-green-700 transition shadow-md">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                    Export
+                    Export Data (Excel)
                 </button>
+            </form>
             </div>
         </div>
 
@@ -136,7 +135,7 @@
         </div>
 
         <div class="h-64 border border-gray-200 rounded-lg p-4 flex items-center justify-center bg-gray-50">
-            <p class="text-gray-400">Area Grafik (Chart.js / ApexCharts)</p>
+            <canvas id="PenjualanChart"></canvas>
         </div>
         
         <div class="flex justify-between mt-4 text-xs text-gray-500 px-2">
@@ -144,21 +143,102 @@
         </div>
     </div>
 </div>
-  <div class="mt-8 pt-4 border-t border-gray-200">
-            <h2 class="text-xl font-alata mb-3">Tambah Meja Baru</h2>
-            <form action="{{ route('make.table') }}" method="POST" class="flex items-end gap-4">
-                @csrf
-                <div class="flex flex-col">
-                    <label for="number_table" class="text-sm text-gray-600 mb-1">Nomor Meja</label>
-                    <select name="number_table" id="number_table" class="h-10 border border-gray-300 rounded-lg p-2 focus:ring-primary focus:border-primary">
-                        @for ($i = 1; $i <= 8; $i++)
-                        <option value="{{ $i }}">{{ $i }}</option>
-                        @endfor
-                    </select>
-                </div>
-                <button type="submit" class="bg-secondary text-background h-10 px-6 rounded-lg font-semibold hover:bg-opacity-90 transition duration-300">
-                    Tambah
-                </button>
-            </form>
-        </div>
+
+<script>
+    const pendapatan = @json($chartPendapatan ?? []);
+    const penjualan = @json($chartPenjualan ?? []); 
+
+    if (labels.length === 0) {
+        document.getElementById('PenjualanChart').parentElement.innerHTML = 
+            '<p class="text-gray-400">Tidak ada data penjualan yang tersedia untuk ditampilkan.</p>';
+        return;
+    }
+
+
+    const ctx = document.getElementById('PenjualanChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'line', 
+        data: {
+            labels: labels, 
+            datasets: [
+                {
+
+                    label: 'Penjualan (Sales/Transaksi)',
+                    data: penjualan, 
+                    backgroundColor: 'rgba(59, 130, 246, 0.5)', 
+                    borderColor: '#3b82f6', 
+                    pointBackgroundColor: '#3b82f6',
+                    tension: 0.3, 
+                    fill: false,
+                    yAxisID: 'y1', 
+                },
+                {
+                    label: 'Pendapatan (Revenue)',
+                    data: pendapatan, 
+                    backgroundColor: 'rgba(239, 68, 68, 0.5)', 
+                    borderColor: '#ef4444', 
+                    pointBackgroundColor: '#ef4444',
+                    tension: 0.3,
+                    fill: false,
+                    yAxisID: 'y', 
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                if (context.dataset.yAxisID === 'y') {
+                                    label += 'Rp' + context.parsed.y.toLocaleString('id-ID');
+                                } else {
+                                    label += context.parsed.y + ' Transaksi';
+                                }
+                            }
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Pendapatan (Revenue)'
+                    },
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return 'Rp' + (value / 1000) + 'K';
+                        }
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    beginAtZero: true,
+                    grid: {
+                        drawOnChartArea: false, 
+                    },
+                    title: {
+                        display: true,
+                        text: 'Penjualan (Transaksi)'
+                    }
+                }
+            }
+        }
+    });
+</script>
 @endsection

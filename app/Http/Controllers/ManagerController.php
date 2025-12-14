@@ -23,18 +23,48 @@ class ManagerController extends Controller
 
         $tanggalHariIni = Carbon::now()->toDateString();
 
-        $penjualanHariIni = DB::table('transactions')
-        ->where('Date', $tanggalHariIni) 
+        $penjualanHariIni = DB::table('view_penjualan_harian')
+        ->where('Tanggal', $tanggalHariIni) 
         ->first();
 
-        
+        $pendapatanBulanan = DB::table('view_pendapatan_bulanan')
+        ->limit(12) 
+        ->get();
 
+        $dataPenjualanBulanan = DB::table('view_pendapatan_bulanan')
+        ->orderBy('Tahun_Bulan', 'ASC') 
+        ->limit(12) 
+        ->get();
+        $labels = [];
+        $pendapatanData = [];
+        $penjualanData = [];
+
+    foreach ($dataPenjualanBulanan as $data) {
+ 
+        $bulanSingkat = Carbon::createFromFormat('Y-m', $data->Tahun_Bulan)->format('M');
+        
+        $labels[] = $bulanSingkat;
+        $pendapatanData[] = $data->Total_Pendapatan_Bulan; 
+        
+        $penjualanData[] = $data->Total_Pendapatan_Bulan * 1.1; 
+    }
+        $tahunBulanSekarang = Carbon::now()->format('Y-m');
+
+        $pendapatanBulanIni = DB::table('view_pendapatan_bulanan')
+    ->where('Tahun_Bulan', $tahunBulanSekarang)
+    ->first();
         return view('dashboard',[
             'menuData' => $menuData,
             'mejaTerpakai' => $mejaTerpakai,
             'mejaTotal' =>$mejaTotal,
             'penjualanHariIni' =>$penjualanHariIni,
-            'tanggalHariIni' =>$tanggalHariIni
+            'tanggalHariIni' =>$tanggalHariIni,
+            'pendapatanBulanIni' => $pendapatanBulanIni,
+            'pendapatanBulanan' => $pendapatanBulanan,
+            'tahunBulanSekarang' => $tahunBulanSekarang,
+            'chartLabels' => $labels,
+            'chartPendapatan' => $pendapatanData,
+            'chartPenjualan' => $penjualanData,
         ]);
     }
    

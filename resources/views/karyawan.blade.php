@@ -75,7 +75,7 @@ class=" relative p-4">
                             </button>
                             
                             <form action="{{ route('employee.destroy', $employee->Id_manajer) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus {{ $employee->Nama_manajer }}?');">
-                                @csrf  
+                                @csrf 
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900 transition">Hapus</button>
                             </form>
@@ -136,7 +136,7 @@ class=" relative p-4">
                             class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
                      placeholder-gray-500 font-sans text-lg"
-                            x-bind:value="karyawanToEdit ? karyawanToEdit.name_employee : ''"
+                            x-bind:value="karyawanToEdit ? karyawanToEdit.Nama_manajer : ''"
                             required
                         />
                     </div>
@@ -150,7 +150,7 @@ class=" relative p-4">
                             class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
                      placeholder-gray-500 font-sans text-lg"
-                            x-bind:value="karyawanToEdit ? karyawanToEdit.number_phone : ''"
+                            x-bind:value="karyawanToEdit ? karyawanToEdit.Nomor_handphone : ''"
                             required
                         />
                     </div>
@@ -184,7 +184,7 @@ class=" relative p-4">
                     
                     <button 
                         type="submit" 
-                        class="w-4/5 py-3 rounded-lg text-white mt-8 transition font-alata bg-primary hover:bg-red-800"
+                        class="w-4/5 py-3 rounded-lg text-white mt-8 transition font-alata bg-primary hover:bg-red-900"
                         x-text="isEdit ? 'Simpan Perubahan' : 'Daftar Karyawan'">
                     </button> 
                 </div>

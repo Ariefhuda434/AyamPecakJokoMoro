@@ -112,59 +112,57 @@ class OrderController extends Controller
         $totalPrice = array_sum(array_map(function ($item) {
             return $item['Price'] * $item['Quantity'];
         }, $cart));
-        // dd($cart);
-
+        
         DB::beginTransaction();
         try {
-            foreach ($cart as $item) {
-
-                $menu = Menu::with('recipe.stocksMagic')->find($item['Menu_id']);
-                if (!$menu || !$menu->recipe || $menu->recipe->stocksMagic->isEmpty()) {
-                    DB::rollBack();
-                    return redirect()->back()->with('error', 'Resep atau bahan baku untuk menu ' . $menu->Name . ' tidak ditemukan/belum didaftarkan.');
-                }
-                foreach ($menu->recipe->stocksMagic as $stock) {
-                    $quantityNeeded = $stock->pivot->Quantity;
-                    $quantityUsed = $quantityNeeded * $item['Quantity'];
-                    if ($stock->Current_Stock < $quantityUsed) {
-                        DB::rollBack();
-                        return redirect()->back()->with('error', 'Stok ' . $stock->Name . ' tidak cukup (' . $stock->Current_Quantity . ' tersedia) untuk pesanan ini.');
-                    }
-
-                    $stock->Current_Stock -= $quantityUsed;
-                    $stock->save();
-                }
-            }
-
-            $order = Order::create([
-                'Employee_id' => $request->Employee_id,
-                'Customer_id' => $request->Customer_id,
-                'Total' => $totalPrice,
-                'Order_Status' => 'Memesan',
+            $employeeId = $request->Employee_id;
+            $customerId = $request->Customer_id;
+            $orderId = 0; 
+            DB::statement('CALL SP_CreateOrder (?, ?, ?, @order_id)', [
+                $employeeId,
+                $customerId,
+                $totalPrice,
             ]);
 
-            foreach ($cart as $item) {
-                $itemSubtotal = $item['Price'] * $item['Quantity'];
+            $result = DB::select('SELECT @order_id AS Order_id');
+            $orderId = $result[0]->Order_id;
 
-                OrderDetail::create([
-                    'Order_id' => $order->Order_id,
-                    'Menu_id' => $item['Menu_id'],
-                    'Quantity' => $item['Quantity'],
-                    'Subtotal' => $itemSubtotal,
-                    'Notes' => $item['Notes'],
-                ]);
+            if (!$orderId) {
+                throw new \Exception('Gagal mendapatkan Order ID.');
             }
 
+            foreach ($cart as $item) {
+               
+                DB::statement('CALL SP_ProcessOrderItem (?, ?, ?, ?, ?, @success, @error_message)', [
+                    $orderId,
+                    $item['Menu_id'],
+                    $item['Quantity'],
+                    $item['Price'],
+                    $item['Notes'],
+                ]);
+
+                $result = DB::select('SELECT @success AS success, @error_message AS error_message');
+                $success = $result[0]->success;
+                $errorMessage = $result[0]->error_message;
+
+                if (!$success) {
+                    throw new \Exception($errorMessage);
+                }
+            }
+        
             session()->forget('cart');
             DB::commit();
+            
 
-            return redirect()->route('order.show', $order->Order_id)->with('success', 'Order berhasil dibuat dan stok diperbarui!');
+            return redirect()->route('order.show', $orderId)->with('success', 'Order berhasil dibuat dan stok diperbarui!');
+
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan order: ' . $e->getMessage());
         }
     }
 
+// ... (Bagian bawah controller tetap sama)
     public function show($order_id)
     {
         $order = Order::with(['customer.table', 'employee', 'orderDetails.menu'])

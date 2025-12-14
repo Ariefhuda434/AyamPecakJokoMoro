@@ -74,7 +74,7 @@ class=" relative p-4">
                                 Edit
                             </button>
                             
-                            <form action="{{ route('employee.destroy', $employee->Id_karyawan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus {{ $employee->Nama_karyawan    }}?');">
+                            <form action="{{ route('employee.destroy', $employee->Id_manajer) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus {{ $employee->Nama_manajer }}?');">
                                 @csrf 
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900 transition">Hapus</button>

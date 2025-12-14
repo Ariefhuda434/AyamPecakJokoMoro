@@ -4,7 +4,6 @@
 
 @section('content')
 
-{{-- Ambil Keranjang dari Session. Jika kosong, default ke array kosong. --}}
 @php
     $cartItems = session('cart', []);
     $cartCount = array_sum(array_column($cartItems, 'Quantity'));
@@ -24,12 +23,16 @@
     </div>
 @endif
 <div x-data="{ isCartOpen: false }" class="h-full min-h-screen max-w-full">
-    
+       <a href="{{ route('customer.index') }}" class="mr-3 text-primary hover:text-secondary transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+        </a>    
     <div class="h-18 w-full flex items-center justify-between px-3 py-2 border-b">
         <div class="flex items-center">
-            <p class="text-primary font-alata text-xl md:text-2xl ml-2">Menu Meja {{ $No_Table }}</p>
+            <p class="text-primary font-alata text-xl md:text-2xl ml-2">Menu Tersedia</p>
         </div>
-        <button @click="isCartOpen = true" class="flex items-center bg-white rounded-full border-2 border-primary p-2 shadow-md hover:bg-gray-50 transition">
+        <button @click="isCartOpen = true" class="flex items-center bg-white  rounded-full border-2 border-primary p-2 shadow-md hover:scale-102 transition">
             <span class="text-xs font-semibold text-primary mr-2 hidden sm:inline">
                 {{ $cartCount }} Item
             </span>
@@ -39,36 +42,36 @@
 
     <div class="w-full flex mt-4 justify-start px-3 gap-3 overflow-x-auto pb-4">
          <div class="flex gap-5">
-        <a href="{{ route('menu.index') }}" class="flex gap-4 mb-8">
+        <a href="{{ route('order.index', ['table' => $No_Table, 'customer' => $Customer_id]) }} class="flex gap-4 mb-8">
             <div class="flex p-4 w-53 h-23 bg-secondary text-primary rounded-2xl shadow-md hover:text-background transition-all duration-400 hover:scale-[1.02] hover:shadow-lg ease-in-out hover:bg-primary shadow-md">
-                <img src="{{ asset('images/all.png') }}" alt="Home Icon" class="h-15 w-15  mr-3 rounded-md">
+                <img src="{{ asset('images/makanan.png') }}" alt="Home Icon" class="h-15 w-15  mr-3 rounded-md">
                 <div class="flex flex-col">
-                    <p class="font-alata text-lg">Semua Meja</p>
+                    <p class="font-alata text-lg">Semua</p>
                     <p class="font-alata text-lg font-bold">{{ $totalmenu }}</p>
                 </div>
             </div>
         </a>
-        <a href="{{ route('menu.index',['Category' => 'Makanan']) }}" class="flex gap-4 mb-8">
+        <a href="{{ route('order.index', ['table' => $No_Table, 'customer' => $Customer_id, 'Category' => 'Makanan']) }}" class="flex gap-4 mb-8">
             <div class="flex p-4 w-53 h-23 bg-secondary text-primary rounded-2xl shadow-md hover:text-background transition-all duration-400 hover:scale-[1.02] hover:shadow-lg ease-in-out hover:bg-primary shadow-md">
-                <img src="{{ asset('images/kosong.png') }}" alt="Home Icon" class="h-15 w-14  mr-3 rounded-md">
+                <img src="{{ asset('images/rice.png') }}" alt="Home Icon" class="h-15 w-14  mr-3 rounded-md">
                 <div class="flex flex-col">
                     <p class="font-alata text-lg">Makanan</p>
                     <p class="font-alata text-lg font-bold">{{ $MenuMakanan }}</p>
                 </div>
             </div>
         </a>
-        <a href="{{ route('menu.index',['Category' => 'Minuman']) }}" class="flex gap-4 mb-8">
+        <a href="{{ route('order.index', ['table' => $No_Table, 'customer' => $Customer_id, 'Category' => 'Makanan']) }} class="flex gap-4 mb-8">
             <div class="flex p-4 w-53 h-23 bg-secondary text-primary rounded-2xl shadow-md hover:text-background transition-all duration-400 hover:scale-[1.02] hover:shadow-lg ease-in-out hover:bg-primary shadow-md">
-                <img src="{{ asset('images/berisi.png') }}" alt="Home Icon" class="h-15 w-15  mr-3 rounded-md">
+                <img src="{{ asset('images/minuman.png') }}" alt="Home Icon" class="h-15 w-15  mr-3 rounded-md">
                 <div class="flex flex-col">
                     <p class="font-alata text-lg">Minuman</p>
                     <p class="font-alata text-lg font-bold">{{ $MenuMinuman }}</p>
                 </div>
             </div>
         </a>
-        <a href="{{ route('menu.index',['Category' => 'Cemilan']) }}" class="flex gap-4 mb-8">
+        <a href="{{ route('order.index',['table' => $No_Table, 'customer' => $Customer_id, 'Category' => 'Cemilan']) }}" class="flex gap-4 mb-8">
             <div class="flex p-4 w-53 h-23 bg-secondary text-primary rounded-2xl shadow-md hover:text-background transition-all duration-400 hover:scale-[1.02] hover:shadow-lg ease-in-out hover:bg-primary shadow-md">
-                <img src="{{ asset('images/berisi.png') }}" alt="Home Icon" class="h-15 w-15  mr-3 rounded-md">
+                <img src="{{ asset('images/snack.png') }}" alt="Home Icon" class="h-15 w-15  mr-3 rounded-md">
                 <div class="flex flex-col">
                     <p class="font-alata text-lg">Cemilan</p>
                     <p class="font-alata text-lg font-bold">{{ $MenuCemilan }}</p>
@@ -115,30 +118,29 @@
                 <div class="flex-grow-0">
                     <label for="Quantity-{{ $menu->Menu_id }}" class="text-xs font-medium block mb-1">Jumlah:</label>
                     <input 
-                        type="number" 
+                        type="text" 
                         name="Quantity" 
                         id="Quantity-{{ $menu->Menu_id }}" 
                         value="1" 
                         min="1" 
-                        class="w-full border border-gray-300 rounded-lg text-center p-2 text-sm focus:border-primary focus:ring-primary"
+                        class="w-10 border border-gray-300 rounded-lg text-center p-2 text-sm focus:border-primary focus:ring-primary"
                         required
                     >
                 </div>
                 
                 <div class="flex-grow">
-                    <label for="Notes-{{ $menu->Menu_id }}" class="text-xs font-medium block mb-1">Catatan (Opsional):</label>
+                    <label for="Notes-{{ $menu->Menu_id }}" class="text-xs font-medium block mb-1">Catatan:</label>
                     <input 
                         type="text" 
                         name="Notes" 
                         id="Notes-{{ $menu->Menu_id }}" 
                         class="w-full border border-gray-300 rounded-lg p-2 text-sm focus:border-primary focus:ring-primary"
-                        placeholder="Pedas/Tanpa gula"
+                        placeholder=""
                     >
                 </div>
             </div>
             
             <button type="submit" class="w-full bg-primary text-white py-3 rounded-xl font-semibold text-base hover:bg-primary/90 transition shadow-md mt-2 flex justify-center items-center space-x-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>
                 <span>Tambah ke Pesanan</span>
             </button>
         </form>
@@ -248,13 +250,13 @@
             @csrf
             
             <input type="hidden" name="Employee_id" value="{{ $employeeId }}"> 
-            <input type="hidden" name="Customer_id" value="{{ $customerId }}">
+            <input type="hidden" name="Customer_id" value="{{ $Customer_id}}">
             <input type="hidden" name="Total" value="{{ $cartTotal }}">
             
             <div class="text-xs text-gray-500 flex mb-3 border-t pt-2 ">
                 <p>Meja:  <strong>{{ $No_Table }} </strong></p> | 
                 <p> Staf ID:  <strong>{{ $employeeId }} </strong></p> | 
-                <p> Customer ID:  <strong>{{ $customerId ?? 'Tamu' }} </strong></p>
+                <p> Customer ID:  <strong>{{ $Customer_id ?? 'Tamu' }} </strong></p>
             </div>
             <button type="submit" 
                 class="w-full block text-center bg-primary text-white py-3 rounded-lg hover:bg-red-900 transition font-alata font-bold text-lg shadow-md">

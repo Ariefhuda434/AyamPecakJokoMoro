@@ -49,15 +49,22 @@ class="relative p-4">
         <div class="md:w-1/3 mb-6 md:mb-0">
             <h3 class="text-lg font-alata font-semibold mb-4 border-b pb-2 text-gray-700">Info Dasar Menu</h3>
             
-            @if ($menu->foto_menu) 
-                                <img src="{{ asset('storage/' . $menu->foto_menu) }}" alt="{{ $menu->nama_menu }}" class="h-10 w-10 rounded object-cover">
+           <div class="w-full aspect-square md:aspect-video overflow-hidden rounded-xl shadow-md border border-gray-100 mb-4 transition duration-300 hover:shadow-lg">
+    
+    @if ($menu->photo) 
+        <img src="{{ asset('storage/' . $menu->photo) }}" 
+             alt="{{ $menu->nama_menu }}" 
+             class="w-full h-full object-cover transition duration-300 transform hover:scale-105"
+        >
 
-                    class="w-full h-48 object-cover rounded-lg shadow-md mb-4 border border-gray-200">
-            @else
-                <div class="w-full h-48 flex items-center justify-center bg-gray-100 rounded-lg mb-4 text-gray-500">
-                    No Image
-                </div>
-            @endif
+    @else
+        <div class="w-full h-full flex flex-col items-center justify-center bg-gray-200 text-gray-500 p-4 text-center">
+            <i class="fas fa-camera-alt text-4xl mb-2"></i>
+            <p class="text-sm font-semibold">Foto Menu Tidak Tersedia</p>
+            <p class="text-xs">({{ $menu->nama_menu }})</p>
+        </div>
+    @endif
+</div>
 
             <div class="space-y-3 text-sm">
                 <div class="flex justify-between items-center border-b pb-2">
@@ -87,7 +94,7 @@ class="relative p-4">
             <div class="mb-6 bg-gray-50 p-4 rounded-lg border border-dashed border-gray-300">
                 <p class="text-sm font-alata text-gray-500 mb-1">Nama Resep:</p>
                 <p class="text-lg font-semibold text-gray-800 mb-4">
-                    {{ $resepData->Nama_resep ?? 'Belum ada Nama Resep' }}
+                    {{ $resepData->nama_resep ?? 'Belum ada Nama Resep' }}
                 </p>
 
                 <p class="text-sm font-alata text-gray-500 mb-1">Keterangan Resep:</p>
@@ -122,7 +129,7 @@ class="relative p-4">
                                 {{ $resep->Satuan_resep }}
                             </td> 
                             <td class="px-4 py-3 whitespace-nowrap text-center text-sm font-medium">
-                                <form action="{{ route('recipies.destroy', ['stock'=> $resep->Stock_id,'recipe' => $resepData->Id_resep,
+                                <form action="{{ route('recipies.destroy', ['stock'=> $resep->Stock_id,'recipe' => $resepData->id_resep,
                                 ]) }}" method="POST">
                                 @csrf
                                     @method('DELETE')
@@ -151,7 +158,7 @@ class="relative p-4">
                 @csrf
                 <div class="flex flex-col items-center space-y-4 w-full pb-10"> 
                     <p class="text-2xl font-semibold text-primary mt-10 mb-6 font-alata text-center">
-                        Tambahkan Bahan untuk **{{ $menu->Name }}**
+                        Tambahkan Bahan untuk {{ $menu->Name }}
                     </p>
                     
                     <input type="hidden" name="Recipe_id" value="{{ $menu->Recipe_id }}">

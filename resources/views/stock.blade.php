@@ -201,7 +201,7 @@ class="relative p-4">
                             type="number" 
                             name="Min_Stock_Level" 
                             placeholder="Contoh: 10"
-                            class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
+                            class="w-4/5 peer border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
                      placeholder-gray-500 font-sans text-lg"
                             x-bind:value="isEdit ? stockToEdit.jumlah_minimum : ''" 

@@ -80,7 +80,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/transactions', [TransactionController::class, 'index'])->name('cashier.view');
         Route::post('/transactions/payment', [TransactionController::class, 'payment'])->name('cashier.pay');
         Route::get('/transactions/payment/{transaction}', [TransactionController::class, 'paymentindex'])->name('payment.index');
-        Route::put('/transactions/payment/konfirmasi', [TransactionController::class, 'paymentkonfirmasi'])->name('payment.konfirmasi');
-
+        Route::post('/transactions/payment/konfirmasi', [TransactionController::class, 'paymentkonfirmasi'])->name('payment.konfirmasi');
+        Route::get('/transaksi/print/{order_id}', [TransactionController::class, 'printStruk'])->name('transaksi.print');
     });
 });

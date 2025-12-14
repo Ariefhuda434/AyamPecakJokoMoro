@@ -10,63 +10,60 @@ use App\Exports\MonthlySalesExport;
 
 class ManagerController extends Controller
 {
-    public function index()
-    {
-        $menuData = DB::table('view_menu_recipes')
-            ->get();
-        
-            $mejaTerpakai = DB::table('tables')
-        ->where('status_table', 'Terisi')
-        ->count();
+public function index()
+    { 
+        $menuData = DB::table('view_menu_recipes')->get();
 
-        $mejaTotal = DB::table('tables')
-        ->select('No_Table as jumlah_meja') 
-        ->count();
+        $mejaTerpakai = DB::table('tables')
+            ->where('status_table', 'Terisi')
+            ->count();
+            
+        $mejaTotal = DB::table('tables')->count(); 
 
         $tanggalHariIni = Carbon::now()->toDateString();
-
         $penjualanHariIni = DB::table('view_penjualan_harian')
-        ->where('Tanggal', $tanggalHariIni) 
-        ->first();
+            ->where('Tanggal', $tanggalHariIni) 
+            ->first();
 
-        $pendapatanBulanan = DB::table('view_pendapatan_bulanan')
-        ->limit(12) 
-        ->get();
 
         $dataPenjualanBulanan = DB::table('view_pendapatan_bulanan')
-        ->orderBy('Tahun_Bulan', 'ASC') 
-        ->limit(12) 
-        ->get();
+            ->orderBy('Tahun_Bulan', 'ASC') 
+            ->limit(12) 
+            ->get();
+            
         $labels = [];
-        $pendapatanData = [];
-        $penjualanData = [];
+        $pendapatanData = []; 
+        $penjualanData = [];  
+        
+        foreach ($dataPenjualanBulanan as $data) {
+            
+            $bulanSingkat = Carbon::createFromFormat('Y-m', $data->Tahun_Bulan)->format('M');
+            
+            $labels[] = $bulanSingkat;
+            
+            $pendapatanBersih = $data->Total_Pendapatan_Bulan; 
+            $pendapatanData[] = $pendapatanBersih; 
+        
+            $penjualanKotor = $pendapatanBersih / 1.11; 
+            $penjualanData[] = round($penjualanKotor);
+        }
 
-    foreach ($dataPenjualanBulanan as $data) {
- 
-        $bulanSingkat = Carbon::createFromFormat('Y-m', $data->Tahun_Bulan)->format('M');
-        
-        $labels[] = $bulanSingkat;
-        $pendapatanData[] = $data->Total_Pendapatan_Bulan; 
-        
-        $penjualanData[] = $data->Total_Pendapatan_Bulan * 1.1; 
-    }
         $tahunBulanSekarang = Carbon::now()->format('Y-m');
-
         $pendapatanBulanIni = DB::table('view_pendapatan_bulanan')
-    ->where('Tahun_Bulan', $tahunBulanSekarang)
-    ->first();
-        return view('dashboard',[
+            ->where('Tahun_Bulan', $tahunBulanSekarang)
+            ->first();
+            // dd($penjualanHariIni);
+        return view('dashboard', [
             'menuData' => $menuData,
             'mejaTerpakai' => $mejaTerpakai,
-            'mejaTotal' =>$mejaTotal,
-            'penjualanHariIni' =>$penjualanHariIni,
-            'tanggalHariIni' =>$tanggalHariIni,
+            'mejaTotal' => $mejaTotal,
+            'penjualanHariIni' => $penjualanHariIni,
+            'tanggalHariIni' => $tanggalHariIni,
             'pendapatanBulanIni' => $pendapatanBulanIni,
-            'pendapatanBulanan' => $pendapatanBulanan,
             'tahunBulanSekarang' => $tahunBulanSekarang,
             'chartLabels' => $labels,
-            'chartPendapatan' => $pendapatanData,
-            'chartPenjualan' => $penjualanData,
+            'chartPendapatan' => $pendapatanData, 
+            'chartPenjualan' => $penjualanData,   
         ]);
     }
     public function exportReport(Request $request)

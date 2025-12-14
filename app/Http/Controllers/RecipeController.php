@@ -17,10 +17,11 @@ class RecipeController extends Controller
 {
     $menu = Menu::where('slug', $slug)->firstOrFail();
     $resepid = $menu->Recipe_id;
-
+    
     $resepData = DB::table('view_resep_stok')
-        ->where('id_resep', $resepid)
-        ->first();
+    ->where('id_resep', $resepid)
+    ->first();
+    // dd($resepData);
 
     $Data = DB::table('view_resep_detail')
         ->where('id_resep', $resepid)

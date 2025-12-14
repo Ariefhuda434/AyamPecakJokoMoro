@@ -68,7 +68,7 @@
             @endphp
             
             <div class="{{ $statusColor }} border-2 rounded-lg p-4 shadow-lg flex flex-col items-center justify-center">
-                
+            
                 <img src="{{ asset('images/kosong.png') }}" class="bg-secondary h-15 w-15 rounded-full p-3" alt="" srcset="">
 
                 <h3 class="text-xl font-extrabold text-gray-800">Meja {{ $table->No_Table }}</h3>

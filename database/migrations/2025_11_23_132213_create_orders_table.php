@@ -10,10 +10,10 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id('Order_id');
-            $table->foreignId('Customer_id')->constrained('customers','Customer_id');
+            $table->foreignId('Customer_id')->constrained('customers','Customer_id')->onDelete('cascade');
             $table->foreignId('Employee_id')->constrained('employees','Employee_id');
             $table->integer('Total');
-            $table->enum('Order_Status', ['Belum Memesan','Memesan'])->default('Belum Memesan');
+            $table->enum('Order_Status', ['Belum Memesan','Memesan','Selesai'])->default('Belum Memesan');
             $table->timestamps();
         });
     }

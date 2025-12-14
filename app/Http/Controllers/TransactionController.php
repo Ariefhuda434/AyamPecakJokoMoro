@@ -4,33 +4,21 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Order;
+use App\Models\Customer;
 use App\Models\Employee;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
     public function index()
     {
-        $transaksiData = DB::table('orders')
-            ->join('customers', 'customers.Customer_id', '=', 'orders.Customer_id')
-            ->join('employees', 'employees.Employee_id', '=', 'orders.Employee_id')
-            ->join('tables', 'tables.No_Table', '=', 'customers.No_Table')
-            ->whereNotIn('orders.Order_Status', ['Selesai', 'Lunas', 'Batal']) 
-            ->select([
-                'orders.Order_id',
-                'employees.Employee_id',
-                'tables.No_Table as nomor_meja',
-                'customers.Name as nama_customer',
-                'customers.Phone_Number as nomor_hp',
-                'employees.Name_Employee as nama_pelayan',
-                'orders.Order_Status as status_order',
-                'orders.Total as total_harga',
-                
-            ])
-            ->orderBy('orders.created_at', 'desc')
-            ->get();
+        $transaksiData = DB::table('V_CURRENT_TRANSACTIONS')
+        ->where('status_order', ['Memesan']) 
+        ->get();
         if ($transaksiData->isEmpty()) {
             return view('transaksi', [
                 'transaksiData' => $transaksiData,
@@ -40,17 +28,9 @@ class TransactionController extends Controller
 
         $orderIds = $transaksiData->pluck('Order_id')->toArray();
 
-        $detailPesanan = DB::table('detail_order')
-            ->join('menus', 'menus.Menu_id', '=', 'detail_order.Menu_id')
-            ->whereIn('detail_order.Order_id', $orderIds)
-            ->select([
-                'detail_order.Order_id', 
-                'menus.Name as nama_menu',
-                'detail_order.Quantity as jumlah_pesanan',
-                'menus.Price as harga_satuan', 
-                'detail_order.Notes as catatan',
-            ])
-            ->get();
+        $detailPesanan = DB::table('V_ITEM_DETAILS')
+        ->whereIn('Order_id', $orderIds)
+        ->get();
         
     $transactionsWithDetails = $transaksiData->map(function ($transaction) use ($detailPesanan) {
     $transaction->items = $detailPesanan
@@ -58,13 +38,14 @@ class TransactionController extends Controller
                             ->values()
                             ->toArray();
     return $transaction;
-});
+        });
         return view('transaksi', [
             'transaksiData' => $transactionsWithDetails, 
         ]);
     }
 
-    public function payment(Request $request){
+    public function payment(Request $request)
+    {
        $request->validate([
             'Employee_id' => 'required|exists:employees,Employee_id',
             'Order_id' => 'required|exists:orders,Order_id',
@@ -77,35 +58,13 @@ class TransactionController extends Controller
             ]);
            $orderId = $request->Order_id;
 
-    $orderUtama = DB::table('orders') 
-        ->join('customers', 'orders.Customer_id', '=', 'customers.Customer_id')
-        ->join('tables', 'customers.No_Table', '=', 'tables.No_Table') 
-        ->where('orders.Order_id', $orderId) 
-        ->select([
-            'orders.Order_id',
-            'orders.Total', 
-            'orders.Employee_id', 
-            'tables.No_Table as nomor_meja',
-            'customers.Name as nama_pembeli',
-            'customers.Customer_id',
-        ])
-        ->first(); 
+        $orderUtama = DB::table('V_CURRENT_TRANSACTIONS')
+        ->where('Order_id', $orderId) 
+        ->first();
 
-    if (!$orderUtama) {
-        return redirect()->back()->with('error', 'Order tidak ditemukan.');
-    }
-
-    $dataItemDetail = DB::table('detail_order')
-        ->join('menus', 'menus.Menu_id', '=', 'detail_order.Menu_id')
-        ->where('detail_order.Order_id', $orderId)
-        ->select([
-            'menus.Name as nama_menu',
-            'detail_order.Quantity as jumlah_pesanan',
-            'menus.Price as harga_satuan', 
-            'detail_order.Notes as catatan',
-            DB::raw('detail_order.Quantity * menus.Price as subtotal') 
-        ])
-        ->get();
+   $dataItemDetail =  DB::table('V_ITEM_DETAILS') 
+    ->where('Order_id', $orderId) 
+    ->get();
 
     return view('payment.payment', [
         'order' => $orderUtama,
@@ -114,97 +73,72 @@ class TransactionController extends Controller
     ])->with('message', 'Silakan lanjutkan pembayaran.');
 }
 
-
-
 public function paymentkonfirmasi(Request $request)
 {
     $validated = $request->validate([
         'Method_Payment'  => 'required',
         'Transaction_id'  => 'required|exists:transactions,Transaction_id'
     ]);
-    
-    $transaksi = Transaction::findOrFail($validated['Transaction_id']);
-    $orderId = $transaksi->Order_id;
-    $employeeId = $transaksi->Employee_id ?? 'N/A'; 
-    $currentTime = Carbon::now();
-
-    $customerData = DB::table('orders')
-                      ->join('customers', 'orders.Customer_id', '=', 'customers.Customer_id')
-                      ->where('orders.Order_id', $orderId)
-                      ->select('customers.Customer_id', 'customers.Name', 'customers.No_Table')
-                      ->first();
-    // dd($customerData);
-    if ($customerData) {
-        $customerId = $customerData->Customer_id;
-        $customerName = $customerData->Name;
-        $tableNumber = $customerData->No_Table;
-
-        DB::table('audit_logs')->insert([
-            'Table_Name' => 'customers',
-            'Record_ID' => $customerId,
-            'Action_Typn' => 'DELETE',
-            'Column_Name' => 'Name', 
-            'Old_Value' => 'Pelanggan: ' . $customerName . ' (Meja ' . $tableNumber . ')',
-            'New_Value' => null,
-            'Employee_id' => $employeeId,
-            'Change_time' => $currentTime,
+    $transactionId = $validated['Transaction_id'];
+    $methodPayment = $validated['Method_Payment'];
+    $employeeId = Auth::id();
+    DB::statement('CALL SP_CONFIRM_PAYMENT(?, ?, ?)', [
+            $transactionId,
+            $methodPayment,
+            $employeeId,
         ]);
+    return redirect()->route('cashier.view')->with('success', 'Transaksi selesai. Proses data ditangani oleh Stored Procedure.');
+}
 
-        $oldTableStatus = DB::table('tables')->where('No_Table', $tableNumber)->value('status_table');
-        
-        DB::table('tables')
-            ->where('No_Table', $tableNumber)
-            ->update(['status_table' => 'Kosong']); 
-        
-        DB::table('audit_logs')->insert([
-            'Table_Name' => 'tables',
-            'Record_ID' => $tableNumber,
-            'Action_Typn' => 'UPDATE',
-            'Column_Name' => 'Status',
-            'Old_Value' => $oldTableStatus,
-            'New_Value' => 'Available',
-            'Employee_id' => $employeeId,
-            'Change_time' => $currentTime,
-        ]);
-        
-        DB::table('customers')->where('Customer_id', $customerId)->delete();
+public function printStruk($order_id)
+{
+    // 1. Ambil data Order utama dari view/tabel (Order_Status pasti sudah Lunas/Selesai)
+    $order = DB::table('V_CURRENT_TRANSACTIONS')
+        ->where('Order_id', $order_id)
+        ->first(); // Menggunakan view untuk detail order
+
+    // Fallback jika tidak ditemukan di view transaksi aktif (karena sudah lunas/selesai)
+    if (!$order) {
+        $order = DB::table('orders')
+                    ->select('orders.*', 'customers.Name as nama_customer', 'tables.No_Table as nomor_meja')
+                    ->join('customers', 'customers.Customer_id', '=', 'orders.Customer_id')
+                    ->join('tables', 'tables.No_Table', '=', 'customers.No_Table')
+                    ->where('orders.Order_id', $order_id)
+                    ->first();
     }
 
+    if (!$order) {
+        return redirect()->back()->with('error', 'Data order tidak ditemukan.');
+    }
 
-    $oldOrderStatus = DB::table('orders')->where('Order_id', $orderId)->value('Order_Status');
+    // 2. Ambil detail pesanan (items)
+    $dataItemDetail = DB::table('V_ITEM_DETAILS')
+        ->where('Order_id', $order_id)
+        ->get();
     
-    DB::table('orders')
-        ->where('Order_id', $orderId)
-        ->update(['Order_Status' => 'Lunas']);
-    
-    DB::table('audit_logs')->insert([
-        'Table_Name' => 'orders',
-        'Record_ID' => $orderId,
-        'Action_Typn' => 'UPDATE',
-        'Column_Name' => 'Order_Status',
-        'Old_Value' => $oldOrderStatus,
-        'New_Value' => 'Lunas',
-        'Employee_id' => $employeeId,
-        'Change_time' => $currentTime,
-    ]);
+    $transactionData = DB::table('transactions')
+        ->where('Order_id', $order_id)
+        ->latest('Transaction_id') // Ambil transaksi terakhir jika ada beberapa
+        ->first();
+        
+    if (!$transactionData) {
+        return redirect()->back()->with('error', 'Data pembayaran (transaction) belum tercatat.');
+    }
 
+    $data = [
+        'order' => $order,
+        'items' => $dataItemDetail,
+        'transaction' => $transactionData,
+        'paidAmount' => $transactionData->Total_Price ?? $order->Total,
+        'namaKasir' => Employee::find($transactionData->Employee_id)->Name_Employee ?? 'N/A',
+        'namaPelayan' => Employee::find($order->Employee_id)->Name_Employee ?? 'N/A', 
+        'paymentMethod' => $transactionData->Method_Payment ?? 'TUNAI',
+    ];
 
-    $transaksi->update([
-        'Method_Payment' => $validated['Method_Payment'], 
-        'Status' => 'Paid', 
-        'Date' => $currentTime, 
-    ]);
+    $pdfFileName = 'struk_meja_' . ($order->nomor_meja ?? 'TAKEAWAY') . '_order_' . $order_id . '.pdf';
 
-    DB::table('audit_logs')->insert([
-        'Table_Name' => 'transactions',
-        'Record_ID' => $transaksi->Transaction_id,
-        'Action_Typn' => 'UPDATE',
-        'Column_Name' => 'Status/Method_Payment', 
-        'Old_Value' => 'Pending',
-        'New_Value' => 'Paid (' . $validated['Method_Payment'] . ')',
-        'Employee_id' => $employeeId,
-        'Change_time' => $currentTime,
-    ]);
-    return redirect()->route('cashier.view')->with('success', 'Transaksi selesai. Meja sudah dikosongkan dan data pelanggan dibersihkan.');
+    $pdf = Pdf::loadView('struk.template', $data);
+
+    return $pdf->stream($pdfFileName);
 }
 }

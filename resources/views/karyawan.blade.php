@@ -58,11 +58,11 @@ class=" relative p-4">
                     @forelse ($employeeData as $employee) 
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $loop->iteration }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->Nama_manajer }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->Nama_karyawan }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->Nomor_handphone }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->role }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ $employee->Role }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                            {{ \Carbon\Carbon::parse($employee->Tanggal_bergabung)->format('d-m-Y') }}
+                            {{ \Carbon\Carbon::parse($employee->Tanggal_Bergabung)->format('d-m-Y') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium flex justify-center items-center space-x-3">
                             
@@ -74,7 +74,7 @@ class=" relative p-4">
                                 Edit
                             </button>
                             
-                            <form action="{{ route('employee.destroy', $employee->Id_manajer) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus {{ $employee->Nama_manajer }}?');">
+                            <form action="{{ route('employee.destroy', $employee->Id_karyawan) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus {{ $employee->Nama_karyawan    }}?');">
                                 @csrf 
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900 transition">Hapus</button>

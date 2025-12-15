@@ -8,7 +8,7 @@ use App\Models\Recipe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Models\RecipePivot; // Pastikan model ini ada
+use App\Models\RecipePivot; 
 
 
 class RecipeController extends Controller
@@ -54,12 +54,10 @@ class RecipeController extends Controller
 
         DB::beginTransaction();
         try {
-            RecipePivot::updateOrCreate(
+            RecipePivot::Create(
                 [
                     'Recipe_id' => $validated['Recipe_id'],
                     'Stock_id' => $validated['Stock_id'],
-                ],
-                [
                     'Quantity' => $validated['Quantity']
                 ]
             );
@@ -82,16 +80,19 @@ class RecipeController extends Controller
         }
     }
 
-    public function destroy(string $stock,string $recipe){
-        // $stock->delete();
-    $recipe1 = Recipe::findOrFail($recipe);
-    $recipe1->stocksMagic()->detach($stock); 
-    $menu = Menu::where('Recipe_id', $recipe)->first();
-    if ($menu) {
+    public function destroy(string $stock,string $recipe)
+    {
+       
+        $recipe1 = Recipe::findOrFail($stock);
+        $recipe1->stocksMagic()->detach($recipe); 
+        $menu = Menu::where('Recipe_id', $stock)->first();
+        // dd($menu);
+         if ($menu) {
         return redirect()->route('recipies.index', ['slug' => $menu->slug])
                          ->with('success', 'Bahan baku berhasil dihapus dari resep.');
     }
-    return redirect()->back()->with('success', 'Bahan baku berhasil dihapus dari pivot.');
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan bahan resep: ');
+
     }
 
 }

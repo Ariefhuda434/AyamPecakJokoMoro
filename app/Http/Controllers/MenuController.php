@@ -97,7 +97,7 @@ public function store(Request $request)
         'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', 
         'Name_Resep' => 'required|string|max:255', 
         'Keterangan' => 'nullable|string',
-        'Menu_Status' => 'required|string', 
+        // 'Menu_Status' => 'required|string', 
     ]);
 
     DB::beginTransaction();
@@ -123,7 +123,7 @@ public function store(Request $request)
             'Category' => $validated['Category'],
             'Name' => $validated['Name'],
             'Price' => $validated['Price'],
-            'status_menu' => $validated['Menu_Status'], 
+            // 'status_menu' => $validated['Menu_Status'], 
             'photo' => $photoPath,
         ]);
         

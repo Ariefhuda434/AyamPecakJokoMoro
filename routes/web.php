@@ -14,6 +14,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\RestockLogContoroller;
 use App\Http\Controllers\TransactionController;
+use App\Models\Transaction;
 
 Route::get('/', [AuthController::class, 'login_view'])->name('auth.login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.action');
@@ -81,6 +82,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/transactions/payment', [TransactionController::class, 'payment'])->name('cashier.pay');
         Route::get('/transactions/payment/{transaction}', [TransactionController::class, 'paymentindex'])->name('payment.index');
         Route::post('/transactions/payment/konfirmasi', [TransactionController::class, 'paymentkonfirmasi'])->name('payment.konfirmasi');
-        Route::get('/transaksi/struk/{transaction_id}', [TransactionController::class, 'printStruk'])->name('cashier.printStruk');
+        Route::get('/transactions/{transactionData}/show', [TransactionController::class, 'show'])->name('transaksi.show');
+        Route::get('/transaksi/{transactionData}/print}', [TransactionController::class, 'printStruk'])->name('transaksi.print');
     });
 });

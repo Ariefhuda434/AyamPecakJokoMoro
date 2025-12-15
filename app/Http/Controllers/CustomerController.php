@@ -7,6 +7,7 @@ use App\Models\Table;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\QueryException;
 
 class CustomerController extends Controller
@@ -45,14 +46,15 @@ class CustomerController extends Controller
             'Phone_Number' => 'required|string|max:14',
             'No_Table' => 'required|numeric|min:1',
         ]);
-        
+        $employeeId = Auth::user()->Employee_id ?? 0;
+        // DB::statement("SET @current_employee_id = ?;", [$employeeId]);
         try {
-            
-            $query = "CALL SP_CustomerJoin(?, ?, ?)";
+            $query = "CALL SP_CustomerJoin(?, ?, ?,?)";
             $result = DB::select($query, [
             $validated['Name'],
             $validated['Phone_Number'],
-            $validated['No_Table']
+            $validated['No_Table'],
+            $employeeId
         ]);
         if (empty($result) || !isset($result[0]->Customer_id)) {
              throw new \Exception("Gagal mendapatkan ID pelanggan dari Stored Procedure.");

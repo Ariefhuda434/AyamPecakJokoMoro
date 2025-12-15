@@ -168,7 +168,7 @@
 
     <div class="bg-white p-6 rounded-xl shadow-lg border border-gray-100">
         <div class="flex justify-between items-center pb-4 border-b border-gray-200 mb-6">
-            <h2 class="text-xl font-bold text-gray-800">Ringkasan Penjualan dan Pendapatan Tahunan</h2>
+            <h2 class="text-xl font-bold text-gray-800">Ringkasan Penjualan dan Pendapatan </h2>
             <div class="flex items-center space-x-3">
                 <form action="{{ route('export') }}" method="GET"> 
                     <button type="submit" class="flex items-center text-sm font-semibold text-white bg-green-600 px-4 py-2 rounded-lg hover:bg-green-700 transition shadow-md">

@@ -33,7 +33,7 @@
                 class="w-full inline-flex items-center justify-center bg-primary hover:bg-red-900 text-white font-bold py-3 px-6 rounded-xl transition duration-300 shadow-md transform hover:shadow-lg "
             >
                 <i class="fas fa-print mr-3"></i> 
-                Cetak Struk & Notifikasi Dapur (PDF)
+                Cetak Struk
             </a>
             
             <a href="{{ route('customer.index') }}" 

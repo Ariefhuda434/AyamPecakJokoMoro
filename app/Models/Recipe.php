@@ -26,6 +26,6 @@ public $timestamps = false;
     return $this->belongsToMany(
         Stock::class,'recipe_pivot', 
         'Recipe_id','Stock_id'
-    )->withPivot('Quantity'); 
+    ); 
 }
 }

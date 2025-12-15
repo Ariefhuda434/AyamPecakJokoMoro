@@ -11,26 +11,24 @@ class LogController extends Controller
 {
     public function indexLog(Request $request)
     {
-        $query = DB::table('audit_logs')
-            ->join('employees', 'audit_logs.Employee_id', '=', 'employees.Employee_id')
-            ->select('audit_logs.*', 'employees.Name_Employee as employee_name')
-            ->orderBy('audit_logs.Change_time', 'desc');
+        $query = DB::table('view_activities');
 
         $actionType = $request->get('action_type');
         if ($actionType && $actionType !== 'all') {
-            $query->where('audit_logs.Action_Typn', $actionType);
+            $query->where('Action_Typn', $actionType);
         }
 
         $tableName = $request->get('table_name');
         if ($tableName && $tableName !== 'all') {
-            $query->where('audit_logs.Table_Name', $tableName);
+            $query->where('Table_Name', $tableName);
         }
         
-        $logData = $query->paginate(25)->withQueryString();
-        
-        $availableTables = DB::table('audit_logs')->distinct()->pluck('Table_Name');
+        $logData = $query->orderBy('Change_time', 'desc')
+                     ->paginate(15)
+                     ->withQueryString();
 
-        $latestActivities = $this->getLatestActivityLogs(5); 
+        $availableTables = DB::table('view_activities')->distinct()->pluck('Table_Name');
+        $latestActivities = $this->getLatestActivityLogs(5);
 
         return view('dashboard.log', [
             'logData' => $logData,
@@ -42,22 +40,10 @@ class LogController extends Controller
   
     public function getLatestActivityLogs($limit = 5)
     {
-        $latestLogs = DB::table('audit_logs')
-            ->join('employees', 'audit_logs.Employee_id', '=', 'employees.Employee_id')
-            ->select(
-                'audit_logs.Change_time',
-                'audit_logs.Table_Name',
-                'audit_logs.Record_ID',
-                'audit_logs.Action_Typn', 
-                'audit_logs.Column_Name',
-                'audit_logs.Old_Value',
-                'audit_logs.New_Value',
-                'audit_logs.Employee_id',
-                'employees.Name_Employee as employee_name'
-            )
-            ->orderBy('audit_logs.Change_time', 'desc')
-            ->limit($limit)
-            ->get();
+        $latestLogs = DB::table('view_activities')
+        ->orderBy('Change_time', 'desc')
+        ->limit($limit)
+        ->get();
             
         $processedLogs = $latestLogs->map(function ($log) {
             $description = $this->createLogDescription($log);

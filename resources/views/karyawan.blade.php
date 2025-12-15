@@ -30,7 +30,18 @@
     }
 }" 
 class=" relative p-4"> 
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+        </div>
+    @endif
     
+    @if (session('error'))
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <span class="block sm:inline">Ada masalah dengan input Anda.</span>
+        </div>
+    @endif
     <div class="flex items-center justify-between mb-6 pt-2">
         <p class="text-xl font-alata font-semibold text-gray-700">
             Daftar Karyawan ({{ count($employeeData ?? []) }}) 
@@ -136,7 +147,7 @@ class=" relative p-4">
                             class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
                      placeholder-gray-500 font-sans text-lg"
-                            x-bind:value="karyawanToEdit ? karyawanToEdit.Nama_manajer : ''"
+                            x-bind:value="karyawanToEdit ? karyawanToEdit.Nama_karyawan : ''"
                             required
                         />
                     </div>
@@ -160,10 +171,10 @@ class=" relative p-4">
                         <select name="role_id" class="w-4/5 peer  border-4 border-primary rounded-tl-[1rem] rounded-br-[1rem] 
                    py-3 px-6 outline-none transition-all focus:border-secondary duration-500 ease-in-out
                      placeholder-gray-500 font-sans text-lg" required>
-                            <option value="" disabled x-bind:selected="!karyawanToEdit || !karyawanToEdit.role">Pilih Peran</option>
-                            <option value="1" x-bind:selected="karyawanToEdit && karyawanToEdit.role === '1'">Manager</option> 
-                            <option value="2" x-bind:selected="karyawanToEdit && karyawanToEdit.role === '2'">Kasir</option> 
-                            <option value="3" x-bind:selected="karyawanToEdit && karyawanToEdit.role === '3'">Pelayan</option> 
+                            <option value="" disabled x-bind:selected="!karyawanToEdit || !karyawanToEdit.Role">Pilih Peran</option>
+                            <option value="1" x-bind:selected="karyawanToEdit && karyawanToEdit.Role == '1'">Manager</option> 
+                            <option value="2" x-bind:selected="karyawanToEdit && karyawanToEdit.Role == '2'">Kasir</option> 
+                            <option value="3" x-bind:selected="karyawanToEdit && karyawanToEdit.Role == '3'">Pelayan</option> 
                         </select>
                     </div>
                     

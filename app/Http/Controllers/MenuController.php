@@ -86,39 +86,33 @@ public function store(Request $request)
 
     public function update(Request $request, Menu $menu)
 {
-    // Cek apakah menu terkait memiliki Recipe_id
     if (!$menu->Recipe_id) {
-        // Jika tidak ada Recipe_id, kita tidak bisa update resep.
         return redirect()->back()->with('error', 'Menu ini tidak terhubung dengan Resep, tidak dapat diupdate.');
     }
 
-    // 1. Validasi Input
     $validated = $request->validate([
         'Category' => 'required|string|max:255',
         'Name' => 'required|string|max:255',
         'Price' => 'required|numeric|min:0',
-        'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Foto sekarang nullable
-        'Name_Resep' => 'required|string|max:255', // Validasi untuk update resep
-        'Keterangan' => 'nullable|string', // Validasi untuk update keterangan resep
-        'Menu_Status' => 'required|string', // Pastikan input ini ada di form
+        'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', 
+        'Name_Resep' => 'required|string|max:255', 
+        'Keterangan' => 'nullable|string',
+        'Menu_Status' => 'required|string', 
     ]);
 
     DB::beginTransaction();
     try {
-        $photoPath = $menu->photo; // Ambil path foto lama sebagai default
+        $photoPath = $menu->photo; 
         
-        // 2. Tangani Upload Foto
         if ($request->hasFile('photo')) {
             if ($menu->photo && Storage::disk('public')->exists($menu->photo)) {
                 Storage::disk('public')->delete($menu->photo);
             }
             
-            // Simpan foto baru
             $path = $request->file('photo')->store('menu', 'public');
             $photoPath = $path;
         }
 
-        // 3. Update Data Resep (Tabel Recipe)
         $recipe = Recipe::findOrFail($menu->Recipe_id);
         $recipe->update([
             'Name_Resep' => $validated['Name_Resep'],

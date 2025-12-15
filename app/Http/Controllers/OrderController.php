@@ -73,7 +73,7 @@ public function index(Request $request, $No_Table, $Customer_id)
         
         $menu = Menu::find($request->Menu_id);
         $quantity = $request->Quantity;
-        
+       
         $cart = session()->get('cart', []);
         $itemId = $menu->Menu_id; 
         
@@ -86,7 +86,9 @@ public function index(Request $request, $No_Table, $Customer_id)
                 "Quantity" => $quantity,
                 "Price" => $menu-> Price, 
                 "Notes" => $request->Notes ?? '', 
+                "Photo" => $menu->photo,
             ];
+            // dd($request->photo);
         }
         session()->put('cart', $cart);
 

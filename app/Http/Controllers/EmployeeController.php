@@ -6,8 +6,9 @@ use Carbon\Carbon;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use function Laravel\Prompts\select;
+use Illuminate\Support\Facades\Log;
 
+use function Laravel\Prompts\select;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -66,14 +67,15 @@ class EmployeeController extends Controller
         try {
             DB::beginTransaction(); 
             $currentEmployeeId = Auth::user()->Employee_id;
-            DB::statement("SET @current_employee_id = ?", [$currentEmployeeId]);
 
+            DB::statement("SET @current_employee_id = ?", [$currentEmployeeId]);
             $validated = $request->validate([
                 'name_employee' => 'required|string|max:150',
                 'number_phone' => 'required|string|max:20',
                 'role_id' => 'required|exists:roles,role_id',
                 'password' => 'nullable|string|min:6', 
             ]);
+
             // dd($request->input());
             if (empty($validated['password'])) {
                 unset($validated['password']);
@@ -81,13 +83,14 @@ class EmployeeController extends Controller
                 $validated['password'] = Hash::make($request->input('password'));
             }
             $employee->update($validated);
-            
+
             DB::commit();
 
             return redirect()->route('employee.index')->with('success', 'Data karyawan berhasil diubah!');
         } catch (\Exception $e) {
             DB::rollBack(); 
-            return redirect()->back()->withInput()->with('error', 'Gagal mengubah data karyawan. Transaksi dibatalkan.');
+            Log::error("UPDATE FAILED: " . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Gagal update: ' . $e->getMessage());
         }
     }
 

@@ -76,7 +76,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/order/{order}/show/print', [OrderController::class, 'printStruk'])->name('order.print');
     });
 
-    Route::middleware(['role:cashier'])->group(function () {    
+    Route::middleware(['role:cashier'])->prefix('cashier')->group(function () {    
         Route::get('/transactions', [TransactionController::class, 'index'])->name('cashier.view');
         Route::post('/transactions/payment', [TransactionController::class, 'payment'])->name('cashier.pay');
         Route::get('/transactions/payment/{transaction}', [TransactionController::class, 'paymentindex'])->name('payment.index');

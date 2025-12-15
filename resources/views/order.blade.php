@@ -3,9 +3,7 @@
 @section('title', 'Pemesanan')
 
 @section('content')
-
     <div class="min-h-screen w-full px-4 pt-4 pb-10">
-        
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5 mb-8">
             
             <a href="{{ route('customer.index') }}" class="block">

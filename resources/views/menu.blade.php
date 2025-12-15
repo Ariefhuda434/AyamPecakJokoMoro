@@ -188,6 +188,10 @@
     <div class="flex items-center space-x-4 w-full">
         
         <div class="w-20 h-20 bg-gray-200 rounded-lg flex-shrink-0">
+             <img src="{{ asset('storage/' . $item['Photo']) }}" 
+             alt="{{ $menu->Name }}" 
+             class="w-full h-full object-cover rounded-lg"
+        >
         </div>
         
         <div class="flex-grow min-w-0"> 

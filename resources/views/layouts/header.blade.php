@@ -32,18 +32,18 @@
         </button>
         
         <h1 class="text-primary font-alata ml-4 text-2xl mr-auto">
-            @if (Request::is('manager/karyawan*'))
+            @if (Request::is('employee.index'))
                 Manajemen Karyawan
             @elseif (Request::is('manager/stock'))
                 Manajemen Stok
             @elseif (Request::is('manager/stock/restock/*'))
                 Manajemen Restock
-            @elseif (Request::is('order*'))
+            @elseif (Request::is('waiter/order*'))
                 Pemesanan
-            @elseif (Request::is('transactions*'))
+            @elseif (Request::is('cashier/transactions*'))
                 Transaksi
-            @elseif (Request::is('dashboard') || Request::is(ltrim(parse_url($dashboardRoute, PHP_URL_PATH), '/')))
-                Dashboard Utama
+            @elseif (Request::is('/dashboard/*'))
+                Dashboard Manajer
             @else
                 Selamat Datang
             @endif
@@ -82,6 +82,7 @@
 
     <ul class="flex flex-col gap-2 text-white font-medium">
         
+        @if ($roleSlug === 'manager')
         <li>
             <a href="{{ $dashboardRoute }}" 
                 class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
@@ -90,13 +91,11 @@
                 Dashboard
             </a>
         </li>
-        
-        @if ($roleSlug === 'manager')
         <li>
             <a href="{{ route('employee.index') }}" 
                 class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
                         {{ $isActive('manager/karyawan*') ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
-                <img src="{{ asset('images/karyawan.png') }}" alt="Karyawan Icon" class="rounded-full bg-white p-1 h-6 w-6 object-contain">
+                <img src="{{ asset('images/karyawan.png') }}" alt="Karyawan Icon" class="rounded-full bg-white p-1 h-fu w-6 object-contain">
                 Manajemen Karyawan
             </a>
         </li>
@@ -114,8 +113,8 @@
         <li>
             <a href="{{ route('customer.index') }}" 
                 class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
-                        {{ $isActive('customer*') || $isActive('order*') ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 2a1 1 0 00-1 1v1a1 1 0 002 0V3a1 1 0 00-1-1zM4 5a2 2 0 00-2 2v2a2 2 0 002 2h1a2 2 0 002-2V7a2 2 0 00-2-2H4zm10-2a1 1 0 00-1 1v1a1 1 0 102 0V4a1 1 0 00-1-1zM7 7a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H8a1 1 0 01-1-1V7z" clip-rule="evenodd"></path></svg>
+                        {{ $isActive('waiter/order*') ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
+                <img src="{{ asset('images/stock.png') }}" alt="Stok Icon" class="rounded-full bg-white p-1 h-6 w-6 object-contain">
                 Order
             </a>
         </li>
@@ -125,8 +124,8 @@
         <li>
             <a href="{{ route('cashier.view') }}" 
                 class="flex items-center gap-3 transition-colors px-3 py-2 rounded-lg 
-                        {{ $isActive('transactions*') ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v8a2 2 0 002 2h12a2 2 0 002-2V9zM5 13a1 1 0 110-2 1 1 0 010 2zm4 0a1 1 0 110-2 1 1 0 010 2zm4 0a1 1 0 110-2 1 1 0 010 2z" clip-rule="evenodd"></path></svg>
+                        {{ $isActive('cashier/transactions*') ? 'bg-[#D4A017] text-[#421512] font-bold' : 'hover:bg-[#D4A017] hover:text-[#421512]' }}">
+                <img src="{{ asset('images/transaksi.png') }}" alt="Stok Icon" class="rounded-full bg-white p-1 h-6 w-6 object-contain">
                 Transaksi
             </a>
         </li>

@@ -35,7 +35,7 @@
     
     <div class="center">
         <h3 style="margin: 0; font-size: 13px; font-weight: bold;">AYAM PECAK JOKO MORO</h3>
-        <p style="margin: 2px 0; font-size: 8px;">Jl. Raya Kuliner No. 45, Jakarta</p>
+        <p style="margin: 2px 0; font-size: 8px;">Jl. Raya Kuliner No. 45, Medan</p>
         <p style="margin: 0; font-size: 8px;">Telp: (021) 1234567</p>
     </div>
 
@@ -76,7 +76,7 @@
                 <tr>
                     <td class="col-qty">{{ $item->jumlah_pesanan }}</td> 
                     <td class="col-name">{{ $item->nama_menu }}</td> 
-                    <td class="col-price">{{ number_format($totalItem, 0, ',', '.') }}</td>
+                    <td class="col-price">{{ number_format($item->harga_satuan, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>
@@ -87,7 +87,7 @@
     <table>
         <tr>
             <td style="width: 65%;">Subtotal</td>
-            <td class="col-price">{{ number_format($subtotal, 0, ',', '.') }}</td>
+            <td class="col-price">{{ number_format($transaction->total_harga_kotor, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <td>Pajak (11%)</td>
@@ -95,7 +95,7 @@
         </tr>
         <tr class="total-row">
             <td>TOTAL BAYAR</td>
-            <td class="col-price">{{ number_format($transaction->Total_Price, 0, ',', '.') }}</td>
+            <td class="col-price">{{ number_format($transaction->total_harga_bersih, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <td>Metode</td>

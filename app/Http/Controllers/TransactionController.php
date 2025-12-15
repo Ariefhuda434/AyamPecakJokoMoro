@@ -20,6 +20,7 @@ class TransactionController extends Controller
     {
         $transaksiData = DB::table('V_CURRENT_TRANSACTIONS')
         ->where('status_order', ['Memesan']) 
+        ->whereNotNull('nomor_meja')
         ->get();
         if ($transaksiData->isEmpty()) {
             return view('transaksi', [
@@ -34,8 +35,8 @@ class TransactionController extends Controller
         ->whereIn('Order_id', $orderIds)
         ->get();
         
-    $transactionsWithDetails = $transaksiData->map(function ($transaction) use ($detailPesanan) {
-    $transaction->items = $detailPesanan
+        $transactionsWithDetails = $transaksiData->map(function ($transaction) use ($detailPesanan) {
+        $transaction->items = $detailPesanan
                             ->where('Order_id', $transaction->Order_id)
                             ->values()
                             ->toArray();
@@ -123,10 +124,13 @@ public function show($transaction_id)
      $transactionData = DB::table('transactions')
     ->join('orders', 'transactions.Order_id', '=', 'orders.Order_id')
     ->join('customers', 'orders.Customer_id', '=', 'customers.Customer_id')
+    ->join('v_current_transactions', 'transactions.Order_id', '=', 'v_current_transactions.Order_id')
     ->select(
         'transactions.*', 
         'transactions.Method_Payment', 
-        'customers.No_Table',              
+        'customers.No_Table',          
+        'v_current_transactions.total_harga_bersih', 
+        'v_current_transactions.jumlah_pajak',   
         'customers.Name AS CustomerName' 
     )
     ->where('transactions.Transaction_id', $transaction_id)
@@ -148,13 +152,15 @@ public function show($transaction_id)
 
     return view('transaksi.show', $data);
 }
+
 public function printStruk($transaction_id)
 {   
     $transaction = DB::table('transactions') 
-    ->leftJoin('v_current_transactions', 'transactions.Order_id', '=', 'v_current_transactions.Order_id')
+    ->join('v_current_transactions', 'transactions.Order_id', '=', 'v_current_transactions.Order_id')
     ->where('transactions.Transaction_id', $transaction_id)
-    ->select('transactions.*', 'v_current_transactions.nama_pelayan','v_current_transactions.jumlah_pajak', 'v_current_transactions.nomor_meja')
+    ->select('transactions.*', 'v_current_transactions.nama_pelayan','v_current_transactions.jumlah_pajak', 'v_current_transactions.total_harga_kotor','v_current_transactions.total_harga_bersih')
     ->first();
+    // dd($transaction);
     $itemDetails = DB::table('v_item_details')
         ->where('Order_id', $transaction->Order_id)
         ->get();

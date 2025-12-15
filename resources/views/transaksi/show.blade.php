@@ -37,7 +37,7 @@
             </div>
             
             <span class="font-bold text-base text-gray-800 flex-shrink-0 ml-4">
-                {{ 'Rp ' . number_format($itemTotal, 0, ',', '.') }}
+                {{ 'Rp ' . number_format($item->harga_satuan, 0, ',', '.') }}
             </span>
         </div>
     @endforeach
@@ -48,10 +48,15 @@
             <span>Subtotal Pesanan:</span>
             <span>{{ 'Rp ' . number_format($subtotal, 0, ',', '.') }}</span>
         </div>
+
+        <div class="flex justify-between text-lg text-gray-700 mb-2">
+            <span>Pajak 11%:</span>
+            <span>{{ 'Rp ' . number_format($transaction->jumlah_pajak, 0, ',', '.') }}</span>
+        </div>
         
         <div class="flex justify-between font-bold text-xl text-primary pt-1">
             <span>TOTAL BERSIH:</span>
-            <span>{{ 'Rp ' . number_format($transaction->Total_Price, 0, ',', '.') }}</span>
+            <span>{{ 'Rp ' . number_format($transaction->total_harga_bersih, 0, ',', '.') }}</span>
         </div>
     </div>
 </div>

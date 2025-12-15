@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use App\Models\Menu;
 use App\Models\Order;
-use App\Models\OrderDetail;
 use App\Models\Stock; 
-use App\Models\Recipe; // Pastikan ini di-import
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf; 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Barryvdh\DomPDF\Facade\Pdf; 
+use App\Models\Recipe; // Pastikan ini di-import
 
 class OrderController extends Controller
 {
@@ -18,15 +20,15 @@ public function index(Request $request, $No_Table, $Customer_id)
 {
     
     $menuQuery = Menu::query(); 
-    
     $categoryFilter = $request->get('category', 'Semua');
     
     if ($categoryFilter !== 'Semua') {
+
         $menuQuery->where('Category', $categoryFilter);
     }
     
-    $menus = $menuQuery->get(); 
-    
+    $menus = $menuQuery->where('Menu_Status','Tersedia')->get(); 
+    // dd($menus);
     $employee = Auth::user(); 
     $employeeId = $employee->Employee_id;
 
@@ -96,73 +98,66 @@ public function index(Request $request, $No_Table, $Customer_id)
     }
 
     public function checkout(Request $request)
-    {
-        $cart = session()->get('cart');
-        if (empty($cart)) {
-            return redirect()->back()->with('error', 'Pesanan masih kosong.');
-        }
-        
-        $request->validate([
-            'Employee_id' => 'required|exists:employees,Employee_id',
-            'Customer_id' => 'required|exists:customers,Customer_id',
-        ]);
-        
-        $totalPrice = array_sum(array_map(function($item) {
-            return $item['Price'] * $item['Quantity'];
-        }, $cart));
-        // dd($cart);
-        
-        DB::beginTransaction();
-        try {
-            foreach ($cart as $item) {
-                
-                $menu = Menu::with('recipe.stocksMagic')->find($item['Menu_id']);
-                if (!$menu || !$menu->recipe || $menu->recipe->stocksMagic->isEmpty()) {
-                    DB::rollBack();
-                    return redirect()->back()->with('error', 'Resep atau bahan baku untuk menu ' . $menu->Name . ' tidak ditemukan/belum didaftarkan.');
-                }   
-                foreach ($menu->recipe->stocksMagic as $stock) {    
-                    $quantityNeeded = $stock->pivot->Quantity; 
-                    $quantityUsed = $quantityNeeded * $item['Quantity']; 
-                    if ($stock->Current_Stock < $quantityUsed) {
-                        DB::rollBack();
-                        return redirect()->back()->with('error', 'Stok ' . $stock->Name . ' tidak cukup (' . $stock->Current_Quantity . ' tersedia) untuk pesanan ini.');
-                    }
-
-                    $stock->Current_Stock -= $quantityUsed;
-                    $stock->save(); 
-                }
-            }
-            
-            $order = Order::create([
-                'Employee_id' => $request->Employee_id,
-                'Customer_id' => $request->Customer_id,
-                'Total' => $totalPrice,
-                'Order_Status' => 'Memesan', 
-            ]);
-            
-            foreach ($cart as $item) {
-                $itemSubtotal = $item['Price'] * $item['Quantity'];
-                
-                OrderDetail::create([
-                    'Order_id' => $order->Order_id,
-                    'Menu_id' => $item['Menu_id'],
-                    'Quantity' => $item['Quantity'],
-                    'Subtotal' => $itemSubtotal, 
-                    'Notes' => $item['Notes'],
-                ]);
-            }
-
-            session()->forget('cart');
-            DB::commit();
-            
-            return redirect()->route('order.show', $order->Order_id)->with('success', 'Order berhasil dibuat dan stok diperbarui!');
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan order: ' . $e->getMessage());
-        }
+{
+    $cart = session()->get('cart');
+    
+    if (empty($cart)) {
+        return redirect()->back()->with('error', 'Pesanan masih kosong.');
     }
+    
+    $request->validate([
+        'Employee_id' => 'required|exists:employees,Employee_id',
+        'Customer_id' => 'required|exists:customers,Customer_id',
+    ]);
+    
+    $totalPrice = array_sum(array_map(function($item) {
+        return $item['Price'] * $item['Quantity'];
+    }, $cart));
+        $order = Order::create([
+            'Employee_id' => $request->Employee_id,
+            'Customer_id' => $request->Customer_id,
+            'Total' => $totalPrice,
+            'Order_Status' => 'Memesan', 
+            'Date' => Carbon::now(), 
+        ]);
+        $orderId = $order->Order_id;
+
+        foreach ($cart as $item) {
+            
+            $menuId = $item['Menu_id'];
+            // dd($menuId);
+            $quantity = $item['Quantity'];
+            $price = $item['Price'];
+            $notes = $item['Notes'] ?? '';
+          
+            DB::statement("CALL SP_ProcessOrderItem(?, ?, ?, ?, ?, @success, @error_message)", [
+                $orderId, 
+                $menuId, 
+                $quantity, 
+                $price, 
+                $notes
+            ]);                                                                         
+            
+            $results = DB::select("SELECT @success AS success, @error_message AS error_message");
+            // dd($results);
+            $success = $results[0]->success;
+            $errorMessage = $results[0]->error_message;
+
+            if (!$success) {
+                DB::rollBack();
+                $order->delete(); 
+                return redirect()->back()->with('error', 'Gagal memproses item: ' . $errorMessage);
+            }
+        } 
+        if ($success) {
+    session()->forget('cart');
+    return redirect()->route('order.show', $orderId)->with('success', 'Order berhasil dibuat dan stok diperbarui!');
+    
+} else {
+    return back()->with('error', $errorMessage);
+}
+
+}
     
     public function show($order_id)
     {

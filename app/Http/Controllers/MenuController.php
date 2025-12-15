@@ -17,7 +17,7 @@ class MenuController extends Controller
         $countMenu = Menu::count();
 
         $menuData = DB::table('view_menu_recipes')
-            ->get();
+                    ->get();
         // dd($menuData);
         return view('dashboardmenu', [
             'menuData' => $menuData,
